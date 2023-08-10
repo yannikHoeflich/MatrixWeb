@@ -1,0 +1,12 @@
+﻿input[type=number]{
+    width: 80px;
+}
+
+.brightness-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.brightness-container input{
+    margin-right: 50px;
+}

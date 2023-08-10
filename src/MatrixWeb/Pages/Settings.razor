@@ -1,0 +1,123 @@
+﻿@page "/Settings"
+@using MatrixWeatherDisplay.Data;
+@using MatrixWeatherDisplay.Services;
+@using MatrixWeatherDisplay.Services.Weather;
+@using MatrixWeb.Services;
+@using System.Globalization;
+
+@inject SpotifyService spotify
+@inject NavigationManager navManager
+@inject DisplayService display
+@inject WeatherService weather
+@inject BrightnessService autoBrightness
+@inject DeviceService devices
+
+
+<p class="settings-container">
+    <h4>Display</h4>
+
+    <h5>Generelle Helligkeit</h5>
+    <input type="range" min="0" step="0.1" max="100" class="form-range" value="@autoBrightness.GeneralBrightness.ToInputString(1, 100)" @oninput="e => ChangeMaxBrightness(e)">
+    <div class="percent">
+        <input type="number" min="0" max="100" class="form-control" value="@autoBrightness.GeneralBrightness.ToInputString(1, 100)" @oninput="e => ChangeMaxBrightness(e)">
+    </div>
+
+    <h5>Rot schwelle</h5>
+    <input type="range" min="0" step="0.1" max="100" class="form-range" value="@display.RedManager.RedThreshold.ToInputString(1, 100)" @oninput="e => ChangeRedThreshold(e)">
+    <div class="percent">
+        <input type="number" min="0" max="100" class="form-control" value="@display.RedManager.RedThreshold.ToInputString(1, 100)" @oninput="e => ChangeRedThreshold(e)">
+    </div>
+<p class="description">
+    Rot von <b>@_redTimeRange.Start</b> bis <b>@_redTimeRange.End</b>
+</p>
+</p>
+
+<p class="settings-container">
+    <h4>Spotify</h4>
+    @if (spotify.IsConnected) {
+        <button type="button" @onclick="DisconnectSpotify" class="btn btn-success">Spotify Verbunden</button>
+    } else {
+        <a class="btn btn-secondary" href="@spotify.GetSpotifyUrl(GetCallbackUrl())">mit Spotify verbinden</a>
+    }
+</p>
+
+<p class="settings-container">
+    <h4>Wetter</h4>
+    <h5>Wetter Anbieter</h5>
+    <select class="form-select" aria-label="Default select example" @onchange="ChangeWeatherProvider">
+        <option value="0">Open Weather Map</option>
+        <option value="1">Weather Api</option>
+    </select>
+</p>
+
+<p class="settings-container">
+    <h4>Display Controller</h4>
+    @if (_restarting) {
+    <p class="btn btn-secondary disabled">Display Controller neustarten</p>
+    } else {
+    <button type="button" @onclick="RestartDisplay" class="btn btn-danger">Display Controller neustarten</button>
+    }
+</p>
+@code {
+    private bool _restarting;
+    private TimeRange _redTimeRange;
+
+    protected override void OnInitialized() {
+        _redTimeRange = display.RedManager.GetRedTimeRange();
+    }
+
+    private string GetCallbackUrl() {
+        var uri = new Uri(navManager.BaseUri);
+        string url = $"{uri.Scheme}://{uri.Host}:{uri.Port}/Spotify/Callback";
+
+        return url;
+    }
+
+    private void DisconnectSpotify() {
+        spotify.Logout();
+    }
+
+    private Task RestartDisplay() {
+        _restarting = true;
+        _ = Task.Run(async () => {
+            await display.RestartAsync();
+            _restarting = false;
+            await InvokeAsync(StateHasChanged);
+        });
+
+        return Task.CompletedTask;
+    }
+
+    private Task ChangeWeatherProvider(ChangeEventArgs eventArgs) {
+        if (!eventArgs.ToInt(out int value)) {
+            return Task.CompletedTask;
+        }
+
+        var newProvider = (WeatherProvider)value;
+        weather.WeatherProvider = newProvider;
+
+        return Task.CompletedTask;
+    }
+
+    private void ChangeRedThreshold(ChangeEventArgs eventArgs) {
+        if (!eventArgs.ToDouble(out double value)) {
+            return;
+        }
+
+        value = value.MinMax(0, 100);
+
+        display.RedManager.RedThreshold = value / 100;
+        _redTimeRange = display.RedManager.GetRedTimeRange();
+    }
+
+    private async Task ChangeMaxBrightness(ChangeEventArgs eventArgs) {
+        if (!eventArgs.ToDouble(out double value)) {
+            return;
+        }
+
+        value = value.MinMax(0, 100);
+
+        autoBrightness.GeneralBrightness = value / 100;
+        await devices.UpdateBrightnessAsync();
+    }
+}

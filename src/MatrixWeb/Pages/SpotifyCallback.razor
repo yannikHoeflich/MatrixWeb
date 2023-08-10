@@ -1,0 +1,53 @@
+﻿@page "/Spotify/Callback"
+@using MatrixWeatherDisplay.Services;
+@using Microsoft.AspNetCore.WebUtilities;
+
+@inject NavigationManager navManager
+@inject SpotifyService spotify
+@inject ILogger<SpotifyCallback> logger
+
+@if (_error) {
+    <p>
+        Error logging into spotify. Return to <a href="/Settings">Settings</a>
+    </p>
+} else {
+    <p>Loading . . .</p>
+}
+
+@code {
+    private bool _error = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        var queryString = new Uri(navManager.Uri).Query;
+
+        var query = QueryHelpers.ParseQuery(queryString);
+
+        if(!query.TryGetValue("code", out var codeValue)) {
+            _error = true;
+            return;
+        }
+
+        string? code = codeValue;
+        if(code is null) {
+            _error = true;
+            return;
+        }
+
+        try {
+            await spotify.AddToken(code, GetCallbackUrl());
+        } catch (Exception ex) {
+            logger.LogError(ex.ToString());
+            _error = true;
+            return;
+        }
+
+        navManager.NavigateTo("/Settings");
+    }
+
+    private string GetCallbackUrl() {
+        var uri = new Uri(navManager.BaseUri);
+        string url = $"{uri.Scheme}://{uri.Host}:{uri.Port}/Spotify/Callback";
+
+        return url;
+    }
+}

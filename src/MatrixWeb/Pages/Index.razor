@@ -1,0 +1,89 @@
+﻿@page "/"
+@using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
+@using MatrixWeatherDisplay.Screens;
+@using MatrixWeatherDisplay.Services;
+@using System.Globalization;
+
+@inject IScreenGeneratorProvider screens
+@inject DeviceService devices
+
+<PageTitle>Index</PageTitle>
+
+<h5>Helligkeit</h5>
+
+<div class="brightness-container">
+    @if (devices.AutoBrightness) {
+        <input type="range" min="0" step="0.01" max="1" class="form-range" value="@devices.Brightness.Visible.ToInputString(2, 1)" disabled>
+        <button type="button" @onclick="() => devices.AutoBrightness = false" class="btn btn-success">Automatisch</button>
+    } else {
+        <input type="range" min="0" step="0.01" max="1" class="form-range" value="@devices.Brightness.Visible.ToInputString(2, 1)" @oninput="e => ChangeBrighness(e)">
+        <button type="button" @onclick="() => devices.AutoBrightness = true" class="btn btn-secondary">Automatisch</button>
+    }
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Beschreibung</th>
+            <th scope="col">Anzeige Dauer in Sekunden</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var screen in screens.GetScreenGenerators()) {
+            <tr>
+                <td scope="row"> @screen.Name </td>
+                <td> @screen.Description </td>
+                <td>
+                    <input type="range" min="0" max="60" class="form-range" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)">
+                    <div class="seconds">
+                        <input type="number" class="form-control" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)">
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private void ChangeScreenTime(ChangeEventArgs eventArgs, IScreenGenerator screenGenerator) {
+        double value = -10;
+
+        if (eventArgs.Value is string str && !double.TryParse(str, out value)) {
+            return;
+        }
+
+        if (eventArgs.Value is double d) {
+            value = d;
+        }
+
+        if (value == -10) {
+            return;
+        }
+
+        ChangeScreenTime(value, screenGenerator);
+    }
+
+    private void ChangeScreenTime(double newScreenTime, IScreenGenerator screenGenerator) {
+        screenGenerator.ScreenTime = TimeSpan.FromSeconds(newScreenTime);
+    }
+
+    private async Task ChangeBrighness(ChangeEventArgs eventArgs) {
+        double value = -10;
+
+        if (eventArgs.Value is string str && !double.TryParse(str, CultureInfo.InvariantCulture, out value)) {
+            return;
+        }
+
+        if (eventArgs.Value is double d) {
+            value = d;
+        }
+
+        if (value < 0 || value > 1) {
+            return;
+        }
+
+        await devices.SetBrightnessAsync(value);
+        StateHasChanged();
+    }
+}
