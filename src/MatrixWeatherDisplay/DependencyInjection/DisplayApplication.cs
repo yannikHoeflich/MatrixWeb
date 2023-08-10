@@ -1,9 +1,12 @@
-﻿using MatrixWeatherDisplay.Data;
+﻿using System.Xml.Serialization;
+
+using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Data.Extensions;
 using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeatherDisplay.Services.Weather;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -41,7 +44,21 @@ public partial class DisplayApplication {
         SensorService? sensorService = Services.GetService<SensorService>();
         if (sensorService is not null)
             _ = sensorService.ScanAsync();
+
+        ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
+        await configService.InitAsync();
+
+        Init<OpenWeatherMapClient>();
+        Init<WeatherApiClient>();
+        Init<SpotifyService>();
+        Init<GasPriceService>();
     }
+
+    private void Init<T>() where T : IInitializable {
+        T? service = Services.GetService<T>();
+        service?.Init();
+    }
+    
 
     public async Task Run() {
         if (_running) {

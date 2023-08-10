@@ -22,14 +22,15 @@ public class DisplayApplicationBuilder {
     public void AddScreenGenerator<T>() where T : class, IScreenGenerator => Services.AddSingleton<IScreenGenerator, T>();
 
     public void AddDefaultServices() {
+        Services.AddSingleton<ConfigService>();
         Services.AddSingleton<SymbolLoader>();
         Services.AddSingleton<WeatherIconLoader>();
         Services.AddSingleton<SensorService>();
-        Services.AddSingleton(x => new OpenWeatherMapClient("-", 51.954593, 8.668798));
-        Services.AddSingleton(x => new WeatherApiClient("-", "London"));
+        Services.AddSingleton<OpenWeatherMapClient>();
+        Services.AddSingleton<WeatherApiClient>();
         Services.AddSingleton<WeatherService>();
-        Services.AddSingleton(x => new GasPriceService("-"));
-        Services.AddSingleton(x => new SpotifyService("-", "-"));
+        Services.AddSingleton< GasPriceService>();
+        Services.AddSingleton< SpotifyService>();
     }
 
     public DisplayApplication Build() {

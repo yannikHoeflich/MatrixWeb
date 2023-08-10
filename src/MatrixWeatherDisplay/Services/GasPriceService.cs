@@ -6,11 +6,13 @@ using Tankerkoenig.Net.Data;
 using Tankerkoenig.Net.Results;
 
 namespace MatrixWeatherDisplay.Services;
-public partial class GasPriceService {
+public partial class GasPriceService : IInitializable {
     private const int s_daysToSave = 14;
 
+    private readonly ConfigService _configService;
+
     private static readonly TicksTimeSpan s_updateFrequency = TicksTimeSpan.FromTimeSpan(TimeSpan.FromMinutes(5.1));
-    private readonly TankerkoenigClient _client;
+    private TankerkoenigClient _client;
 
     private double _price;
     private TicksTime _lastUpdate;
@@ -22,8 +24,19 @@ public partial class GasPriceService {
     public double MaxPrice => _minMaxValues.Where(x => x != default).Max(x => x.Max);
     public double MinPrice => _minMaxValues.Where(x => x != default).Min(x => x.Min);
 
-    public GasPriceService(string apiKey) {
-        _client = new TankerkoenigClient(apiKey);
+    public GasPriceService(ConfigService configService) {
+        _configService = configService;
+    }
+
+    public void Init() {
+        var config = _configService.GetConfig("tanker-koenig");
+        if(config is null) {
+            return;
+        }
+
+        if(config.TryGetString("api-key", out string? apiKey) && apiKey is not null) {
+            _client = new TankerkoenigClient(apiKey);
+        }
     }
 
     private async Task UpdatePrice(double lat, double lon) {

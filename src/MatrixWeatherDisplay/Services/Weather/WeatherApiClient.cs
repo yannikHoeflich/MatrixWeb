@@ -5,15 +5,28 @@ using NETWeatherAPI;
 using NETWeatherAPI.Entities;
 
 namespace MatrixWeatherDisplay.Services.Weather;
-public class WeatherApiClient : CachedWeatherClient {
+public class WeatherApiClient : CachedWeatherClient, IInitializable {
     private readonly ILogger _logger = Logger.Create<WeatherApiClient>();
-    private readonly WeatherAPIClient _weatherAPIClient;
-    private readonly string _cityName;
-    public WeatherApiClient(string apiKey, string cityName){
-        _weatherAPIClient = new WeatherAPIClient(apiKey);
-        _cityName = cityName;
+    private WeatherAPIClient _weatherAPIClient;
+    private string _cityName;
+
+    private readonly ConfigService _configService;
+    public WeatherApiClient(ConfigService configService) {
+        _configService = configService;
     }
 
+    public void Init() {
+        var config = _configService.GetConfig("weather-api");
+        if (config is null) {
+            return;
+        }
+
+        if (config.TryGetString("api-key", out string? apiKey)) {
+            _weatherAPIClient = new WeatherAPIClient(apiKey);
+        }
+
+        config.TryGetString("city", out _cityName);
+    }
     protected override async Task<WeatherStatus> UpdateWeather() {
         _logger.LogDebug("Updating Weather");
         RealtimeRequestEntity request = new RealtimeRequestEntity().WithCityName(_cityName);

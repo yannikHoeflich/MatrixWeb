@@ -3,13 +3,15 @@ using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 
 namespace MatrixWeatherDisplay.Services;
-public class SpotifyService {
+public class SpotifyService : IInitializable {
     private readonly static ICollection<string> s_spotifyScopes = new List<string> { Scopes.UserReadCurrentlyPlaying };
+
+    private readonly ConfigService _configService;
 
     private SpotifyClient? _client;
 
-    private readonly string _clientId;
-    private readonly string _clientSecret;
+    private string _clientId;
+    private string _clientSecret;
 
     private readonly HttpClient _httpClient = new();
 
@@ -17,9 +19,18 @@ public class SpotifyService {
 
     public bool IsConnected => _client is not null;
 
-    public SpotifyService(string clientId, string accessToken) {
-        _clientId = clientId;
-        _clientSecret = accessToken;
+    public SpotifyService(ConfigService configService) {
+        _configService = configService;
+    }
+
+    public void Init() {
+        var config = _configService.GetConfig("spotify");
+        if(config is null) {
+            return;
+        }
+
+        config.TryGetString("client-id", out _clientId);
+        config.TryGetString("client-secret", out _clientSecret);
     }
 
     public string GetSpotifyUrl(string baseUrl) {
