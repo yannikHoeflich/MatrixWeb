@@ -21,6 +21,12 @@
     }
 </div>
 
+@if (_showAll) {
+    <button type="button" @onclick="() => _showAll = false" class="btn btn-success">Alle anzeigen</button>
+} else {
+    <button type="button" @onclick="() => _showAll = true" class="btn btn-secondary">Alle anzeigen</button>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -31,21 +37,25 @@
     </thead>
     <tbody>
         @foreach (var screen in screens.GetScreenGenerators()) {
-            <tr>
-                <td scope="row"> @screen.Name </td>
-                <td> @screen.Description </td>
-                <td>
-                    <input type="range" min="0" max="60" class="form-range" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)">
-                    <div class="seconds">
-                        <input type="number" class="form-control" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)">
-                    </div>
-                </td>
-            </tr>
+            @if (screen.IsEnabled || _showAll) {
+                <tr class="@IsDisabledClass(screen)">
+                    <td scope="row"> @screen.Name</td>
+                    <td> @screen.Description </td>
+                    <td>
+                        <input type="range" min="0" max="60" class="form-range" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)" disabled="@(!screen.IsEnabled)">
+                        <div class="seconds">
+                            <input type="number" class="form-control" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)" disabled="@(!screen.IsEnabled)">
+                        </div>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
 
 @code {
+    private bool _showAll = false;
+
     private void ChangeScreenTime(ChangeEventArgs eventArgs, IScreenGenerator screenGenerator) {
         double value = -10;
 
@@ -85,5 +95,9 @@
 
         await devices.SetBrightnessAsync(value);
         StateHasChanged();
+    }
+
+    private string IsDisabledClass(IScreenGenerator screenGenerator) {
+        return screenGenerator.IsEnabled ? "" : "disabled-screen-generator";
     }
 }
