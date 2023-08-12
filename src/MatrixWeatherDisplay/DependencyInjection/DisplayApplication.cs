@@ -30,35 +30,48 @@ public partial class DisplayApplication {
     }
 
     public async Task InitDefaultServices() {
+        ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
+        await configService.InitAsync();
+
         BrightnessService autoBrightnessService = Services.GetService<BrightnessService>() ?? throw new InvalidOperationException("The Service of type 'AutoBrightnessService' must be registered");
         RedManager = new RedSettings(autoBrightnessService);
 
-        WeatherIconLoader? weatherLoader = Services.GetService<WeatherIconLoader>();
-        if (weatherLoader is not null)
-            await weatherLoader.LoadGifsAsync();
-
-        SymbolLoader? symbolLoader = Services.GetService<SymbolLoader>();
-        if (symbolLoader is not null)
-            await symbolLoader.LoadSymbolsAsync();
-
-        SensorService? sensorService = Services.GetService<SensorService>();
-        if (sensorService is not null)
-            _ = sensorService.ScanAsync();
-
-        ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
-        await configService.InitAsync();
+        await InitAsync<WeatherIconLoader>();
+        await InitAsync<SymbolLoader>();
 
         Init<OpenWeatherMapClient>();
         Init<WeatherApiClient>();
         Init<SpotifyService>();
         Init<GasPriceService>();
+
+        SensorService? sensorService = Services.GetService<SensorService>();
+        if (sensorService is not null)
+            _ = sensorService.ScanAsync();
+
     }
 
-    private void Init<T>() where T : IInitializable {
+    private void Init<T>() where T : IInitializable => Init<T>(service => service.Init());
+    private void Init<T>(Action<T> action) {
         T? service = Services.GetService<T>();
-        service?.Init();
+        if(service is null) {
+            return;
+        }
+
+        action(service);
     }
-    
+
+
+    private async Task InitAsync<T>() where T : IAsyncInitializable => await InitAsync<T>(service => service.InitAsync());
+    private async Task InitAsync<T>(Func<T, Task> action) {
+        T? service = Services.GetService<T>();
+        if (service is null) {
+            return;
+        }
+
+        await action(service);
+    }
+
+
 
     public async Task Run() {
         if (_running) {
@@ -112,7 +125,7 @@ public partial class DisplayApplication {
                 continue;
             }
 
-            if (screenGenerator.ScreenTime <= TimeSpan.Zero) {
+            if (screenGenerator.ScreenTime <= TimeSpan.Zero || !screenGenerator.IsEnabled) {
                 skips++;
                 continue;
             }

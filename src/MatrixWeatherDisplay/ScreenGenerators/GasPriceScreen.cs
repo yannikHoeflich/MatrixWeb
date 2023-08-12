@@ -14,6 +14,7 @@ public class GasPriceScreen : IScreenGenerator {
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(3);
 
+    public bool IsEnabled => _gasPrices.IsEnabled;
 
     public GasPriceScreen(GasPriceService gasPrices, SymbolLoader symbolLoader) {
         _gasPrices = gasPrices;

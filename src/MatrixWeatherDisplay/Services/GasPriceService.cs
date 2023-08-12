@@ -1,4 +1,5 @@
-﻿using MatrixWeatherDisplay.Data.Extensions;
+﻿using MatrixWeatherDisplay.Data;
+using MatrixWeatherDisplay.Data.Extensions;
 using MatrixWeatherDisplay.Logging;
 using Microsoft.Extensions.Logging;
 using Tankerkoenig.Net;
@@ -7,7 +8,9 @@ using Tankerkoenig.Net.Results;
 
 namespace MatrixWeatherDisplay.Services;
 public partial class GasPriceService : IInitializable {
-    private const int s_daysToSave = 14;
+    private const int s_defaultDaysToSave = 14;
+
+    private int _daysToSave = s_defaultDaysToSave;
 
     private readonly ConfigService _configService;
 
@@ -19,24 +22,32 @@ public partial class GasPriceService : IInitializable {
 
     private readonly ILogger _logger = Logger.Create<GasPriceService>();
 
-    private readonly MinMax[] _minMaxValues = new MinMax[s_daysToSave];
+    private MinMax[] _minMaxValues = new MinMax[s_defaultDaysToSave];
 
     public double MaxPrice => _minMaxValues.Where(x => x != default).Max(x => x.Max);
     public double MinPrice => _minMaxValues.Where(x => x != default).Min(x => x.Min);
+
+    public bool IsEnabled {get; private set;}
 
     public GasPriceService(ConfigService configService) {
         _configService = configService;
     }
 
     public void Init() {
-        var config = _configService.GetConfig("tanker-koenig");
-        if(config is null) {
+        var config = _configService.GetConfig("tanker-koenig") ?? throw new RequiredConfigException("tanker-koenig", "api-key");
+
+        if (!config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
+            IsEnabled = false;
             return;
         }
 
-        if(config.TryGetString("api-key", out string? apiKey) && apiKey is not null) {
-            _client = new TankerkoenigClient(apiKey);
+        if (config.TryGetInt("days-to-save", out int daysToSave)) {
+            _daysToSave = daysToSave;
+            _minMaxValues = new MinMax[_daysToSave];
         }
+
+        _client = new TankerkoenigClient(apiKey);
+        IsEnabled = true;
     }
 
     private async Task UpdatePrice(double lat, double lon) {
@@ -59,7 +70,7 @@ public partial class GasPriceService : IInitializable {
 
     private void UpdateMinMaxPrice() {
         var now = DateTime.Now;
-        int index = (int)(now - DateTime.UnixEpoch).TotalDays % s_daysToSave;
+        int index = (int)(now - DateTime.UnixEpoch).TotalDays % _daysToSave;
 
         if (_minMaxValues[index] == default || _minMaxValues[index].Date != DateOnly.FromDateTime(now)) {
             _minMaxValues[index] = new MinMax() {

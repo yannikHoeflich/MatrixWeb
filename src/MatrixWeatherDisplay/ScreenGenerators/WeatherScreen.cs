@@ -14,6 +14,8 @@ public class WeatherScreen : IScreenGenerator {
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(5);
 
+    public bool IsEnabled => _weather.IsEnabled;
+
     public WeatherScreen(WeatherService weatherService, WeatherIconLoader iconLoader) {
         _weather = weatherService;
         _iconLoader = iconLoader;

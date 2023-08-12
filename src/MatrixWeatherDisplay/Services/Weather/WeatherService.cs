@@ -1,8 +1,10 @@
 ﻿namespace MatrixWeatherDisplay.Services.Weather;
-public class WeatherService {
+public class WeatherService : IEnableable {
     private readonly Dictionary<WeatherProvider, CachedWeatherClient> _clients;
 
     public WeatherProvider WeatherProvider { get; set; } = WeatherProvider.OpenWeatherMap;
+
+    public bool IsEnabled => _clients[WeatherProvider].IsEnabled;
 
     public WeatherService(OpenWeatherMapClient openWeatherMapClient, WeatherApiClient weatherApiClient) {
         _clients = new() {

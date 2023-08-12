@@ -1,5 +1,5 @@
 ﻿namespace MatrixWeatherDisplay.Services;
-public class SymbolLoader {
+public class SymbolLoader : IAsyncInitializable{
     private const string s_directory = "Icons/Symbols";
 
     private static readonly IReadOnlyDictionary<string, char> s_files = new Dictionary<string, char>() {
@@ -34,6 +34,7 @@ public class SymbolLoader {
         return symbol;
     }
 
+    public Task InitAsync() => LoadSymbolsAsync();
     public async Task LoadSymbolsAsync() {
         foreach (KeyValuePair<string, char> symbol in s_files) {
             string file = symbol.Key;
@@ -73,4 +74,5 @@ public class SymbolLoader {
             }
         }
     }
+
 }

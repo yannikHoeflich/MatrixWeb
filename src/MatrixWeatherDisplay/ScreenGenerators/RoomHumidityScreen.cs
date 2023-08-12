@@ -16,6 +16,8 @@ public class RoomHumidityScreen : IScreenGenerator {
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(1);
 
+    public bool IsEnabled => _weatherService.IsEnabled;
+
     public RoomHumidityScreen(SensorService sensors, SymbolLoader symbolLoader, WeatherService weatherService) {
         _sensors = sensors;
         _symbolLoader = symbolLoader;

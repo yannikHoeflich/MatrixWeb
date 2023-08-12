@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using OpenWeatherMap.NetClient.Models;
 
 namespace MatrixWeatherDisplay.Services.Weather;
-public class OpenWeatherMapClient : CachedWeatherClient, IInitializable {
+public class OpenWeatherMapClient : CachedWeatherClient {
     private OpenWeatherMap.NetClient.OpenWeatherMapClient _client;
     private double _latitude;
     private double _longitude;
@@ -13,22 +13,29 @@ public class OpenWeatherMapClient : CachedWeatherClient, IInitializable {
 
     private readonly ConfigService _configService;
 
+    public override bool IsEnabled { get; protected set;}
+
     public OpenWeatherMapClient(ConfigService configService) {
         _configService = configService;
     }
 
-    public void Init() {
+    public override void Init() {
         var config = _configService.GetConfig("open-weather-map");
         if(config is null) {
+            IsEnabled = false;
             return;
         }
 
-        if(config.TryGetString("api-key", out string? apiKey)) {
-            _client = new OpenWeatherMap.NetClient.OpenWeatherMapClient(apiKey);
+        if(!config.TryGetString("api-key", out string? apiKey)) {
+            IsEnabled = false;
+            return;
         }
+
+        _client = new OpenWeatherMap.NetClient.OpenWeatherMapClient(apiKey);
 
         config.TryGetDouble("latitude", out _latitude);
         config.TryGetDouble("longitude", out _longitude);
+        IsEnabled = true;
     }
 
     protected override async Task<WeatherStatus> UpdateWeather() {

@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 using System;
 
 namespace MatrixWeatherDisplay.Services;
-internal interface IInitializable : IEnableable{
-    public void Init();
+internal interface IAsyncInitializable {
+    public Task InitAsync();
 }

@@ -1,4 +1,5 @@
-﻿using MatrixWeatherDisplay.Logging;
+﻿using MatrixWeatherDisplay.Data;
+using MatrixWeatherDisplay.Logging;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 
@@ -19,6 +20,8 @@ public class SpotifyService : IInitializable {
 
     public bool IsConnected => _client is not null;
 
+    public bool IsEnabled { get; private set; }
+
     public SpotifyService(ConfigService configService) {
         _configService = configService;
     }
@@ -26,11 +29,16 @@ public class SpotifyService : IInitializable {
     public void Init() {
         var config = _configService.GetConfig("spotify");
         if(config is null) {
+            IsEnabled = false;
             return;
         }
 
-        config.TryGetString("client-id", out _clientId);
-        config.TryGetString("client-secret", out _clientSecret);
+        if(!config.TryGetString("client-id", out _clientId) || !config.TryGetString("client-secret", out _clientSecret)) {
+            IsEnabled = false;
+            return;
+        }
+
+        IsEnabled = true;
     }
 
     public string GetSpotifyUrl(string baseUrl) {

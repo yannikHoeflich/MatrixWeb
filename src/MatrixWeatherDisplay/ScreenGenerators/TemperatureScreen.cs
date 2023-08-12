@@ -16,6 +16,8 @@ public class TemperatureScreen : IScreenGenerator {
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(3);
 
+    public bool IsEnabled => _weather.IsEnabled;
+
     public TemperatureScreen(SymbolLoader symbolLoader, WeatherService weatherService) {
         _symbolLoader = symbolLoader;
         _weather = weatherService;

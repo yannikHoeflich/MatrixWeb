@@ -1,7 +1,7 @@
 ﻿using MatrixWeatherDisplay.Data;
 
 namespace MatrixWeatherDisplay.Services;
-public class WeatherIconLoader {
+public class WeatherIconLoader : IAsyncInitializable {
     private const string s_directory = "Icons/Weather";
 
     private static readonly IReadOnlyDictionary<string, WeatherType> s_files = new Dictionary<string, WeatherType>() {
@@ -20,6 +20,8 @@ public class WeatherIconLoader {
     private readonly Dictionary<WeatherType, Image<Rgb24>> _iconCash = new();
 
     private static async Task<Image<Rgb24>> LoadGifAsync(string path) => await Image.LoadAsync<Rgb24>(path);
+
+    public Task InitAsync() => LoadGifsAsync();
 
     public async Task LoadGifsAsync() {
         foreach (KeyValuePair<string, WeatherType> item in s_files) {

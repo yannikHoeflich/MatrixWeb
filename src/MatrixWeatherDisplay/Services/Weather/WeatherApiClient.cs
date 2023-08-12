@@ -11,22 +11,30 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
     private string _cityName;
 
     private readonly ConfigService _configService;
+
+    public override bool IsEnabled { get; protected set; } = false;
+
     public WeatherApiClient(ConfigService configService) {
         _configService = configService;
     }
 
-    public void Init() {
+    public override void Init() {
         var config = _configService.GetConfig("weather-api");
         if (config is null) {
+            IsEnabled = false;
             return;
         }
 
-        if (config.TryGetString("api-key", out string? apiKey)) {
-            _weatherAPIClient = new WeatherAPIClient(apiKey);
+        if (!config.TryGetString("api-key", out string? apiKey) || !config.TryGetString("city", out _cityName)) {
+            IsEnabled = false;
+            return;
         }
 
-        config.TryGetString("city", out _cityName);
+        _weatherAPIClient = new WeatherAPIClient(apiKey);
+        IsEnabled = true;
     }
+
+
     protected override async Task<WeatherStatus> UpdateWeather() {
         _logger.LogDebug("Updating Weather");
         RealtimeRequestEntity request = new RealtimeRequestEntity().WithCityName(_cityName);

@@ -8,7 +8,6 @@ public class SensorService {
 
     private readonly ILogger _logger = Logger.Create<SensorService>();
 
-
     public async Task ScanAsync() {
         _logger.LogInformation("Searching for sensor devices");
         while (_devices.Count == 0) {

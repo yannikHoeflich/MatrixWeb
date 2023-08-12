@@ -1,5 +1,5 @@
 ﻿namespace MatrixWeatherDisplay.Data.Converter;
-internal static class ColorHelper {
+public static class ColorHelper {
 
     public static Color MapTemperature(int temperature)
         => MapColor(temperature, -10, 45, 240, 0);
@@ -22,7 +22,7 @@ internal static class ColorHelper {
     }
 
     public static Color MapHour(double hours)
-        => MapColor(hours, 0, 24, 230, 230 + 360);
+        => MapColor(hours, 0, 24, 240, 240 + 360);
 
     public static Color MapMinute(double minutes)
         => MapColor(minutes, 0, 60, 0, 360);

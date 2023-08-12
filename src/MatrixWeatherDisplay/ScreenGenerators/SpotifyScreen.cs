@@ -14,6 +14,7 @@ public class SpotifyScreen : IScreenGenerator {
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(10);
 
+    public bool IsEnabled => _spotify.IsEnabled;
 
     public SpotifyScreen(SpotifyService spotify) {
         _spotify = spotify;

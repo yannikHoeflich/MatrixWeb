@@ -1,8 +1,9 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Data.Converter;
+using MatrixWeatherDisplay.Services;
 
 namespace MatrixWeatherDisplay.Screens;
-public interface IScreenGenerator {
+public interface IScreenGenerator : IEnableable{
     public string Name { get; }
     public string Description { get; }
     public TimeSpan ScreenTime { get; set; }

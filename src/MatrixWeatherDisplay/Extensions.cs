@@ -5,18 +5,18 @@ using Microsoft.Extensions.Logging;
 
 namespace MatrixWeatherDisplay;
 public static class Extensions {
-    internal static async Task<byte[]> ToGifBytesAsync<T>(this Image<T> image) where T : unmanaged, IPixel<T> {
+    public static async Task<byte[]> ToGifBytesAsync<T>(this Image<T> image) where T : unmanaged, IPixel<T> {
         ImageHelper.AdjustFrameLengths(image);
         var stream = new MemoryStream();
         await image.SaveAsGifAsync(stream);
         return stream.ToArray();
     }
 
-    internal static double TotalHours(this DateTime dateTime) => TotalHours(TimeOnly.FromDateTime(dateTime));
+    public static double TotalHours(this DateTime dateTime) => TotalHours(TimeOnly.FromDateTime(dateTime));
 
-    internal static double MinutesOfHour(this DateTime dateTime) => MinutesOfHour(TimeOnly.FromDateTime(dateTime));
+    public static double MinutesOfHour(this DateTime dateTime) => MinutesOfHour(TimeOnly.FromDateTime(dateTime));
 
-    internal static double TotalHours(this TimeOnly dateTime) {
+    public static double TotalHours(this TimeOnly dateTime) {
         double hours = dateTime.Hour;
         hours += dateTime.Minute / 60.0;
         hours += dateTime.Second / 60.0 / 60;
@@ -24,7 +24,7 @@ public static class Extensions {
         return hours;
     }
 
-    internal static double MinutesOfHour(this TimeOnly dateTime) {
+    public static double MinutesOfHour(this TimeOnly dateTime) {
         double minutes = dateTime.Minute;
         minutes += dateTime.Second / 60.0;
 

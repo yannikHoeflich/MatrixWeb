@@ -1,5 +1,5 @@
 ﻿namespace MatrixWeatherDisplay.Data.Converter;
-internal static class ImageHelper {
+public static class ImageHelper {
     public static void ScaleDown<TBigPixel, TSmallPixel>(Image<TBigPixel> big,  Image<TSmallPixel> small) where TBigPixel : unmanaged, IPixel<TBigPixel> where TSmallPixel : unmanaged, IPixel<TSmallPixel> {
         int stepsWidth = big.Width / small.Width;
         int stepsHeight = big.Height / small.Height;
