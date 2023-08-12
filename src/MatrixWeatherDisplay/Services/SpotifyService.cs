@@ -28,12 +28,8 @@ public class SpotifyService : IInitializable {
 
     public void Init() {
         var config = _configService.GetConfig("spotify");
-        if(config is null) {
-            IsEnabled = false;
-            return;
-        }
 
-        if(!config.TryGetString("client-id", out _clientId) || !config.TryGetString("client-secret", out _clientSecret)) {
+        if(config is null || !config.TryGetString("client-id", out _clientId) || !config.TryGetString("client-secret", out _clientSecret)) {
             IsEnabled = false;
             return;
         }

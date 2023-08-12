@@ -34,9 +34,9 @@ public partial class GasPriceService : IInitializable {
     }
 
     public void Init() {
-        var config = _configService.GetConfig("tanker-koenig") ?? throw new RequiredConfigException("tanker-koenig", "api-key");
+        var config = _configService.GetConfig("tanker-koenig");
 
-        if (!config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
+        if (config is null || !config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
             IsEnabled = false;
             return;
         }
