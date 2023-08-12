@@ -2,6 +2,7 @@
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,6 +27,7 @@ public class DisplayApplicationBuilder {
         Services.AddSingleton<SymbolLoader>();
         Services.AddSingleton<WeatherIconLoader>();
         Services.AddSingleton<SensorService>();
+        Services.AddSingleton<RoomHumidityService>();
         Services.AddSingleton<OpenWeatherMapClient>();
         Services.AddSingleton<WeatherApiClient>();
         Services.AddSingleton<WeatherService>();

@@ -2,22 +2,28 @@
 using Microsoft.Extensions.Logging;
 using USM.Devices;
 
-namespace MatrixWeatherDisplay.Services;
-public class SensorService {
+namespace MatrixWeatherDisplay.Services.SensorServices;
+public class SensorService
+{
     private readonly List<SensorDevice> _devices = new();
 
     private readonly ILogger _logger = Logger.Create<SensorService>();
 
-    public async Task ScanAsync() {
+    public async Task ScanAsync()
+    {
         _logger.LogInformation("Searching for sensor devices");
-        while (_devices.Count == 0) {
+        while (_devices.Count == 0)
+        {
             _logger.LogDebug("Scanning . . .");
-            await foreach (IDevice device in Device.ScanAsync()) {
-                if (device is not SensorDevice sensorDevice) {
+            await foreach (IDevice device in Device.ScanAsync())
+            {
+                if (device is not SensorDevice sensorDevice)
+                {
                     continue;
                 }
 
-                if (_devices.Exists(x => x.Id == sensorDevice.Id)) {
+                if (_devices.Exists(x => x.Id == sensorDevice.Id))
+                {
                     continue;
                 }
 
@@ -29,15 +35,22 @@ public class SensorService {
         _logger.LogInformation("Found {deviceCount} devices", _devices.Count);
     }
 
-    public async Task<double?> GetValueBySuffixAsync(string suffix) {
-        SensorDevice? device = _devices.Find(x => x.Suffix == suffix);
-        if(device is null) {
+    public SensorDevice? GetDeviceBySuffix(string suffix) => _devices.Find(x => x.Suffix == suffix);
+
+    public async Task<double?> GetValueBySuffixAsync(string suffix)
+    {
+        SensorDevice? device = GetDeviceBySuffix(suffix);
+        if (device is null)
+        {
             return null;
         }
 
-        try {
+        try
+        {
             return await device.GetValueAsync(TimeSpan.FromSeconds(1));
-        } catch {
+        }
+        catch
+        {
             _logger.LogWarning("Value request timed out");
             return null;
         }

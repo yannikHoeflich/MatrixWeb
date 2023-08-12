@@ -2,11 +2,12 @@
 using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class RoomHumidityScreen : IScreenGenerator {
-    private readonly SensorService _sensors;
+    private readonly RoomHumidityService _roomHumidityService;
     private readonly SymbolLoader _symbolLoader;
     private readonly WeatherService _weatherService;
 
@@ -16,16 +17,16 @@ public class RoomHumidityScreen : IScreenGenerator {
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(1);
 
-    public bool IsEnabled => _weatherService.IsEnabled;
+    public bool IsEnabled => _weatherService.IsEnabled && _roomHumidityService.IsEnabled;
 
-    public RoomHumidityScreen(SensorService sensors, SymbolLoader symbolLoader, WeatherService weatherService) {
-        _sensors = sensors;
+    public RoomHumidityScreen(RoomHumidityService roomHumidityService, SymbolLoader symbolLoader, WeatherService weatherService) {
+        _roomHumidityService = roomHumidityService;
         _symbolLoader = symbolLoader;
         _weatherService = weatherService;
     }
 
     public async Task<Screen> GenerateImageAsync() {
-        double? value = await _sensors.GetValueBySuffixAsync("%");
+        double? value = await _roomHumidityService.GetValueAsync();
         if(value is null) {
             return Screen.Empty;
         }

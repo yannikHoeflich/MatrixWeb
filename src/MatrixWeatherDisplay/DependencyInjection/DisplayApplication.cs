@@ -6,6 +6,7 @@ using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
