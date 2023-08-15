@@ -34,10 +34,14 @@
 
 <p class="settings-container">
     <h4>Spotify</h4>
-    @if (spotify.IsConnected) {
-        <button type="button" @onclick="DisconnectSpotify" class="btn btn-success">Spotify Verbunden</button>
-    } else {
-        <a class="btn btn-secondary" href="@spotify.GetSpotifyUrl(GetCallbackUrl())">mit Spotify verbinden</a>
+    @if (spotify.IsEnabled)
+        @if (spotify.IsConnected) {
+            <button type="button" @onclick="DisconnectSpotify" class="btn btn-success">Spotify Verbunden</button>
+        } else {
+            <a class="btn btn-secondary" href="@spotify.GetSpotifyUrl(GetCallbackUrl())">mit Spotify verbinden</a>
+        }
+    } else{
+        <p class="red">Spotify ist deaktiviert, füge <i>Client Id</i> und <i>Client Secret</i> zu <i>config.json</i> hinzu, um diese funktion zu aktievieren</p>
     }
 </p>
 
