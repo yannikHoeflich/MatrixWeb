@@ -19,6 +19,8 @@ public class RoomHumidityScreen : IScreenGenerator {
 
     public bool IsEnabled => _weatherService.IsEnabled && _roomHumidityService.IsEnabled;
 
+    public bool NeedsInternet => true;
+
     public RoomHumidityScreen(RoomHumidityService roomHumidityService, SymbolLoader symbolLoader, WeatherService weatherService) {
         _roomHumidityService = roomHumidityService;
         _symbolLoader = symbolLoader;
@@ -26,17 +28,17 @@ public class RoomHumidityScreen : IScreenGenerator {
     }
 
     public async Task<Screen> GenerateImageAsync() {
-        double? value = await _roomHumidityService.GetValueAsync();
-        if(value is null) {
+        double value = await _roomHumidityService.GetValueAsync();
+        if(double.IsNaN(value)) {
             return Screen.Empty;
         }
 
         WeatherStatus currentWeather = await _weatherService.GetWeatherAsync();
 
-        Color color = ColorHelper.MapRoomHumidity(value.Value, currentWeather.Humidity);
+        Color color = ColorHelper.MapRoomHumidity(value, currentWeather.Humidity);
 
         var image = new Image<Rgb24>(16, 16);
-        _symbolLoader.DrawNumber(image, (int)value.Value, 2, 1, 4, color);
+        _symbolLoader.DrawNumber(image, (int)value, 2, 1, 4, color);
         _symbolLoader.DrawSymbol(image, 10, 4, '%', color);
 
         return new Screen(image, ScreenTime);

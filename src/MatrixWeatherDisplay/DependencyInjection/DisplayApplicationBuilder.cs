@@ -2,6 +2,7 @@
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,14 +26,18 @@ public class DisplayApplicationBuilder {
     public void AddDefaultServices() {
         Services.AddSingleton<ConfigService>();
         Services.AddSingleton<SymbolLoader>();
-        Services.AddSingleton<WeatherIconLoader>();
         Services.AddSingleton<SensorService>();
         Services.AddSingleton<RoomHumidityService>();
         Services.AddSingleton<OpenWeatherMapClient>();
+        Services.AddSingleton<GasPriceService>();
+        Services.AddSingleton<SpotifyService>();
+        Services.AddSingleton<InternetService>();
+
         Services.AddSingleton<WeatherApiClient>();
         Services.AddSingleton<WeatherService>();
-        Services.AddSingleton< GasPriceService>();
-        Services.AddSingleton< SpotifyService>();
+
+        Services.AddSingleton<WeatherIconLoader>();
+        Services.AddSingleton<ErrorIconLoader>();
     }
 
     public DisplayApplication Build() {

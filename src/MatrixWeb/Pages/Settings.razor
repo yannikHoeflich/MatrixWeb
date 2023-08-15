@@ -34,7 +34,7 @@
 
 <p class="settings-container">
     <h4>Spotify</h4>
-    @if (spotify.IsEnabled)
+    @if (spotify.IsEnabled){
         @if (spotify.IsConnected) {
             <button type="button" @onclick="DisconnectSpotify" class="btn btn-success">Spotify Verbunden</button>
         } else {

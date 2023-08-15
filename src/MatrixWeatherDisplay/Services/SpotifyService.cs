@@ -58,6 +58,7 @@ public class SpotifyService : IInitializable {
                         .CreateDefault()
                         .WithAuthenticator(new AuthorizationCodeAuthenticator(_clientId, _clientSecret, tokenResponse));
 
+        config.HTTPClient.SetRequestTimeout(TimeSpan.FromMilliseconds(500));
 
         _client = new SpotifyClient(config);
     }

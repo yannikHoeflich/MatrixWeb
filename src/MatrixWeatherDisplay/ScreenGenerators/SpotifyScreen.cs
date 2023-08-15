@@ -16,6 +16,8 @@ public class SpotifyScreen : IScreenGenerator {
 
     public bool IsEnabled => _spotify.IsEnabled;
 
+    public bool NeedsInternet => true;
+
     public SpotifyScreen(SpotifyService spotify) {
         _spotify = spotify;
     }

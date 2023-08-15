@@ -6,6 +6,7 @@ using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,7 @@ public partial class DisplayApplication {
         BrightnessService autoBrightnessService = Services.GetService<BrightnessService>() ?? throw new InvalidOperationException("The Service of type 'AutoBrightnessService' must be registered");
         RedManager = new RedSettings(autoBrightnessService);
 
+        await InitAsync<ErrorIconLoader>();
         await InitAsync<WeatherIconLoader>();
         await InitAsync<SymbolLoader>();
 
@@ -86,6 +88,7 @@ public partial class DisplayApplication {
         _shouldRun = true;
 
         DeviceService deviceService = Services.GetService<DeviceService>() ?? throw new InvalidOperationException("The Service of type 'DeviceService' must be registered");
+        InternetService? internetService = Services.GetService<InternetService>();
 
 
         await deviceService.ScanAsync();
@@ -93,14 +96,14 @@ public partial class DisplayApplication {
         ScreenGenerators.Reset();
 
         while (_shouldRun) {
-            await ShowNextScreenAndWait(deviceService);
+            await ShowNextScreenAndWait(deviceService, internetService);
         }
 
         _running = false;
     }
 
-    private async Task ShowNextScreenAndWait(DeviceService deviceService) {
-        ByteScreen? screen = await GetNextScreenAsync(deviceService);
+    private async Task ShowNextScreenAndWait(DeviceService deviceService, InternetService? internetService) {
+        ByteScreen? screen = await GetNextScreenAsync(deviceService, internetService);
 
         if (screen is null) {
             return;
@@ -113,20 +116,16 @@ public partial class DisplayApplication {
         await Extensions.SleepUntil(_waitUntil, () => !_shouldRun);
     }
 
-    private async Task<ByteScreen?> GetNextScreenAsync(DeviceService deviceService) {
+    private async Task<ByteScreen?> GetNextScreenAsync(DeviceService deviceService, InternetService? internetService) {
         int skips = 0;
         IScreenGenerator? screenGenerator = null;
         while (_shouldRun) {
             await LogIfSkippedLast(skips, screenGenerator);
 
             screenGenerator = ScreenGenerators.GetNextScreenGenerator();
+            _logger.LogTrace("Trying to show '{screen}'", screenGenerator?.Name);
 
-            if (screenGenerator is null) {
-                skips++;
-                continue;
-            }
-
-            if (screenGenerator.ScreenTime <= TimeSpan.Zero || !screenGenerator.IsEnabled) {
+            if (screenGenerator is null || screenGenerator.ScreenTime <= TimeSpan.Zero || !screenGenerator.IsEnabled || await HasInternetError(screenGenerator, internetService)) {
                 skips++;
                 continue;
             }
@@ -157,6 +156,12 @@ public partial class DisplayApplication {
         }
 
         return null;
+    }
+
+    private async Task<bool> HasInternetError(IScreenGenerator screenGenerator, InternetService? internetService) {
+        return internetService is not null && 
+               screenGenerator.NeedsInternet && 
+               !await internetService.HasInternetConnection();
     }
 
     private async Task LogIfSkippedLast(int skips, IScreenGenerator? screenGenerator) {

@@ -1,5 +1,5 @@
 ﻿using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Services;
+using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.Weather;
 
 namespace MatrixWeatherDisplay.Screens;
@@ -16,6 +16,8 @@ public class WeatherScreen : IScreenGenerator {
 
     public bool IsEnabled => _weather.IsEnabled;
 
+    public bool NeedsInternet => true;
+
     public WeatherScreen(WeatherService weatherService, WeatherIconLoader iconLoader) {
         _weather = weatherService;
         _iconLoader = iconLoader;
@@ -24,7 +26,7 @@ public class WeatherScreen : IScreenGenerator {
 
     public async Task<Screen> GenerateImageAsync() {
         var currentWeather = await _weather.GetWeatherAsync();
-        Image<Rgb24> icon = _iconLoader.GetWeatherIconAsync(currentWeather.Weather);
+        Image<Rgb24> icon = _iconLoader.GetIconAsync(currentWeather.Weather);
         return new Screen(icon, ScreenTime);
     }
 }

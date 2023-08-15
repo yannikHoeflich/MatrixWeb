@@ -19,6 +19,7 @@ public static class Program {
         displayBuilder.AddScreenGenerator<GasPriceScreen>();
         displayBuilder.AddScreenGenerator<RoomHumidityScreen>();
         displayBuilder.AddScreenGenerator<SpotifyScreen>();
+        displayBuilder.AddScreenGenerator<ErrorScreen>();
 
         DisplayApplication displayApp = displayBuilder.Build();
 

@@ -15,6 +15,9 @@ public class TimeScreen : IScreenGenerator {
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(3);
 
     public bool IsEnabled { get; } = true;
+
+    public bool NeedsInternet => false;
+
     public TimeScreen(SymbolLoader symbolLoader) {
         _symbolLoader = symbolLoader;
     }

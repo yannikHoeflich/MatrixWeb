@@ -13,11 +13,17 @@ public interface ISensorService : IEnableable {
 }
 
 public static class ISensorServiceExtensions {
+    private static readonly TimeSpan s_timeout = TimeSpan.FromMilliseconds(500);
+
     public static async Task<double> GetValueAsync(this ISensorService sensorService) {
         SensorDevice? device = sensorService.GetSensorDevice();
-        return device is not null
-            ? await device.GetValueAsync()
-            : double.NaN;
+        try {
+            return device is not null
+                ? await device.GetValueAsync(s_timeout)
+                : double.NaN;
+        } catch (TimeoutException) {
+            return double.NaN;
+        }
     }
 
     public static SensorDevice? GetSensorDevice(this ISensorService sensorService) => sensorService.SensorService.GetDeviceBySuffix(sensorService.SensorSuffix);

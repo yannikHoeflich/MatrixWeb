@@ -6,6 +6,7 @@ namespace MatrixWeatherDisplay.Screens;
 public interface IScreenGenerator : IEnableable{
     public string Name { get; }
     public string Description { get; }
+    public bool NeedsInternet { get; }
     public TimeSpan ScreenTime { get; set; }
 
     public Task<Screen> GenerateImageAsync();

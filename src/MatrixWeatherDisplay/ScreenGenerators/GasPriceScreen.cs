@@ -16,6 +16,8 @@ public class GasPriceScreen : IScreenGenerator {
 
     public bool IsEnabled => _gasPrices.IsEnabled;
 
+    public bool NeedsInternet => true;
+
     public GasPriceScreen(GasPriceService gasPrices, SymbolLoader symbolLoader) {
         _gasPrices = gasPrices;
         _symbolLoader = symbolLoader;

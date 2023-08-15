@@ -18,6 +18,8 @@ public class TemperatureScreen : IScreenGenerator {
 
     public bool IsEnabled => _weather.IsEnabled;
 
+    public bool NeedsInternet => true;
+
     public TemperatureScreen(SymbolLoader symbolLoader, WeatherService weatherService) {
         _symbolLoader = symbolLoader;
         _weather = weatherService;
