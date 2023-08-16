@@ -1,10 +1,32 @@
-﻿namespace MatrixWeatherDisplay.Data.Converter;
-public static class ColorHelper {
+﻿using MatrixWeatherDisplay.Services;
 
-    public static Color MapTemperature(int temperature)
+namespace MatrixWeatherDisplay.Data.Converter;
+public class ColorHelper: IInitializable {
+    private readonly ConfigService _configService;
+    private double _badHumidityDifference = 10;
+
+    public bool IsEnabled { get; } = true;
+
+    public ColorHelper(ConfigService configService) {
+        _configService = configService;
+    }
+
+    public void Init() {
+        var config = _configService.GetConfig("color-config");
+        if(config is null) {
+            return;
+        }
+
+        if(config.TryGetDouble("bad-humidity-difference", out double badHumidityDifference)) {
+            _badHumidityDifference = badHumidityDifference;
+        }
+    }
+
+
+    public Color MapTemperature(int temperature)
         => MapColor(temperature, -10, 45, 240, 0);
 
-    public static Color MapGasPrice(double price, double minPrice, double maxPrice) {
+    public Color MapGasPrice(double price, double minPrice, double maxPrice) {
         double diffrence = maxPrice - minPrice;
 
         double min;
@@ -21,15 +43,15 @@ public static class ColorHelper {
         return MapColor(price, min, max, 120, 0);
     }
 
-    public static Color MapHour(double hours)
+    public Color MapHour(double hours)
         => MapColor(hours, 0, 24, 240, 240 + 360);
 
-    public static Color MapMinute(double minutes)
+    public Color MapMinute(double minutes)
         => MapColor(minutes, 0, 60, 0, 360);
 
-    public static Color MapRoomHumidity(double roomHumidity, double outsideHumidity) {
-        double diffrence = roomHumidity - outsideHumidity;
-        return MapColor(diffrence, 0, 20, 120, 0);
+    public Color MapRoomHumidity(double roomHumidity, double outsideHumidity) {
+        double difference = roomHumidity - outsideHumidity;
+        return MapColor(difference, 0, _badHumidityDifference, 120, 0);
     }
 
     private static Color MapColor(double value, double min, double max, double hueFrom, double hueTo) {
@@ -67,4 +89,5 @@ public static class ColorHelper {
             _ => Color.FromRgb(v, p, q)
         };
     }
+
 }
