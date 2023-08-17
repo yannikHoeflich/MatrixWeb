@@ -41,9 +41,7 @@ public static class Extensions {
         return true;
     }
 
-    public static string ToInputString(this double value) {
-        return value.ToString(CultureInfo.InvariantCulture);
-    }
+    public static string ToInputString(this double value) => value.ToString(CultureInfo.InvariantCulture);
 
     public static string ToInputString(this double value, int decimals) {
         double multiplier = Math.Pow(10, decimals);
@@ -52,9 +50,7 @@ public static class Extensions {
         return ToInputString(value);
     }
 
-    public static string ToInputString(this double value, int decimals, double multiplier) {
-        return ToInputString(value * multiplier, decimals);
-    }
+    public static string ToInputString(this double value, int decimals, double multiplier) => ToInputString(value * multiplier, decimals);
 
     public static double MinMax(this double value, double min, double max) {
         if (value < min) {

@@ -12,7 +12,7 @@ namespace MatrixWeatherDisplay.Services;
 public class ConfigService{
     private const string s_configFile = "config.json";
 
-    private Dictionary<string, Config?>? _configs;
+    private Dictionary<string, Config>? _configs;
 
     public async Task InitAsync() {
         if (!File.Exists(s_configFile)) {
@@ -20,7 +20,9 @@ public class ConfigService{
         }
 
         using FileStream stream = File.OpenRead(s_configFile);
-        _configs = await JsonSerializer.DeserializeAsync<Dictionary<string, Config?>>(stream);
+        _configs = await JsonSerializer.DeserializeAsync<Dictionary<string, Config>>(stream);
+
+        _configs ??= new Dictionary<string, Config>();
     }
 
     public Config? GetConfig(string name) {
@@ -28,15 +30,16 @@ public class ConfigService{
             return null;
         }
 
-        if(!_configs.TryGetValue(name, out Config? config)) {
-            return null;
-        }
-
-        return config;
+        return !_configs.TryGetValue(name, out Config? config) ? null : config;
     }
 
     public Config CreateConfig(string name) { 
         var newConfig = new Config();
+
+        if(_configs is null) {
+            throw new InvalidOperationException("Initialize the 'Config Service' before using it");
+        }
+
         _configs.Add(name, newConfig);
 
         return newConfig;
@@ -44,6 +47,6 @@ public class ConfigService{
 
     public async Task SaveAsync() {
         FileStream fileStream = File.Create(s_configFile);
-        await JsonSerializer.SerializeAsync(fileStream, _configs);
+        await JsonSerializer.SerializeAsync(fileStream, _configs, new JsonSerializerOptions() { WriteIndented = true});
     }
 }

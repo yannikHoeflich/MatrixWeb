@@ -8,7 +8,7 @@ public partial class DisplayService {
     private readonly DisplayApplication _application;
     private readonly ILogger _logger = Logger.Create<DisplayApplication>();
 
-    public RedSettings RedManager => _application.RedManager;
+    public RedSettings RedManager => _application.RedManager ?? throw new InvalidOperationException("Please add 'RedSettings' to 'DisplayService' and initialize");
 
     public DisplayService(DisplayApplication application) {
         _application = application;

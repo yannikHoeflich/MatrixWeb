@@ -36,10 +36,7 @@ public class InternetService : IInitializable {
     }
 
     public void Init() {
-        var config = _configService.GetConfig(s_configName);
-        if(config is null) {
-            config = _configService.CreateConfig(s_configName);
-        }
+        Config? config = _configService.GetConfig(s_configName) ?? _configService.CreateConfig(s_configName);
 
         if(config.TryGetDouble(s_updateFrequencyName, out double checkFrequency)) {
             _updateFrequency = TicksTimeSpan.FromTimeSpan(TimeSpan.FromMinutes(checkFrequency));
@@ -81,5 +78,4 @@ public class InternetService : IInitializable {
             return false;
         }
     }
-
 }

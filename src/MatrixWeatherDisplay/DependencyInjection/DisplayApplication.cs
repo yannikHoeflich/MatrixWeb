@@ -17,7 +17,7 @@ public partial class DisplayApplication {
     public IServiceProvider Services { get; }
     public IScreenGeneratorProvider ScreenGenerators { get; }
 
-    public RedSettings RedManager { get; private set; }
+    public RedSettings? RedManager { get; private set; }
 
     private readonly ILogger _logger = Logger.Create<DisplayApplication>();
 
@@ -133,7 +133,7 @@ public partial class DisplayApplication {
 
             ByteScreen? screen;
 
-            bool turnRed = RedManager.ShouldBeRed(deviceService.Brightness);
+            bool turnRed = RedManager is not null &&  RedManager.ShouldBeRed(deviceService.Brightness);
             try {
                 screen = await screenGenerator.GenerateScreenAsync(turnRed);
             } catch (Exception ex) {

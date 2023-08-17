@@ -19,7 +19,7 @@ public partial class GasPriceService : IInitializable {
     private readonly ConfigService _configService;
 
     private static readonly TicksTimeSpan s_updateFrequency = TicksTimeSpan.FromTimeSpan(TimeSpan.FromMinutes(5.1));
-    private TankerkoenigClient _client;
+    private TankerkoenigClient? _client;
 
     private double _price;
     private TicksTime _lastUpdate;
@@ -39,7 +39,7 @@ public partial class GasPriceService : IInitializable {
     }
 
     public void Init() {
-        var config = _configService.GetConfig("tanker-koenig");
+        Config? config = _configService.GetConfig("tanker-koenig");
 
         if (config is null || !config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
             IsEnabled = false;
@@ -64,6 +64,10 @@ public partial class GasPriceService : IInitializable {
     }
 
     private async Task UpdatePrice(double lat, double lon) {
+        if(_client is null) {
+            throw new InvalidOperationException("The service 'GasPriceService' should be initialized and get all values through the config, to be used!");
+        }
+
         _logger.LogDebug("Updating Gas Price");
         Result<IReadOnlyList<Station>> stationsResult = await _client.ListStationsAsync(lat, lon, _searchRadius);
         if (!stationsResult.TryGetValue(out IReadOnlyList<Station>? stations) || stations is null) {
@@ -82,7 +86,7 @@ public partial class GasPriceService : IInitializable {
     }
 
     private void UpdateMinMaxPrice() {
-        var now = DateTime.Now;
+        DateTime now = DateTime.Now;
         int index = (int)(now - DateTime.UnixEpoch).TotalDays % _daysToSave;
 
         if (_minMaxValues[index] == default || _minMaxValues[index].Date != DateOnly.FromDateTime(now)) {

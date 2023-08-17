@@ -11,8 +11,8 @@ public class SpotifyService : IInitializable {
 
     private SpotifyClient? _client;
 
-    private string _clientId;
-    private string _clientSecret;
+    private string? _clientId;
+    private string? _clientSecret;
 
     private readonly HttpClient _httpClient = new();
 
@@ -27,7 +27,7 @@ public class SpotifyService : IInitializable {
     }
 
     public void Init() {
-        var config = _configService.GetConfig("spotify");
+        Config? config = _configService.GetConfig("spotify");
 
         if(config is null || !config.TryGetString("client-id", out _clientId) || !config.TryGetString("client-secret", out _clientSecret)) {
             IsEnabled = false;
@@ -38,6 +38,10 @@ public class SpotifyService : IInitializable {
     }
 
     public string GetSpotifyUrl(string baseUrl) {
+        if(_clientId is null) {
+            throw new InvalidOperationException("The service 'SpotifyService' should be initialized and get all values through the config, to be used!");
+        }
+
         var request = new LoginRequest(new Uri(baseUrl), _clientId, LoginRequest.ResponseType.Code) {
             Scope = s_spotifyScopes
         };
@@ -46,6 +50,9 @@ public class SpotifyService : IInitializable {
     }
 
     public async Task AddToken(string code, string url) {
+        if (_clientId is null || _clientSecret is null) {
+            throw new InvalidOperationException("The service 'SpotifyService' should be initialized and get all values through the config, to be used!");
+        }
 
         AuthorizationCodeTokenResponse tokenResponse = await new OAuthClient().RequestToken(
           new AuthorizationCodeTokenRequest(

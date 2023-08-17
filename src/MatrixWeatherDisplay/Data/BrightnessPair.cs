@@ -7,4 +7,4 @@ using System.Threading.Tasks;
 using System;
 
 namespace MatrixWeatherDisplay.Data;
-public record struct BrightnessPair(double Visible, double Real);
+public record struct BrightnessPair(double Display, double Real);

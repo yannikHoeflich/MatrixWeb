@@ -15,7 +15,7 @@ public class ColorHelper: IInitializable {
     }
 
     public void Init() {
-        var config = _configService.GetConfig(s_configName);
+        Config? config = _configService.GetConfig(s_configName);
         if(config is null) {
             return;
         }
@@ -94,5 +94,4 @@ public class ColorHelper: IInitializable {
             _ => Color.FromRgb(v, p, q)
         };
     }
-
 }

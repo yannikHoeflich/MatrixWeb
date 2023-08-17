@@ -7,8 +7,8 @@ using NETWeatherAPI.Entities;
 namespace MatrixWeatherDisplay.Services.Weather;
 public class WeatherApiClient : CachedWeatherClient, IInitializable {
     private readonly ILogger _logger = Logger.Create<WeatherApiClient>();
-    private WeatherAPIClient _weatherAPIClient;
-    private string _cityName;
+    private WeatherAPIClient? _weatherAPIClient;
+    private string? _cityName;
 
     private readonly ConfigService _configService;
 
@@ -19,7 +19,7 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
     }
 
     public override void Init() {
-        var config = _configService.GetConfig("weather-api");
+        Config? config = _configService.GetConfig("weather-api");
         if (config is null) {
             IsEnabled = false;
             return;
@@ -36,6 +36,10 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
 
 
     protected override async Task<WeatherStatus> UpdateWeather() {
+        if (_weatherAPIClient is null || _cityName is null) {
+            throw new InvalidOperationException("The service 'WeatherApiClient' should be initialized and get all values through the config, to be used!");
+        }
+
         _logger.LogDebug("Updating Weather");
         RealtimeRequestEntity request = new RealtimeRequestEntity().WithCityName(_cityName);
         RealtimeResponseEntity response = await _weatherAPIClient.Realtime.GetCurrentAsync(request);

@@ -8,7 +8,7 @@ namespace MatrixWeatherDisplay.Services;
 public class DeviceService {
     private readonly List<MatrixDevice> _devices = new();
 
-    public BrightnessPair Brightness { get; private set; } = new BrightnessPair(1, 0.75);
+    public BrightnessPair Brightness { get; private set; }
     public bool AutoBrightness { 
         get => _brightnessService.AutoBrightness;
         set {
@@ -22,6 +22,7 @@ public class DeviceService {
 
     public DeviceService(BrightnessService autoBrightness) {
         _brightnessService = autoBrightness;
+        Brightness = new BrightnessPair(1, _brightnessService.GeneralBrightness);
     }
     
 
@@ -62,7 +63,7 @@ public class DeviceService {
     }
 
     public async Task UpdateBrightnessAsync() {
-        BrightnessPair brightness = _brightnessService.GetBrightness(Brightness.Visible);
+        BrightnessPair brightness = _brightnessService.GetBrightness(Brightness.Display);
         Brightness = brightness;
         await PerformForAll(d => d.SendBrightnessAsync(brightness.Real));
     }

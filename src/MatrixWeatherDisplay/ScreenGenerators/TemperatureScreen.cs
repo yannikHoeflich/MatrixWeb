@@ -27,12 +27,12 @@ public class TemperatureScreen : IScreenGenerator {
     }
 
     public async Task<Screen> GenerateImageAsync() {
-        var weather = await _weather.GetWeatherAsync();
+        WeatherStatus weather = await _weather.GetWeatherAsync();
         int temp = (int)Math.Round(weather.Temperature);
 
         Color color = _colorHelper.MapTemperature(temp);
 
-        var image = GenerateTemperatureScreen(16, 16, temp, color);
+        Image<Rgb24> image = GenerateTemperatureScreen(16, 16, temp, color);
         return new Screen(image, ScreenTime);
     }
 

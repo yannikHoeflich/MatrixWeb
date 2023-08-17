@@ -5,7 +5,7 @@ using OpenWeatherMap.NetClient.Models;
 
 namespace MatrixWeatherDisplay.Services.Weather;
 public class OpenWeatherMapClient : CachedWeatherClient {
-    private OpenWeatherMap.NetClient.OpenWeatherMapClient _client;
+    private OpenWeatherMap.NetClient.OpenWeatherMapClient? _client;
     private double _latitude;
     private double _longitude;
 
@@ -20,13 +20,13 @@ public class OpenWeatherMapClient : CachedWeatherClient {
     }
 
     public override void Init() {
-        var config = _configService.GetConfig("open-weather-map");
+        Config? config = _configService.GetConfig("open-weather-map");
         if(config is null) {
             IsEnabled = false;
             return;
         }
 
-        if(!config.TryGetString("api-key", out string? apiKey)) {
+        if(!config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
             IsEnabled = false;
             return;
         }
@@ -39,6 +39,11 @@ public class OpenWeatherMapClient : CachedWeatherClient {
     }
 
     protected override async Task<WeatherStatus> UpdateWeather() {
+        if (_client is null) {
+            throw new InvalidOperationException("The service 'OpenWeatherMap' should be initialized and get all values through the config, to be used!");
+        }
+
+
         Func<Task<CurrentWeather?>> getWeatherFunction = () => _client.CurrentWeather.GetByCoordinatesAsync(_latitude, _longitude);
         CurrentWeather? response = await Extensions.Retry(getWeatherFunction, 5, _logger);
 

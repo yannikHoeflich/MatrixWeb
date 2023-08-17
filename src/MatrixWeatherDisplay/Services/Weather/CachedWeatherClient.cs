@@ -28,5 +28,4 @@ public abstract class CachedWeatherClient : IInitializable {
 
         return _currentWeather ?? throw new UnreachableException("Current weather should always has a value as this point");
     }
-
 }

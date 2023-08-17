@@ -14,9 +14,7 @@ public partial class DisplayApplication {
             _brightnessService = brightnessService;
         }
 
-        public bool ShouldBeRed(BrightnessPair brightness) {
-            return brightness.Visible <= RedThreshold;
-        }
+        public bool ShouldBeRed(BrightnessPair brightness) => brightness.Display <= RedThreshold;
 
         public TimeRange GetRedTimeRange() {
             if(RedThreshold == 0) {
@@ -47,6 +45,6 @@ public partial class DisplayApplication {
             }
         }
 
-        private TimeOnly AddTime(TimeOnly time) => time.Add(s_step);
+        private static TimeOnly AddTime(TimeOnly time) => time.Add(s_step);
     }
 }

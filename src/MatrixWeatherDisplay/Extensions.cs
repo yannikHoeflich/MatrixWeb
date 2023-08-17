@@ -12,10 +12,9 @@ public static class Extensions {
         return stream.ToArray();
     }
 
+
+
     public static double TotalHours(this DateTime dateTime) => TotalHours(TimeOnly.FromDateTime(dateTime));
-
-    public static double MinutesOfHour(this DateTime dateTime) => MinutesOfHour(TimeOnly.FromDateTime(dateTime));
-
     public static double TotalHours(this TimeOnly dateTime) {
         double hours = dateTime.Hour;
         hours += dateTime.Minute / 60.0;
@@ -24,6 +23,7 @@ public static class Extensions {
         return hours;
     }
 
+    public static double MinutesOfHour(this DateTime dateTime) => MinutesOfHour(TimeOnly.FromDateTime(dateTime));
     public static double MinutesOfHour(this TimeOnly dateTime) {
         double minutes = dateTime.Minute;
         minutes += dateTime.Second / 60.0;

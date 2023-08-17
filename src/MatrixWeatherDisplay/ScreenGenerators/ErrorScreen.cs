@@ -31,7 +31,7 @@ public class ErrorScreen : IScreenGenerator {
             return Screen.Empty;
         }
 
-        var image = _errorIconLoader.GetIconAsync(ErrorType.NoInternet);
+        Image<Rgb24> image = _errorIconLoader.GetIconAsync(ErrorType.NoInternet);
         return new Screen(image, ScreenTime);
     }
 }

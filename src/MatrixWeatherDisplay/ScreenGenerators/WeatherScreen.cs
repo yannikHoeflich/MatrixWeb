@@ -25,7 +25,7 @@ public class WeatherScreen : IScreenGenerator {
 
 
     public async Task<Screen> GenerateImageAsync() {
-        var currentWeather = await _weather.GetWeatherAsync();
+        WeatherStatus currentWeather = await _weather.GetWeatherAsync();
         Image<Rgb24> icon = _iconLoader.GetIconAsync(currentWeather.Weather);
         return new Screen(icon, ScreenTime);
     }
