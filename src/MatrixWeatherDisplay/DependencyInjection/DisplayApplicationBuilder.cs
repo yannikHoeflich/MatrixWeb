@@ -1,4 +1,5 @@
-﻿using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
+﻿using MatrixWeatherDisplay.Data.Converter;
+using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
@@ -25,6 +26,7 @@ public class DisplayApplicationBuilder {
 
     public void AddDefaultServices() {
         Services.AddSingleton<ConfigService>();
+        Services.AddSingleton<ColorHelper>();
         Services.AddSingleton<SymbolLoader>();
         Services.AddSingleton<SensorService>();
         Services.AddSingleton<RoomHumidityService>();

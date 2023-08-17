@@ -7,6 +7,7 @@ using static OpenWeatherMap.NetClient.Models.Forecast5Days;
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class TimeScreen : IScreenGenerator {
     private readonly SymbolLoader _symbolLoader;
+    private readonly ColorHelper _colorHelper;
 
     public string Name { get; } = "Uhr";
 
@@ -18,8 +19,9 @@ public class TimeScreen : IScreenGenerator {
 
     public bool NeedsInternet => false;
 
-    public TimeScreen(SymbolLoader symbolLoader) {
+    public TimeScreen(SymbolLoader symbolLoader, ColorHelper colorHelper) {
         _symbolLoader = symbolLoader;
+        _colorHelper = colorHelper;
     }
 
     public Task<Screen> GenerateImageAsync() {
@@ -29,8 +31,8 @@ public class TimeScreen : IScreenGenerator {
         int hours = now.Hour;
         int minutes = now.Minute;
 
-        Color colorHour = ColorHelper.MapHour(now.TotalHours());
-        Color colorMinute = ColorHelper.MapMinute(now.MinutesOfHour());
+        Color colorHour = _colorHelper.MapHour(now.TotalHours());
+        Color colorMinute = _colorHelper.MapMinute(now.MinutesOfHour());
 
         _symbolLoader.DrawNumber(image, hours, 2, 0, 4, colorHour);
         _symbolLoader.DrawNumber(image, minutes, 2, 9, 4, colorMinute);

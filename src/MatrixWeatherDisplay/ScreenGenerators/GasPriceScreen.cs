@@ -7,6 +7,7 @@ namespace MatrixWeatherDisplay.ScreenGenerators;
 public class GasPriceScreen : IScreenGenerator {
     private readonly GasPriceService _gasPrices;
     private readonly SymbolLoader _symbolLoader;
+    private readonly ColorHelper _colorHelper;
 
     public string Name { get; } = "Benzin Preis";
 
@@ -18,16 +19,17 @@ public class GasPriceScreen : IScreenGenerator {
 
     public bool NeedsInternet => true;
 
-    public GasPriceScreen(GasPriceService gasPrices, SymbolLoader symbolLoader) {
+    public GasPriceScreen(GasPriceService gasPrices, SymbolLoader symbolLoader, ColorHelper colorHelper) {
         _gasPrices = gasPrices;
         _symbolLoader = symbolLoader;
+        _colorHelper = colorHelper;
     }
 
     public async Task<Screen> GenerateImageAsync() {
         double price = await _gasPrices.GetCheapestPriceAsync(51.954607, 8.668700);
         int priceCents = (int)(price * 100);
 
-        Color color = ColorHelper.MapGasPrice(price, _gasPrices.MinPrice, _gasPrices.MaxPrice);
+        Color color = _colorHelper.MapGasPrice(price, _gasPrices.MinPrice, _gasPrices.MaxPrice);
 
         var image = new Image<Rgb24>(16, 16);
 

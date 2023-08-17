@@ -8,7 +8,7 @@ namespace MatrixWeatherDisplay.ScreenGenerators;
 public class TemperatureScreen : IScreenGenerator {
     private readonly SymbolLoader _symbolLoader;
     private readonly WeatherService _weather;
-
+    private readonly ColorHelper _colorHelper;
 
     public string Name { get; } = "außen Temperatur";
 
@@ -20,16 +20,17 @@ public class TemperatureScreen : IScreenGenerator {
 
     public bool NeedsInternet => true;
 
-    public TemperatureScreen(SymbolLoader symbolLoader, WeatherService weatherService) {
+    public TemperatureScreen(SymbolLoader symbolLoader, WeatherService weatherService, ColorHelper colorHelper) {
         _symbolLoader = symbolLoader;
         _weather = weatherService;
+        _colorHelper = colorHelper;
     }
 
     public async Task<Screen> GenerateImageAsync() {
         var weather = await _weather.GetWeatherAsync();
         int temp = (int)Math.Round(weather.Temperature);
 
-        Color color = ColorHelper.MapTemperature(temp);
+        Color color = _colorHelper.MapTemperature(temp);
 
         var image = GenerateTemperatureScreen(16, 16, temp, color);
         return new Screen(image, ScreenTime);
