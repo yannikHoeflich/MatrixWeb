@@ -2,6 +2,9 @@
 
 namespace MatrixWeatherDisplay.Data.Converter;
 public class ColorHelper: IInitializable {
+    private const string s_configName = "colors";
+    private const string s_badHumidityDifferenceName = "bad-humidity-difference";
+
     private readonly ConfigService _configService;
     private double _badHumidityDifference = 10;
 
@@ -12,13 +15,15 @@ public class ColorHelper: IInitializable {
     }
 
     public void Init() {
-        var config = _configService.GetConfig("color-config");
+        var config = _configService.GetConfig(s_configName);
         if(config is null) {
             return;
         }
 
-        if(config.TryGetDouble("bad-humidity-difference", out double badHumidityDifference)) {
+        if(config.TryGetDouble(s_badHumidityDifferenceName, out double badHumidityDifference)) {
             _badHumidityDifference = badHumidityDifference;
+        } else {
+            config.Set(s_badHumidityDifferenceName, _badHumidityDifference);
         }
     }
 

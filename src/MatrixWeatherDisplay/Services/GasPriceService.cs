@@ -8,9 +8,13 @@ using Tankerkoenig.Net.Results;
 
 namespace MatrixWeatherDisplay.Services;
 public partial class GasPriceService : IInitializable {
+    private const string s_searchRadiusName = "search-radius";
+    private const string s_defaultDaysToSaveName = "days-to-save";
+
     private const int s_defaultDaysToSave = 14;
 
     private int _daysToSave = s_defaultDaysToSave;
+    private int _searchRadius = 3;
 
     private readonly ConfigService _configService;
 
@@ -22,7 +26,7 @@ public partial class GasPriceService : IInitializable {
 
     private readonly ILogger _logger = Logger.Create<GasPriceService>();
 
-    private MinMax[] _minMaxValues = new MinMax[s_defaultDaysToSave];
+    private MinMax[] _minMaxValues;
 
     public double MaxPrice => _minMaxValues.Where(x => x != default).Max(x => x.Max);
     public double MinPrice => _minMaxValues.Where(x => x != default).Min(x => x.Min);
@@ -31,6 +35,7 @@ public partial class GasPriceService : IInitializable {
 
     public GasPriceService(ConfigService configService) {
         _configService = configService;
+        _minMaxValues = new MinMax[_daysToSave];
     }
 
     public void Init() {
@@ -41,9 +46,17 @@ public partial class GasPriceService : IInitializable {
             return;
         }
 
-        if (config.TryGetInt("days-to-save", out int daysToSave)) {
+        if (config.TryGetInt(s_defaultDaysToSaveName, out int daysToSave)) {
             _daysToSave = daysToSave;
             _minMaxValues = new MinMax[_daysToSave];
+        } else {
+            config.Set(s_defaultDaysToSaveName, _daysToSave);
+        }
+
+        if(config.TryGetInt(s_searchRadiusName, out int radius)) {
+            _searchRadius = radius;
+        } else {
+            config.Set(s_searchRadiusName, _searchRadius);
         }
 
         _client = new TankerkoenigClient(apiKey);
@@ -52,7 +65,7 @@ public partial class GasPriceService : IInitializable {
 
     private async Task UpdatePrice(double lat, double lon) {
         _logger.LogDebug("Updating Gas Price");
-        Result<IReadOnlyList<Station>> stationsResult = await _client.ListStationsAsync(lat, lon, 3);
+        Result<IReadOnlyList<Station>> stationsResult = await _client.ListStationsAsync(lat, lon, _searchRadius);
         if (!stationsResult.TryGetValue(out IReadOnlyList<Station>? stations) || stations is null) {
             return;
         }

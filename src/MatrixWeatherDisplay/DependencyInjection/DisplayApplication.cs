@@ -51,6 +51,7 @@ public partial class DisplayApplication {
         if (sensorService is not null)
             _ = sensorService.ScanAsync();
 
+        await configService.SaveAsync();
     }
 
     private void Init<T>() where T : IInitializable => Init<T>(service => service.Init());

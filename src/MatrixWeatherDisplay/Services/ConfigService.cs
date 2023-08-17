@@ -34,4 +34,16 @@ public class ConfigService{
 
         return config;
     }
+
+    public Config CreateConfig(string name) { 
+        var newConfig = new Config();
+        _configs.Add(name, newConfig);
+
+        return newConfig;
+    }
+
+    public async Task SaveAsync() {
+        FileStream fileStream = File.Create(s_configFile);
+        await JsonSerializer.SerializeAsync(fileStream, _configs);
+    }
 }

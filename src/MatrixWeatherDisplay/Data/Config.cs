@@ -34,6 +34,9 @@ public class Config : IDictionary<string, string> {
         return _data.ContainsKey(key) && func(_data[key], CultureInfo.InvariantCulture, out value);
     }
 
+    public void Set(string key, object value) {
+        _data[key] = value.ToString();
+    }
 
 
     ICollection<string> IDictionary<string, string>.Keys => ((IDictionary<string, string>)_data).Keys;
