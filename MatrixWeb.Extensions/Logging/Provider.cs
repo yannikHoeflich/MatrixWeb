@@ -8,10 +8,9 @@ public class Provider : ILoggerProvider {
 
     private readonly ConcurrentDictionary<string, Logger> _loggers =  new(StringComparer.OrdinalIgnoreCase);
     public ILogger CreateLogger(string categoryName) {
-        if(_disposedValue)
-            throw new ObjectDisposedException(GetType().FullName);
-
-        return _loggers.GetOrAdd(categoryName, name => new Logger(name));
+        return _disposedValue
+            ? throw new ObjectDisposedException(GetType().FullName)
+            : (ILogger)_loggers.GetOrAdd(categoryName, name => new Logger(name));
     }
 
     public ILogger CreateLogger<T>() => CreateLogger(typeof(T).Name);

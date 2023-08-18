@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using System;
 
-namespace MatrixWeatherDisplay.Services;
-internal interface IInitializable : IEnableable{
-    public void Init();
+namespace MatrixWeb.Extensions;
+public interface IEnableable {
+    public bool IsEnabled { get; }
 }

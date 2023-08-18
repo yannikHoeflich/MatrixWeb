@@ -1,4 +1,7 @@
 ﻿using MatrixWeatherDisplay.Services;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Data.Converter;
 public class ColorHelper: IInitializable {

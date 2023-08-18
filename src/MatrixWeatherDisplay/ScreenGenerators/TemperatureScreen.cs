@@ -3,6 +3,8 @@ using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.Weather;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class TemperatureScreen : IScreenGenerator {
@@ -18,7 +20,7 @@ public class TemperatureScreen : IScreenGenerator {
 
     public bool IsEnabled => _weather.IsEnabled;
 
-    public bool NeedsInternet => true;
+    public bool RequiresInternet => true;
 
     public TemperatureScreen(SymbolLoader symbolLoader, WeatherService weatherService, ColorHelper colorHelper) {
         _symbolLoader = symbolLoader;

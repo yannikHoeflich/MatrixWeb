@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 
 using MatrixWeatherDisplay.Data.Extensions;
+using MatrixWeb.Extensions;
 
 namespace MatrixWeatherDisplay.Services.Weather;
 public abstract class CachedWeatherClient : IInitializable {

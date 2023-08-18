@@ -4,12 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 using MatrixWeatherDisplay.Data.Converter;
+using MatrixWeb.Extensions.Services;
 using SixLabors.ImageSharp;
 using System;
 
 namespace MatrixWeatherDisplay.UnitTests;
 public class ColorHelperTests {
-    private ColorHelper _colorHelper = new ColorHelper(new Services.ConfigService());
+    private ColorHelper _colorHelper = new(new ConfigService());
     private Color _color;
 
     [Fact]

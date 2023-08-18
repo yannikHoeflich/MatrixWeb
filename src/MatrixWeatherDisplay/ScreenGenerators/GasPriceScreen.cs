@@ -2,6 +2,8 @@
 using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class GasPriceScreen : IScreenGenerator {
@@ -17,7 +19,7 @@ public class GasPriceScreen : IScreenGenerator {
 
     public bool IsEnabled => _gasPrices.IsEnabled;
 
-    public bool NeedsInternet => true;
+    public bool RequiresInternet => true;
 
     public GasPriceScreen(GasPriceService gasPrices, SymbolLoader symbolLoader, ColorHelper colorHelper) {
         _gasPrices = gasPrices;

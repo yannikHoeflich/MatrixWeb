@@ -1,6 +1,7 @@
-﻿namespace MatrixWeatherDisplay.Services.IconLoader;
-public abstract class IconLoader<T> : IAsyncInitializable where T : struct
-{
+﻿using MatrixWeb.Extensions;
+
+namespace MatrixWeb.Extensions.Services.Loader;
+public abstract class IconLoader<T> : IAsyncInitializable where T : struct {
     protected abstract string p_directory { get; }
 
     protected abstract Dictionary<string, T> p_files { get; }
@@ -11,10 +12,8 @@ public abstract class IconLoader<T> : IAsyncInitializable where T : struct
 
     public Task InitAsync() => LoadGifsAsync();
 
-    public async Task LoadGifsAsync()
-    {
-        foreach (KeyValuePair<string, T> item in p_files)
-        {
+    public async Task LoadGifsAsync() {
+        foreach (KeyValuePair<string, T> item in p_files) {
             string file = item.Key;
             T name = item.Value;
 

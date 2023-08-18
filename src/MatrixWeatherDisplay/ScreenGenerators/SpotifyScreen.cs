@@ -2,6 +2,8 @@
 using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 using SpotifyAPI.Web;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
@@ -16,7 +18,7 @@ public class SpotifyScreen : IScreenGenerator {
 
     public bool IsEnabled => _spotify.IsEnabled;
 
-    public bool NeedsInternet => true;
+    public bool RequiresInternet => true;
 
     public SpotifyScreen(SpotifyService spotify) {
         _spotify = spotify;

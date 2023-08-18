@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Server.IIS.Core;
 
 namespace MatrixWeb;
-public static class Extensions {
+public static class ExtensionsClass {
     public static bool ToDouble(this ChangeEventArgs eventArgs, out double value) {
         value = 0;
 

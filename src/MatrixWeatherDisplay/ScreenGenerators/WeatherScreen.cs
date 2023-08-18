@@ -1,6 +1,8 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.Weather;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 
 namespace MatrixWeatherDisplay.Screens;
 public class WeatherScreen : IScreenGenerator {
@@ -16,7 +18,7 @@ public class WeatherScreen : IScreenGenerator {
 
     public bool IsEnabled => _weather.IsEnabled;
 
-    public bool NeedsInternet => true;
+    public bool RequiresInternet => true;
 
     public WeatherScreen(WeatherService weatherService, WeatherIconLoader iconLoader) {
         _weather = weatherService;

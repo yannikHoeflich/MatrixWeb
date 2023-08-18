@@ -1,4 +1,6 @@
-﻿using MatrixWeatherDisplay.Data.Converter;
+﻿using System.Reflection;
+
+using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
@@ -6,6 +8,8 @@ using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -42,12 +46,24 @@ public class DisplayApplicationBuilder {
         Services.AddSingleton<ErrorIconLoader>();
     }
 
+    public void AddExtensions() {
+
+    }
+
     public DisplayApplication Build() {
         ServiceProvider serviceProvider = Services.BuildServiceProvider();
 
         IEnumerable<IScreenGenerator> screenGenerators = serviceProvider.GetServices<IScreenGenerator>();
         var screenGeneratorProvider = new ScreenGeneratorProvider(screenGenerators.ToArray());
 
-        return new DisplayApplication(serviceProvider, screenGeneratorProvider);
+        Type[] initServices = Services.GetServiceTypesWithInterface<IInitializable>().ToArray();
+        Type[] initAsyncServices = Services.GetServiceTypesWithInterface<IInitializable>().ToArray();
+
+        var app = new DisplayApplication(serviceProvider, screenGeneratorProvider) {
+            Initializables = initServices,
+            AsyncInitializables = initAsyncServices
+        };
+
+        return app;
     }
 }

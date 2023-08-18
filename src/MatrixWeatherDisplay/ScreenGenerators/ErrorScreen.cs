@@ -7,6 +7,8 @@ using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 using System;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
@@ -18,7 +20,7 @@ public class ErrorScreen : IScreenGenerator {
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(5);
     public bool IsEnabled { get; } = true;
 
-    public bool NeedsInternet => false;
+    public bool RequiresInternet => false;
 
     public ErrorScreen(InternetService internetService, ErrorIconLoader errorIconLoader) {
         _internetService = internetService;

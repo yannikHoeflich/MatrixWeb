@@ -23,7 +23,7 @@ public static class Program {
 
         DisplayApplication displayApp = displayBuilder.Build();
 
-        await displayApp.InitDefaultServices();
+        await displayApp.InitDefaultServicesAsync();
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSingleton(_ => new DisplayService(displayApp));

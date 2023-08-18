@@ -1,4 +1,5 @@
 ﻿using MatrixWeatherDisplay.Screens;
+using MatrixWeb.Extensions;
 
 namespace MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 internal class ScreenGeneratorProvider : IScreenGeneratorProvider {

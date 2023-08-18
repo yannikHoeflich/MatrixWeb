@@ -9,6 +9,9 @@ using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -18,6 +21,9 @@ public partial class DisplayApplication {
     public IScreenGeneratorProvider ScreenGenerators { get; }
 
     public RedSettings? RedManager { get; private set; }
+
+    internal Type[]? Initializables { get; init; }
+    internal Type[]? AsyncInitializables { get; init; }
 
     private readonly ILogger _logger = Logger.Create<DisplayApplication>();
 
@@ -31,21 +37,26 @@ public partial class DisplayApplication {
         ScreenGenerators = screenGeneratorProvider;
     }
 
-    public async Task InitDefaultServices() {
+    public async Task InitDefaultServicesAsync() {
         ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
         await configService.InitAsync();
 
         BrightnessService autoBrightnessService = Services.GetService<BrightnessService>() ?? throw new InvalidOperationException("The Service of type 'AutoBrightnessService' must be registered");
         RedManager = new RedSettings(autoBrightnessService);
 
-        await InitAsync<ErrorIconLoader>();
-        await InitAsync<WeatherIconLoader>();
-        await InitAsync<SymbolLoader>();
+        var serviceInitializer = new ServiceInitializer(Services);
 
-        Init<OpenWeatherMapClient>();
-        Init<WeatherApiClient>();
-        Init<SpotifyService>();
-        Init<GasPriceService>();
+        if (Initializables is not null) {
+            foreach (Type serviceType in Initializables) {
+                serviceInitializer.Init(serviceType);
+            }
+        }
+
+        if (AsyncInitializables is not null) {
+            foreach (Type serviceType in AsyncInitializables.Where(x => x != typeof(ConfigService))) {
+                await serviceInitializer.InitAsync(serviceType);
+            }
+        }
 
         SensorService? sensorService = Services.GetService<SensorService>();
         if (sensorService is not null)
@@ -54,30 +65,7 @@ public partial class DisplayApplication {
         await configService.SaveAsync();
     }
 
-    private void Init<T>() where T : IInitializable => Init<T>(service => service.Init());
-    private void Init<T>(Action<T> action) {
-        T? service = Services.GetService<T>();
-        if(service is null) {
-            return;
-        }
-
-        action(service);
-    }
-
-
-    private async Task InitAsync<T>() where T : IAsyncInitializable => await InitAsync<T>(service => service.InitAsync());
-    private async Task InitAsync<T>(Func<T, Task> action) {
-        T? service = Services.GetService<T>();
-        if (service is null) {
-            return;
-        }
-
-        await action(service);
-    }
-
-
-
-    public async Task Run() {
+    public async Task RunAsync() {
         if (_running) {
             _logger.LogInformation("Already running");
             return;
@@ -97,58 +85,56 @@ public partial class DisplayApplication {
         ScreenGenerators.Reset();
 
         while (_shouldRun) {
-            await ShowNextScreenAndWait(deviceService, internetService);
+            await ShowNextScreenAndWaitAsync(deviceService, internetService);
         }
 
         _running = false;
     }
 
-    private async Task ShowNextScreenAndWait(DeviceService deviceService, InternetService? internetService) {
+    private async Task ShowNextScreenAndWaitAsync(DeviceService deviceService, InternetService? internetService) {
         ByteScreen? screen = await GetNextScreenAsync(deviceService, internetService);
 
         if (screen is null) {
             return;
         }
 
+        await SendScreenAsync(deviceService, screen);
+        await Extensions.SleepUntilAsync(_waitUntil, () => !_shouldRun);
+    }
+
+    private async Task SendScreenAsync(DeviceService deviceService, ByteScreen screen) {
         _logger.LogTrace("sending gif");
         await deviceService.SendGifAsync(screen.Image);
         _logger.LogTrace("waiting {screen time}ms", screen.ScreenTime.TotalMilliseconds);
         SetWaitUntil(screen.ScreenTime);
-        await Extensions.SleepUntil(_waitUntil, () => !_shouldRun);
     }
 
     private async Task<ByteScreen?> GetNextScreenAsync(DeviceService deviceService, InternetService? internetService) {
         int skips = 0;
         IScreenGenerator? screenGenerator = null;
         while (_shouldRun) {
-            await LogIfSkippedLast(skips, screenGenerator);
+            await LogIfSkippedLastAsync(skips, screenGenerator);
 
             screenGenerator = ScreenGenerators.GetNextScreenGenerator();
             _logger.LogTrace("Trying to show '{screen}'", screenGenerator?.Name);
 
-            if (screenGenerator is null || screenGenerator.ScreenTime <= TimeSpan.Zero || !screenGenerator.IsEnabled || await HasInternetError(screenGenerator, internetService)) {
+            if (await ShouldScreenGeneratorSkipAsync(internetService, screenGenerator)) {
                 skips++;
                 continue;
             }
 
             ByteScreen? screen;
 
-            bool turnRed = RedManager is not null &&  RedManager.ShouldBeRed(deviceService.Brightness);
+            bool turnRed = RedManager is not null && RedManager.ShouldBeRed(deviceService.Brightness);
             try {
-                screen = await screenGenerator.GenerateScreenAsync(turnRed);
+                Screen rawScreen = await screenGenerator.GenerateImageAsync();
+                screen = await ByteScreen.FromScreenAsync(rawScreen, turnRed);
             } catch (Exception ex) {
-                _logger.LogError("Error creating next screen {ex}", ex);
-                skips++;
-                continue;
+                _logger.LogError("Error creating next screen {ex}", ex); 
+                screen = null;
             }
 
-            if (screen is null) {
-                _logger.LogWarning("The screen generation timed out. Check your internet connection");
-                skips++;
-                continue;
-            }
-
-            if (screen.ScreenTime <= TimeSpan.Zero) {
+            if (screen is null || screen.ScreenTime <= TimeSpan.Zero) {
                 skips++;
                 continue;
             }
@@ -159,28 +145,11 @@ public partial class DisplayApplication {
         return null;
     }
 
-    private async Task<bool> HasInternetError(IScreenGenerator screenGenerator, InternetService? internetService) {
-        return internetService is not null && 
-               screenGenerator.NeedsInternet && 
-               !await internetService.HasInternetConnection();
-    }
-
-    private async Task LogIfSkippedLast(int skips, IScreenGenerator? screenGenerator) {
-        if (skips > 0) {
-            _logger.LogDebug("Skipping screen '{screenName}'", screenGenerator?.GetType().Name);
-        }
-
-        if (skips > ScreenGenerators.ScreenGeneratorCount) {
-            _logger.LogInformation("Skipped all screen generators, waiting 30 Seconds to retry");
-            await Extensions.Sleep(TimeSpan.FromSeconds(30), () => !_shouldRun);
-        }
-    }
-
     public async Task StopAsync() {
         _logger.LogInformation($"Stopping");
         _shouldRun = false;
 
-        await Extensions.Sleep(TimeSpan.FromSeconds(1), () => !_running);
+        await Extensions.SleepAsync(TimeSpan.FromSeconds(1), () => !_running);
 
         if (_running) {
             _logger.LogError($"Didn't stop after 1 Seconds.");
@@ -190,8 +159,8 @@ public partial class DisplayApplication {
         }
     }
 
-    public async Task Inject(Screen screen) {
-        ByteScreen byteScreen = await ByteScreen.FromScreenAsync(screen);
+    public async Task InjectAsync(Screen screen) {
+        ByteScreen byteScreen = await ByteScreen.FromScreenAsync(screen, false);
 
         DeviceService? deviceService = Services.GetService<DeviceService>();
 
@@ -199,8 +168,7 @@ public partial class DisplayApplication {
             return;
         }
 
-        await deviceService.SendGifAsync(byteScreen.Image);
-        SetWaitUntil(byteScreen.ScreenTime);
+        await SendScreenAsync(deviceService, byteScreen);
     }
 
     private void SetWaitUntil(TimeSpan timeSpan) => _waitUntil.Value = TicksTime.Now + TicksTimeSpan.FromTimeSpan(timeSpan);

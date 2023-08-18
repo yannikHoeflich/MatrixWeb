@@ -1,4 +1,6 @@
-﻿namespace MatrixWeatherDisplay.Services;
+﻿using MatrixWeb.Extensions;
+
+namespace MatrixWeatherDisplay.Services;
 public class SymbolLoader : IAsyncInitializable{
     private const string s_directory = "Icons/Symbols";
 

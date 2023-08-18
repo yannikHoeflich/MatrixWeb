@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using MatrixWeatherDisplay.Data;
+using MatrixWeb.Extensions.Services.Loader;
 using System;
 
 namespace MatrixWeatherDisplay.Services.IconLoader;

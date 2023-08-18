@@ -1,6 +1,7 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.DependencyInjection;
 using MatrixWeatherDisplay.Logging;
+using MatrixWeb.Extensions.Data;
 using static MatrixWeatherDisplay.DependencyInjection.DisplayApplication;
 
 namespace MatrixWeb.Services;
@@ -15,14 +16,14 @@ public partial class DisplayService {
     }
 
     public void Start() {
-        var displayThread = new Thread(async () => await StartUpThread());
+        var displayThread = new Thread(async () => await StartUpThreadAsync());
         displayThread.Start();
     }
 
-    private async Task StartUpThread() {
+    private async Task StartUpThreadAsync() {
         ILogger logger = Logger.Create<DisplayService>();
         try {
-            await _application.Run();
+            await _application.RunAsync();
         } catch (Exception ex) {
             logger.LogCritical("Exception: {ex}", ex.ToString());
         }
@@ -36,7 +37,7 @@ public partial class DisplayService {
         Start();
     }
 
-    public async Task Inject(Screen screen) => await _application.Inject(screen);
+    public async Task InjectAsync(Screen screen) => await _application.InjectAsync(screen);
 
     public void StopInjection() => _application.StopInjection();
 }

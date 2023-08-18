@@ -101,4 +101,8 @@
     <Folder Include="Icons\Errors\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\MatrixWeb.Extensions\MatrixWeb.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>

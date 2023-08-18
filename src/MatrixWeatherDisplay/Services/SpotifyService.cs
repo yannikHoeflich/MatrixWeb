@@ -1,5 +1,8 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Logging;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 
@@ -81,7 +84,7 @@ public class SpotifyService : IInitializable {
         }
 
         Func<Task<CurrentlyPlaying?>> requestFunc = async () => await _client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
-        CurrentlyPlaying? response = await Extensions.Retry(requestFunc, 5, _logger);
+        CurrentlyPlaying? response = await Extensions.RetryAsync(requestFunc, 5, _logger);
         return response;
     }
 

@@ -1,5 +1,6 @@
 ﻿using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.Data.Extensions;
+using MatrixWeb.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -36,20 +37,20 @@ public static class Extensions {
         to.AddSingleton(_ => service);
     }
 
-    public static async Task Sleep(TimeSpan timeSpan, Func<bool> endFunc) {
+    public static async Task SleepAsync(TimeSpan timeSpan, Func<bool> endFunc) {
         TicksTime ticks = TicksTime.Now;
         var ticksToWait = TicksTimeSpan.FromTimeSpan(timeSpan);
 
-        await SleepUntil(ticks + ticksToWait, endFunc);
+        await SleepUntilAsync(ticks + ticksToWait, endFunc);
     }
 
-    public static async Task SleepUntil(Wrapped<TicksTime> tickCount, Func<bool> endFunc) {
+    public static async Task SleepUntilAsync(Wrapped<TicksTime> tickCount, Func<bool> endFunc) {
         while (TicksTime.Now < tickCount && !endFunc()) {
             await Task.Delay(1);
         }
     }
 
-    public static async Task<bool> TimeoutAfter(this Task task, TimeSpan timeout) {
+    public static async Task<bool> TimeoutAfterAsync(this Task task, TimeSpan timeout) {
         using var timeoutCancellationTokenSource = new CancellationTokenSource();
         Task completedTask = await Task.WhenAny(task, Task.Delay(timeout, timeoutCancellationTokenSource.Token));
         if (completedTask == task) {
@@ -61,7 +62,7 @@ public static class Extensions {
         }
     }
 
-    public static async Task<TResult?> TimeoutAfter<TResult>(this Task<TResult> task, TimeSpan timeout) {
+    public static async Task<TResult?> TimeoutAfterAsync<TResult>(this Task<TResult> task, TimeSpan timeout) {
 
         using var timeoutCancellationTokenSource = new CancellationTokenSource();
         Task completedTask = await Task.WhenAny(task, Task.Delay(timeout, timeoutCancellationTokenSource.Token));
@@ -73,7 +74,7 @@ public static class Extensions {
         }
     }
 
-    public static async Task<TResult?> Retry<TResult>(Func<Task<TResult?>> createTask, int maxRetries, ILogger logger) {
+    public static async Task<TResult?> RetryAsync<TResult>(Func<Task<TResult?>> createTask, int maxRetries, ILogger logger) {
         TResult? response = default;
         Exception? exception = null;
         int retries = 0;
@@ -101,4 +102,7 @@ public static class Extensions {
 
         return response;
     }
+
+    public static IEnumerable<Type> GetServiceTypesWithInterface<T>(this IServiceCollection services)
+        => services.OfType<ServiceDescriptor>().Select(x => x.ImplementationType).OfType<Type>().Where(x => typeof(T).IsAssignableFrom(x));
 }

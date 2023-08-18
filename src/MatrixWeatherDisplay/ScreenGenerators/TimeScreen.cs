@@ -2,6 +2,8 @@
 using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 using static OpenWeatherMap.NetClient.Models.Forecast5Days;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
@@ -17,7 +19,7 @@ public class TimeScreen : IScreenGenerator {
 
     public bool IsEnabled { get; } = true;
 
-    public bool NeedsInternet => false;
+    public bool RequiresInternet => false;
 
     public TimeScreen(SymbolLoader symbolLoader, ColorHelper colorHelper) {
         _symbolLoader = symbolLoader;

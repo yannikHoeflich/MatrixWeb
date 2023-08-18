@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using System;
 
-namespace MatrixWeatherDisplay.Services;
-internal interface IAsyncInitializable {
+namespace MatrixWeb.Extensions;
+public interface IAsyncInitializable {
     public Task InitAsync();
 }

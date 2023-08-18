@@ -1,4 +1,5 @@
 ﻿using MatrixWeatherDisplay.Data;
+using MatrixWeb.Extensions.Services.Loader;
 
 namespace MatrixWeatherDisplay.Services.IconLoader;
 public class WeatherIconLoader : IconLoader<WeatherType>

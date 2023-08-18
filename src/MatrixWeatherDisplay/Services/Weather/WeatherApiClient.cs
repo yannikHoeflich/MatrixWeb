@@ -1,5 +1,8 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Logging;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
 using NETWeatherAPI;
 using NETWeatherAPI.Entities;

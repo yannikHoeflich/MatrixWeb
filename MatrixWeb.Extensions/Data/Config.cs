@@ -6,10 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Newtonsoft.Json.Linq;
 using System;
 
-namespace MatrixWeatherDisplay.Data;
+namespace MatrixWeb.Extensions.Data;
 public class Config : IDictionary<string, string?> {
     private delegate bool DataGetter<T>(string input, IFormatProvider? formatProvider, out T output);
     private readonly Dictionary<string, string?> _data = new();
@@ -34,9 +33,7 @@ public class Config : IDictionary<string, string?> {
         return _data.ContainsKey(key) && _data[key] is not null && func(_data[key], CultureInfo.InvariantCulture, out value);
     }
 
-    public void Set(string key, object value) {
-        _data[key] = value.ToString();
-    }
+    public void Set(string key, object value) => _data[key] = value.ToString();
 
 
     ICollection<string> IDictionary<string, string?>.Keys => ((IDictionary<string, string?>)_data).Keys;

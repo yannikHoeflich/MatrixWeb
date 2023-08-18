@@ -1,5 +1,7 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Logging;
+using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
 using OpenWeatherMap.NetClient.Models;
 
@@ -45,7 +47,7 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
 
         Func<Task<CurrentWeather?>> getWeatherFunction = () => _client.CurrentWeather.GetByCoordinatesAsync(_latitude, _longitude);
-        CurrentWeather? response = await Extensions.Retry(getWeatherFunction, 5, _logger);
+        CurrentWeather? response = await Extensions.RetryAsync(getWeatherFunction, 5, _logger);
 
         if(response is null ) {
             return default;

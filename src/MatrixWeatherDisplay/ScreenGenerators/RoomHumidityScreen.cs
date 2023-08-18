@@ -4,6 +4,8 @@ using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
+using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class RoomHumidityScreen : IScreenGenerator {
@@ -20,7 +22,7 @@ public class RoomHumidityScreen : IScreenGenerator {
 
     public bool IsEnabled => _weatherService.IsEnabled && _roomHumidityService.IsEnabled;
 
-    public bool NeedsInternet => true;
+    public bool RequiresInternet => true;
 
     public RoomHumidityScreen(RoomHumidityService roomHumidityService, SymbolLoader symbolLoader, WeatherService weatherService, ColorHelper colorHelper) {
         _roomHumidityService = roomHumidityService;

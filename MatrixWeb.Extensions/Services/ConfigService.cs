@@ -5,10 +5,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using MatrixWeatherDisplay.Data;
+using MatrixWeb.Extensions.Data;
 using System;
 
-namespace MatrixWeatherDisplay.Services;
+namespace MatrixWeb.Extensions.Services;
 public class ConfigService{
     private const string s_configFile = "config.json";
 
@@ -26,7 +26,7 @@ public class ConfigService{
     }
 
     public Config? GetConfig(string name) {
-        if(_configs is null) {
+        if (_configs is null) {
             return null;
         }
 
