@@ -44,7 +44,7 @@ public class InternetService : IInitializable, IService {
         if(config.TryGetDouble(s_updateFrequencyName, out double checkFrequency)) {
             _updateFrequency = TicksTimeSpan.FromTimeSpan(TimeSpan.FromMinutes(checkFrequency));
         } else {
-            config.Set(s_updateFrequencyName, _updateFrequency);
+            config.Set(s_updateFrequencyName, _updateFrequency.Minutes);
         }
 
         if(config.TryGetInt(s_timeoutName, out int timeout)) {
@@ -56,7 +56,7 @@ public class InternetService : IInitializable, IService {
         if(config.TryGetString(s_hostToPingName, out string? hostToPing) && hostToPing is not null) {
             _hostToPing = hostToPing;
         } else {
-            config.Set(s_hostToPingName,  _hostToPing);
+            config.Set(s_hostToPingName, _hostToPing);
         }
     }
 

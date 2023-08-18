@@ -20,7 +20,9 @@ public class ConfigService: IService{
         }
 
         using FileStream stream = File.OpenRead(s_configFile);
-        _configs = await JsonSerializer.DeserializeAsync<Dictionary<string, Config>>(stream);
+        if (stream.Length > 0) {
+            _configs = await JsonSerializer.DeserializeAsync<Dictionary<string, Config>>(stream);
+        }
 
         _configs ??= new Dictionary<string, Config>();
     }
@@ -46,7 +48,7 @@ public class ConfigService: IService{
     }
 
     public async Task SaveAsync() {
-        FileStream fileStream = File.Create(s_configFile);
+        using FileStream fileStream = File.Create(s_configFile);
         await JsonSerializer.SerializeAsync(fileStream, _configs, new JsonSerializerOptions() { WriteIndented = true});
     }
 }

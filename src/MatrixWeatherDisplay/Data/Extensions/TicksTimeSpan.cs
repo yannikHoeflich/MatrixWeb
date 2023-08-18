@@ -1,6 +1,10 @@
 ﻿namespace MatrixWeatherDisplay.Data.Extensions;
 public readonly struct TicksTimeSpan : IEquatable<TicksTimeSpan> {
     public long Ticks { get; }
+    public double Seconds => Ticks / 1000.0;
+    public double Minutes => Seconds / 60;
+    public double Hours => Seconds / 60;
+    public double Days => Seconds / 24;
 
     public static explicit operator TimeSpan(TicksTimeSpan ticksTime) => TimeSpan.FromMilliseconds(ticksTime.Ticks);
     public static explicit operator TicksTimeSpan(TimeSpan timespan) => FromTimeSpan(timespan);
@@ -29,4 +33,5 @@ public readonly struct TicksTimeSpan : IEquatable<TicksTimeSpan> {
     public override int GetHashCode() => HashCode.Combine(Ticks);
 
     public static TicksTimeSpan FromTimeSpan(TimeSpan timeSpan) => new((long)timeSpan.TotalMilliseconds);
+    public override string? ToString() => Ticks.ToString();
 }
