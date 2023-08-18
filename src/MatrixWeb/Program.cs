@@ -21,6 +21,8 @@ public static class Program {
         displayBuilder.AddScreenGenerator<SpotifyScreen>();
         displayBuilder.AddScreenGenerator<ErrorScreen>();
 
+        displayBuilder.AddExtensions();
+
         DisplayApplication displayApp = displayBuilder.Build();
 
         await displayApp.InitDefaultServicesAsync();

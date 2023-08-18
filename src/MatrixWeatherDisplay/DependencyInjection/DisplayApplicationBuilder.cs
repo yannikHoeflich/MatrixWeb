@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace MatrixWeatherDisplay.DependencyInjection;
-public class DisplayApplicationBuilder {
+public partial class DisplayApplicationBuilder {
     public IServiceCollection Services { get; private set; }
 
     public DisplayApplicationBuilder() {
@@ -27,6 +27,13 @@ public class DisplayApplicationBuilder {
     }
 
     public void AddScreenGenerator<T>() where T : class, IScreenGenerator => Services.AddSingleton<IScreenGenerator, T>();
+    public void AddScreenGenerator(Type t) {
+        if (!typeof(IScreenGenerator).IsAssignableFrom(t) || !t.IsClass) {
+            throw new InvalidOperationException("Every screen generator must implement the IScreenGenerator interface and must be a class.");
+        }
+
+        Services.AddSingleton(typeof(IScreenGenerator), t);
+    }
 
     public void AddDefaultServices() {
         Services.AddSingleton<ConfigService>();
@@ -44,10 +51,6 @@ public class DisplayApplicationBuilder {
 
         Services.AddSingleton<WeatherIconLoader>();
         Services.AddSingleton<ErrorIconLoader>();
-    }
-
-    public void AddExtensions() {
-
     }
 
     public DisplayApplication Build() {
