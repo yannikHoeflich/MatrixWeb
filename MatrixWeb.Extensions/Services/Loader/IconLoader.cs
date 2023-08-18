@@ -1,7 +1,7 @@
 ﻿using MatrixWeb.Extensions;
 
 namespace MatrixWeb.Extensions.Services.Loader;
-public abstract class IconLoader<T> : IAsyncInitializable where T : struct {
+public abstract class IconLoader<T> : IAsyncInitializable, IService where T : struct {
     protected abstract string p_directory { get; }
 
     protected abstract Dictionary<string, T> p_files { get; }

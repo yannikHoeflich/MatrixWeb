@@ -10,7 +10,7 @@ using Tankerkoenig.Net.Data;
 using Tankerkoenig.Net.Results;
 
 namespace MatrixWeatherDisplay.Services;
-public partial class GasPriceService : IInitializable {
+public partial class GasPriceService : IInitializable, IService {
     private const string s_searchRadiusName = "search-radius";
     private const string s_defaultDaysToSaveName = "days-to-save";
 

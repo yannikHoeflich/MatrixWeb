@@ -4,11 +4,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Services;
 using System;
 using USM.Devices;
 
 namespace MatrixWeatherDisplay.Services.SensorServices;
-public interface ISensorService : IEnableable {
+public interface ISensorService : IEnableable, IService {
     public string SensorSuffix { get; }
     public SensorService SensorService { get; }
 }

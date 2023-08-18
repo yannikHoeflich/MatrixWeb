@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
 
+using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Data.Extensions;
 using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Services.Weather;
-public abstract class CachedWeatherClient : IInitializable {
+public abstract class CachedWeatherClient : IInitializable, IService {
     private static readonly TicksTimeSpan s_updateFrequency = TicksTimeSpan.FromTimeSpan(TimeSpan.FromMinutes(5));
 
     private WeatherStatus? _currentWeather;

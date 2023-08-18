@@ -1,11 +1,12 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Logging;
+using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
 using UnitsNet.Units;
 using USM.Devices;
 
 namespace MatrixWeatherDisplay.Services;
-public class DeviceService {
+public class DeviceService: IService {
     private readonly List<MatrixDevice> _devices = new();
 
     public BrightnessPair Brightness { get; private set; }

@@ -13,7 +13,7 @@ using MatrixWeb.Extensions.Services;
 using System;
 
 namespace MatrixWeatherDisplay.Services;
-public class InternetService : IInitializable {
+public class InternetService : IInitializable, IService {
     private const string s_configName = "connection";
     private const string s_updateFrequencyName = "check-frequency";
     private const string s_timeoutName = "timeout";

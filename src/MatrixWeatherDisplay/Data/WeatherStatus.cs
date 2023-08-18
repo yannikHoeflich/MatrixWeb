@@ -1,4 +1,2 @@
-﻿using MatrixWeatherDisplay.Data;
-
-namespace MatrixWeatherDisplay.Services.Weather;
+﻿namespace MatrixWeatherDisplay.Data;
 public record struct WeatherStatus(WeatherType Weather, double Temperature, double Humidity);

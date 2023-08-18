@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 
 namespace MatrixWeatherDisplay.Services;
-public class SpotifyService : IInitializable {
+public class SpotifyService : IInitializable, IService {
     private readonly static ICollection<string> s_spotifyScopes = new List<string> { Scopes.UserReadCurrentlyPlaying };
 
     private readonly ConfigService _configService;

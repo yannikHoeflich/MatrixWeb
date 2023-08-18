@@ -9,7 +9,7 @@ using MatrixWeb.Extensions.Data;
 using System;
 
 namespace MatrixWeb.Extensions.Services;
-public class ConfigService{
+public class ConfigService: IService{
     private const string s_configFile = "config.json";
 
     private Dictionary<string, Config>? _configs;

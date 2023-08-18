@@ -15,16 +15,6 @@ internal class ServiceInitializer {
         _services = services;
     }
 
-    public async Task InitAsync<T>() where T : IAsyncInitializable => await InitAsync<T>(service => service.InitAsync());
-    public async Task InitAsync<T>(Func<T, Task> action) {
-        T? service = _services.GetService<T>();
-        if (service is null) {
-            return;
-        }
-
-        await action(service);
-    }
-
     public void Init<T>() where T : IInitializable => Init<T>(service => service.Init());
     public void Init<T>(Action<T> action) {
         T? service = _services.GetService<T>();
@@ -41,6 +31,16 @@ internal class ServiceInitializer {
         }
 
         service.Init();
+    }
+
+    public async Task InitAsync<T>() where T : IAsyncInitializable => await InitAsync<T>(service => service.InitAsync());
+    public async Task InitAsync<T>(Func<T, Task> action) {
+        T? service = _services.GetService<T>();
+        if (service is null) {
+            return;
+        }
+
+        await action(service);
     }
 
     public async Task InitAsync(Type t) {

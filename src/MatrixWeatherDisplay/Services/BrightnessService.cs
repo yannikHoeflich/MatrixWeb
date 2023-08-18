@@ -1,7 +1,8 @@
 ﻿using MatrixWeatherDisplay.Data;
+using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Services;
-public class BrightnessService {
+public class BrightnessService: IService {
     public double GeneralBrightness { get; set; } = 0.75;
 
     private const double s_a = -(99.0 / 138236000),
