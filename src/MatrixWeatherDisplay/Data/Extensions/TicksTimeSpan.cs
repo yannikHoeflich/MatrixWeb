@@ -3,8 +3,8 @@ public readonly struct TicksTimeSpan : IEquatable<TicksTimeSpan> {
     public long Ticks { get; }
     public double Seconds => Ticks / 1000.0;
     public double Minutes => Seconds / 60;
-    public double Hours => Seconds / 60;
-    public double Days => Seconds / 24;
+    public double Hours => Minutes / 60;
+    public double Days => Hours / 24;
 
     public static explicit operator TimeSpan(TicksTimeSpan ticksTime) => TimeSpan.FromMilliseconds(ticksTime.Ticks);
     public static explicit operator TicksTimeSpan(TimeSpan timespan) => FromTimeSpan(timespan);

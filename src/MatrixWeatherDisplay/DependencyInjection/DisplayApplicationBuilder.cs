@@ -60,7 +60,7 @@ public partial class DisplayApplicationBuilder {
         var screenGeneratorProvider = new ScreenGeneratorProvider(screenGenerators.ToArray());
 
         Type[] initServices = Services.GetServiceTypesWithInterface<IInitializable>().ToArray();
-        Type[] initAsyncServices = Services.GetServiceTypesWithInterface<IInitializable>().ToArray();
+        Type[] initAsyncServices = Services.GetServiceTypesWithInterface<IAsyncInitializable>().ToArray();
 
         var app = new DisplayApplication(serviceProvider, screenGeneratorProvider) {
             Initializables = initServices,

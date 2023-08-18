@@ -27,7 +27,7 @@ internal class ServiceInitializer {
 
     public void Init(Type t) {
         if (_services.GetService(t) is not IInitializable service) {
-            return;
+            throw new InvalidOperationException("The type must implement the 'IInitializable' interface to be initializable by this method");
         }
 
         service.Init();
@@ -45,7 +45,7 @@ internal class ServiceInitializer {
 
     public async Task InitAsync(Type t) {
         if (_services.GetService(t) is not IAsyncInitializable service) {
-            return;
+            throw new InvalidOperationException("The type must implement the 'IAsyncInitializable' interface to be initializable by this method");
         }
 
         await service.InitAsync();

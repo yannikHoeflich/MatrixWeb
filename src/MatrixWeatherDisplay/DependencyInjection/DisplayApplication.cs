@@ -79,7 +79,6 @@ public partial class DisplayApplication {
         DeviceService deviceService = Services.GetService<DeviceService>() ?? throw new InvalidOperationException("The Service of type 'DeviceService' must be registered");
         InternetService? internetService = Services.GetService<InternetService>();
 
-
         await deviceService.ScanAsync();
 
         ScreenGenerators.Reset();
@@ -113,7 +112,9 @@ public partial class DisplayApplication {
         int skips = 0;
         IScreenGenerator? screenGenerator = null;
         while (_shouldRun) {
-            await LogIfSkippedLastAsync(skips, screenGenerator);
+            if(await LogIfSkippedLastAsync(skips, screenGenerator)) {
+                skips = 0;
+            }
 
             screenGenerator = ScreenGenerators.GetNextScreenGenerator();
             _logger.LogTrace("Trying to show '{screen}'", screenGenerator?.Name);

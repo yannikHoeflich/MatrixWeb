@@ -22,7 +22,7 @@ public partial class DisplayApplication {
                !await internetService.HasInternetConnection();
     }
 
-    private async Task LogIfSkippedLastAsync(int skips, IScreenGenerator? screenGenerator) {
+    private async Task<bool> LogIfSkippedLastAsync(int skips, IScreenGenerator? screenGenerator) {
         if (skips > 0) {
             _logger.LogDebug("Skipping screen '{screenName}'", screenGenerator?.GetType().Name);
         }
@@ -30,6 +30,9 @@ public partial class DisplayApplication {
         if (skips > ScreenGenerators.ScreenGeneratorCount) {
             _logger.LogInformation("Skipped all screen generators, waiting 30 Seconds to retry");
             await Extensions.SleepAsync(TimeSpan.FromSeconds(30), () => !_shouldRun);
+            return true;
         }
+
+        return false;
     }
 }
