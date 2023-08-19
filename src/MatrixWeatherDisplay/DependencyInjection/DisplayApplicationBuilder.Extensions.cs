@@ -42,7 +42,7 @@ public partial class DisplayApplicationBuilder {
     private static void GetTypes(PluginLoader loader, out IEnumerable<Type> serviceTypes, out IEnumerable<Type> screenGeneratorTypes) {
         IEnumerable<Type> pluginTypes = loader.LoadDefaultAssembly().GetTypes().Where(t => !t.IsAbstract && !t.IsInterface);
         serviceTypes = pluginTypes.Where(t => typeof(IService).IsAssignableFrom(t));
-        screenGeneratorTypes = pluginTypes.Where(t => typeof(IService).IsAssignableFrom(t));
+        screenGeneratorTypes = pluginTypes.Where(t => typeof(IScreenGenerator).IsAssignableFrom(t));
     }
 
     private static List<PluginLoader> LoadLoaders(string pluginsDir) {

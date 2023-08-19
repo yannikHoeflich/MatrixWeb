@@ -11,7 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{11F3732E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatrixWeatherDisplay.UnitTests", "Tests\MatrixWeatherDisplay.UnitTests\MatrixWeatherDisplay.UnitTests.csproj", "{15F2DEAB-EE48-4579-BB8B-63AC13360879}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixWeb.Extensions", "MatrixWeb.Extensions\MatrixWeb.Extensions.csproj", "{6FDE76DF-910C-4D4C-84B4-496102DE4840}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatrixWeb.Extensions", "MatrixWeb.Extensions\MatrixWeb.Extensions.csproj", "{6FDE76DF-910C-4D4C-84B4-496102DE4840}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{CB810D7E-BA4F-4C4C-ADCE-6D74F7B1AD13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExtensions", "TestExtensions\TestExtensions.csproj", "{77D1625D-885E-4989-AA20-C8CB035AA8CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,12 +39,17 @@ Global
 		{6FDE76DF-910C-4D4C-84B4-496102DE4840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FDE76DF-910C-4D4C-84B4-496102DE4840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FDE76DF-910C-4D4C-84B4-496102DE4840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77D1625D-885E-4989-AA20-C8CB035AA8CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D1625D-885E-4989-AA20-C8CB035AA8CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D1625D-885E-4989-AA20-C8CB035AA8CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D1625D-885E-4989-AA20-C8CB035AA8CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{15F2DEAB-EE48-4579-BB8B-63AC13360879} = {11F3732E-2E3B-4333-8489-FC405827836E}
+		{77D1625D-885E-4989-AA20-C8CB035AA8CB} = {CB810D7E-BA4F-4C4C-ADCE-6D74F7B1AD13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FAF29288-A26E-4948-ACEC-92E1181BA03D}
