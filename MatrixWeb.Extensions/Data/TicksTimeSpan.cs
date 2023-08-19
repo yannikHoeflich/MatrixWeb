@@ -1,4 +1,4 @@
-﻿namespace MatrixWeatherDisplay.Data.Extensions;
+﻿namespace MatrixWeb.Extensions.Data;
 public readonly struct TicksTimeSpan : IEquatable<TicksTimeSpan> {
     public long Ticks { get; }
     public double Seconds => Ticks / 1000.0;

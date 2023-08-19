@@ -29,21 +29,6 @@ public class ColorHelperTests {
     }
 
     [Fact]
-    public void GasPrice() {
-        _color = _colorHelper.MapGasPrice(1, 1, 1);
-        Assert.Equal(Color.FromRgb(255, 255, 0), _color);
-
-        _color = _colorHelper.MapGasPrice(1, 0, 2);
-        Assert.Equal(Color.FromRgb(255, 255, 0), _color);
-
-        _color = _colorHelper.MapGasPrice(1, 1, 2);
-        Assert.Equal(Color.FromRgb(0, 255, 0), _color);
-
-        _color = _colorHelper.MapGasPrice(2, 1, 2);
-        Assert.Equal(Color.FromRgb(255, 0, 0), _color);
-    }
-
-    [Fact]
     public void Hour() {
         _color = _colorHelper.MapHour(0);
         Assert.Equal(Color.FromRgb(0, 0, 255), _color);

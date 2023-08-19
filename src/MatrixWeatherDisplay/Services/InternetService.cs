@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Data.Extensions;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services;

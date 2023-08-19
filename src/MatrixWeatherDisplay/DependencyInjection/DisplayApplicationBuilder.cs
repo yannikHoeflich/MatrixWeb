@@ -42,7 +42,6 @@ public partial class DisplayApplicationBuilder {
         Services.AddSingleton<SensorService>();
         Services.AddSingleton<RoomHumidityService>();
         Services.AddSingleton<OpenWeatherMapClient>();
-        Services.AddSingleton<GasPriceService>();
         Services.AddSingleton<SpotifyService>();
         Services.AddSingleton<InternetService>();
 

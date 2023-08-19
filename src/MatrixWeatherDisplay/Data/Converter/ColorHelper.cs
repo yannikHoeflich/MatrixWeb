@@ -34,22 +34,6 @@ public class ColorHelper: IInitializable {
     public Color MapTemperature(int temperature)
         => MapColor(temperature, -10, 45, 240, 0);
 
-    public Color MapGasPrice(double price, double minPrice, double maxPrice) {
-        double diffrence = maxPrice - minPrice;
-
-        double min;
-        double max;
-
-        if (diffrence < 0.01) {
-            min = price - 0.01;
-            max = price + 0.01;
-        } else {
-            min = minPrice + (diffrence * 0.1);
-            max = maxPrice - (diffrence * 0.1);
-        }
-
-        return MapColor(price, min, max, 120, 0);
-    }
 
     public Color MapHour(double hours)
         => MapColor(hours, 0, 24, 240, 240 + 360);

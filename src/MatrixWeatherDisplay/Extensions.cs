@@ -1,6 +1,6 @@
 ﻿using MatrixWeatherDisplay.Data.Converter;
-using MatrixWeatherDisplay.Data.Extensions;
 using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

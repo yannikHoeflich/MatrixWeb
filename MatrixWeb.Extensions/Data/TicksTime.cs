@@ -1,4 +1,4 @@
-﻿namespace MatrixWeatherDisplay.Data.Extensions;
+﻿namespace MatrixWeb.Extensions.Data;
 public readonly struct TicksTime : IEquatable<TicksTime> {
     public static TicksTime MaxValue { get; } = new TicksTime(long.MaxValue);
     public static TicksTime MinValue { get; } = new TicksTime(long.MinValue);

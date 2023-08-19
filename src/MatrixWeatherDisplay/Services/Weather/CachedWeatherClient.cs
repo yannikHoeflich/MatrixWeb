@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
 using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Data.Extensions;
 using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Services.Weather;

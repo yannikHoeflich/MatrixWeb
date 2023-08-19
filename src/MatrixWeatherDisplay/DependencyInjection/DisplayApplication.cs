@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
 
 using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Data.Extensions;
 using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
