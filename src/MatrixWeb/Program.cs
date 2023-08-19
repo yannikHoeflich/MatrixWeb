@@ -1,10 +1,11 @@
 using MatrixWeatherDisplay;
 using MatrixWeatherDisplay.DependencyInjection;
-using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.ScreenGenerators;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.Weather;
+using MatrixWeb.Extensions.Logging;
+using MatrixWeb.Extensions.Services;
 using MatrixWeb.Services;
 
 namespace MatrixWeb;
@@ -27,11 +28,10 @@ public static class Program {
         await displayApp.InitDefaultServicesAsync();
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddSingleton(_ => new DisplayService(displayApp));
+        displayApp.Services.MoveServiceTo<ConfigService>(builder.Services);
+        displayApp.Services.MoveLogger(builder.Services);
 
-
-        builder.Logging.ClearProviders();
-        builder.Logging.AddProvider(new Provider());
+        builder.Services.AddSingleton((p) => new DisplayService(displayApp, p.GetService<ILogger<DisplayService>>()));
 
         displayApp.Services.MoveServiceTo<SpotifyService>(builder.Services);
         displayApp.Services.MoveServiceTo<DeviceService>(builder.Services);

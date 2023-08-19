@@ -2,7 +2,6 @@
 
 using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
-using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
@@ -10,6 +9,7 @@ using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Logging;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,24 +21,30 @@ public partial class DisplayApplication {
 
     public RedSettings? RedManager { get; private set; }
 
-    internal Type[]? Initializables { get; init; }
-    internal Type[]? AsyncInitializables { get; init; }
+    internal ServiceDescriptor[]? Initializables { get; init; }
+    internal ServiceDescriptor[]? AsyncInitializables { get; init; }
 
-    private readonly ILogger _logger = Logger.Create<DisplayApplication>();
+    private ILogger _logger;
 
     private bool _running = false;
     private bool _shouldRun = false;
 
-    private readonly Wrapped<TicksTime> _waitUntil = TicksTime.Zero;
+    private readonly Wrapped<TicksTime> _waitUntil = new(TicksTime.Zero);
 
     internal DisplayApplication(IServiceProvider services, IScreenGeneratorProvider screenGeneratorProvider) {
         Services = services;
         ScreenGenerators = screenGeneratorProvider;
+
     }
 
     public async Task InitDefaultServicesAsync() {
         ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
         await configService.InitAsync();
+
+        ILogger<DisplayApplication>? newLogger = Services.GetService<ILogger<DisplayApplication>>();
+        if (newLogger is not null) {
+            _logger = newLogger;
+        }
 
         BrightnessService autoBrightnessService = Services.GetService<BrightnessService>() ?? throw new InvalidOperationException("The Service of type 'AutoBrightnessService' must be registered");
         RedManager = new RedSettings(autoBrightnessService);
@@ -46,14 +52,14 @@ public partial class DisplayApplication {
         var serviceInitializer = new ServiceInitializer(Services);
 
         if (Initializables is not null) {
-            foreach (Type serviceType in Initializables) {
-                serviceInitializer.Init(serviceType);
+            foreach (ServiceDescriptor serviceDescriptor in Initializables) {
+                serviceInitializer.Init(serviceDescriptor);
             }
         }
 
         if (AsyncInitializables is not null) {
-            foreach (Type serviceType in AsyncInitializables.Where(x => x != typeof(ConfigService))) {
-                await serviceInitializer.InitAsync(serviceType);
+            foreach (ServiceDescriptor serviceDescriptor in AsyncInitializables.Where(x => x.ImplementationType != typeof(ConfigService))) {
+                await serviceInitializer.InitAsync(serviceDescriptor);
             }
         }
 

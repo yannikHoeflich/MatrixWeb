@@ -1,5 +1,4 @@
 ﻿using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Logging;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services;
@@ -19,14 +18,15 @@ public class SpotifyService : IInitializable, IService {
 
     private readonly HttpClient _httpClient = new();
 
-    private readonly ILogger _logger = Logger.Create<SpotifyService>();
+    private readonly ILogger _logger;
 
     public bool IsConnected => _client is not null;
 
     public bool IsEnabled { get; private set; }
 
-    public SpotifyService(ConfigService configService) {
+    public SpotifyService(ConfigService configService, ILogger<SpotifyService> logger) {
         _configService = configService;
+        _logger = logger;
     }
 
     public void Init() {

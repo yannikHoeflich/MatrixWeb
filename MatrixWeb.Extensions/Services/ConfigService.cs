@@ -27,6 +27,8 @@ public class ConfigService: IService{
         _configs ??= new Dictionary<string, Config>();
     }
 
+    public Config GetOrCreateConfig(string name) => GetConfig(name) ?? CreateConfig(name);
+
     public Config? GetConfig(string name) {
         if (_configs is null) {
             return null;

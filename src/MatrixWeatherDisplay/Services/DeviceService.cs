@@ -1,5 +1,4 @@
 ﻿using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Logging;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
 using UnitsNet.Units;
@@ -18,12 +17,13 @@ public class DeviceService: IService {
         } 
     }
 
-    private readonly ILogger _logger = Logger.Create<DeviceService>();
+    private readonly ILogger _logger;
     private readonly BrightnessService _brightnessService;
 
-    public DeviceService(BrightnessService autoBrightness) {
+    public DeviceService(BrightnessService autoBrightness, ILogger<DeviceService> logger) {
         _brightnessService = autoBrightness;
         Brightness = new BrightnessPair(1, _brightnessService.GeneralBrightness);
+        _logger = logger;
     }
     
 

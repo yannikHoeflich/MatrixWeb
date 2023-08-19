@@ -2,16 +2,17 @@
 
 using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
-using MatrixWeatherDisplay.Logging;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeatherDisplay.Services.Weather;
 using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Logging;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Configuration;
 
 namespace MatrixWeatherDisplay.DependencyInjection;
 public partial class DisplayApplicationBuilder {
@@ -19,6 +20,9 @@ public partial class DisplayApplicationBuilder {
 
     public DisplayApplicationBuilder() {
         Services = new ServiceCollection();
+
+        Services.AddSingleton<ConfigService>();
+        Services.AddLogger();
 
         Services.AddSingleton<BrightnessService>();
         Services.AddSingleton<DeviceService>();
@@ -36,7 +40,6 @@ public partial class DisplayApplicationBuilder {
     }
 
     public void AddDefaultServices() {
-        Services.AddSingleton<ConfigService>();
         Services.AddSingleton<ColorHelper>();
         Services.AddSingleton<SymbolLoader>();
         Services.AddSingleton<SensorService>();
@@ -58,8 +61,8 @@ public partial class DisplayApplicationBuilder {
         IEnumerable<IScreenGenerator> screenGenerators = serviceProvider.GetServices<IScreenGenerator>();
         var screenGeneratorProvider = new ScreenGeneratorProvider(screenGenerators.ToArray());
 
-        Type[] initServices = Services.GetServiceTypesWithInterface<IInitializable>().ToArray();
-        Type[] initAsyncServices = Services.GetServiceTypesWithInterface<IAsyncInitializable>().ToArray();
+        ServiceDescriptor[] initServices = Services.GetServiceTypesWithInterface<IInitializable>().ToArray();
+        ServiceDescriptor[] initAsyncServices = Services.GetServiceTypesWithInterface<IAsyncInitializable>().ToArray();
 
         var app = new DisplayApplication(serviceProvider, screenGeneratorProvider) {
             Initializables = initServices,

@@ -1,5 +1,4 @@
-﻿using MatrixWeatherDisplay.Logging;
-using MatrixWeb.Extensions.Services;
+﻿using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
 using USM.Devices;
 
@@ -7,7 +6,11 @@ namespace MatrixWeatherDisplay.Services.SensorServices;
 public class SensorService: IService {
     private readonly List<SensorDevice> _devices = new();
 
-    private readonly ILogger _logger = Logger.Create<SensorService>();
+    private readonly ILogger _logger;
+
+    public SensorService(ILogger<SensorService> logger) {
+        _logger = logger;
+    }
 
     public async Task ScanAsync()
     {

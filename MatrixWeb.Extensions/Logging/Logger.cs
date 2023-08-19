@@ -1,24 +1,20 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MatrixWeb.Extensions.Data;
+using Microsoft.Extensions.Logging;
 
-namespace MatrixWeatherDisplay.Logging;
+namespace MatrixWeb.Extensions.Logging;
 public class Logger : ILogger {
     private readonly string _name;
-
+    private readonly Wrapped<LogLevel> _minLogLevel;
     private static readonly object s_lock = new();
 
-    public Logger(string name) {
+    public Logger(string name, Wrapped<LogLevel> minLogLevel) {
         _name = name;
+        _minLogLevel = minLogLevel;
     }
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
-    public bool IsEnabled(LogLevel logLevel) {
-#if DEBUG
-        return logLevel >= LogLevel.Debug;
-#else
-        return logLevel >= LogLevel.Information;
-#endif
-    }
+    public bool IsEnabled(LogLevel logLevel) => logLevel >= _minLogLevel;
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) {
         if (!IsEnabled(logLevel))
@@ -45,5 +41,5 @@ public class Logger : ILogger {
     };
 
 
-    public static ILogger Create<T>() => new Logger(typeof(T).Name);
+    // public static ILogger Create<T>() => new Logger(typeof(T).Name, new Wrapped<LogLevel>(LogLevel.Information));
 }

@@ -1,5 +1,4 @@
 ﻿using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Logging;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
@@ -11,14 +10,15 @@ public class OpenWeatherMapClient : CachedWeatherClient {
     private double _latitude;
     private double _longitude;
 
-    private readonly ILogger _logger = Logger.Create<OpenWeatherMapClient>();
+    private readonly ILogger _logger;
 
     private readonly ConfigService _configService;
 
     public override bool IsEnabled { get; protected set;}
 
-    public OpenWeatherMapClient(ConfigService configService) {
+    public OpenWeatherMapClient(ConfigService configService, ILogger<OpenWeatherMapClient> logger) {
         _configService = configService;
+        _logger = logger;
     }
 
     public override void Init() {

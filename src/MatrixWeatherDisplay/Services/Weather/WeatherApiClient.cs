@@ -1,5 +1,4 @@
 ﻿using MatrixWeatherDisplay.Data;
-using MatrixWeatherDisplay.Logging;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services;
@@ -9,7 +8,7 @@ using NETWeatherAPI.Entities;
 
 namespace MatrixWeatherDisplay.Services.Weather;
 public class WeatherApiClient : CachedWeatherClient, IInitializable {
-    private readonly ILogger _logger = Logger.Create<WeatherApiClient>();
+    private readonly ILogger _logger;
     private WeatherAPIClient? _weatherAPIClient;
     private string? _cityName;
 
@@ -17,8 +16,9 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
 
     public override bool IsEnabled { get; protected set; } = false;
 
-    public WeatherApiClient(ConfigService configService) {
+    public WeatherApiClient(ConfigService configService, ILogger<WeatherApiClient> logger) {
         _configService = configService;
+        _logger = logger;
     }
 
     public override void Init() {

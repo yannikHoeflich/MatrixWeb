@@ -37,11 +37,16 @@ public static class Extensions {
         to.AddSingleton(_ => service);
     }
 
+    public static void MoveServiceTo<TService, TImplementation>(this IServiceProvider from, IServiceCollection to) where TService: class where TImplementation : class, TService {
+        TImplementation? service = from.GetService<TImplementation>() ?? throw new InvalidOperationException("The requested service is not registered");
+        to.AddSingleton<TService, TImplementation>(_ => service);
+    }
+
     public static async Task SleepAsync(TimeSpan timeSpan, Func<bool> endFunc) {
         TicksTime ticks = TicksTime.Now;
         var ticksToWait = TicksTimeSpan.FromTimeSpan(timeSpan);
 
-        await SleepUntilAsync(ticks + ticksToWait, endFunc);
+        await SleepUntilAsync(new Wrapped<TicksTime>(ticks + ticksToWait), endFunc);
     }
 
     public static async Task SleepUntilAsync(Wrapped<TicksTime> tickCount, Func<bool> endFunc) {
@@ -103,6 +108,6 @@ public static class Extensions {
         return response;
     }
 
-    public static IEnumerable<Type> GetServiceTypesWithInterface<T>(this IServiceCollection services)
-        => services.OfType<ServiceDescriptor>().Select(x => x.ImplementationType).OfType<Type>().Where(x => typeof(T).IsAssignableFrom(x));
+    public static IEnumerable<ServiceDescriptor> GetServiceTypesWithInterface<T>(this IServiceCollection services)
+        => services.OfType<ServiceDescriptor>().Where(x => typeof(T).IsAssignableFrom(x.ImplementationType));
 }
