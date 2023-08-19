@@ -23,6 +23,7 @@ public class Config : IDictionary<string, string?> {
         return false;
     }
 
+    public bool TryGetByte(string key, out byte value) => Get(key, byte.TryParse, out value);
     public bool TryGetInt(string key, out int value) => Get(key, int.TryParse, out value);
     public bool TryGetLong(string key, out long value) => Get(key, long.TryParse, out value);
     public bool TryGetDouble(string key, out double value) => Get(key, double.TryParse, out value);
