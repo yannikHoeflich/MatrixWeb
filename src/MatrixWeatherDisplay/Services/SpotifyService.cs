@@ -22,7 +22,8 @@ public class SpotifyService : IInitializable, IService {
 
     public bool IsConnected => _client is not null;
 
-    public bool IsEnabled { get; private set; }
+    public bool HasClientKeys => _clientId is not null && _clientSecret is not null;
+    public bool IsEnabled => HasClientKeys && _client is not null;
 
     public SpotifyService(ConfigService configService, ILogger<SpotifyService> logger) {
         _configService = configService;
@@ -32,12 +33,12 @@ public class SpotifyService : IInitializable, IService {
     public void Init() {
         Config? config = _configService.GetConfig("spotify");
 
-        if(config is null || !config.TryGetString("client-id", out _clientId) || !config.TryGetString("client-secret", out _clientSecret)) {
-            IsEnabled = false;
+        if(config is null) {
             return;
         }
 
-        IsEnabled = true;
+        config.TryGetString("client-id", out _clientId);
+        config.TryGetString("client-secret", out _clientSecret);
     }
 
     public string GetSpotifyUrl(string baseUrl) {
