@@ -2,15 +2,11 @@
 using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Services;
-public class BrightnessService: IService {
-    public double GeneralBrightness { get; set; } = 0.75;
+public class BrightnessService : IService {
+    private const double s_u = 15;
+    private const double s_o = 3;
 
-    private const double s_a = -(99.0 / 138236000),
-                         s_b = (7821.0 / 96765200),
-                         s_c = -(3510837.0 / 967652000),
-                         s_d = (15060573.0 / 241913000),
-                         s_e = -(1226907.0 / 4319875),
-                         s_f = (1.0 / 100);
+    public double GeneralBrightness { get; set; } = 0.75;
 
     internal bool AutoBrightness { get; set; } = true;
 
@@ -21,8 +17,8 @@ public class BrightnessService: IService {
             return new BrightnessPair(newBrightness, newBrightness * GeneralBrightness);
         }
 
-        double x = time.TotalHours();
-        double factor = PolynomialFunction(x, s_a, s_b, s_c, s_d, s_e, s_f);
+        double x = time.TotalHours() % 24;
+        double factor = BrightnessFunction(x, s_u, s_o);
 
         if (factor > 1) {
             factor = 1;
@@ -37,7 +33,15 @@ public class BrightnessService: IService {
         return new BrightnessPair(factor, brightness);
     }
 
+    private double BrightnessFunction(double x, double u, double o) {
+        double upper = x - u;
+        upper *= upper;
 
-    private static double PolynomialFunction(double x, params double[] values)
-        => values.Reverse().Select((a, i) => a * Math.Pow(x, i)).Sum();
+        double lower = 2 * o * o;
+
+        double exponent = -(upper / lower);
+
+        double result = Math.Pow(Math.E, exponent);
+        return result;
+    }
 }
