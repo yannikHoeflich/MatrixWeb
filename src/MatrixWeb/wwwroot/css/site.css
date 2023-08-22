@@ -67,12 +67,12 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
-.percent, .seconds {
+.percent, .seconds, .hours {
     position: relative;
     display: inline-block;
     color: gray;
 }
-    .percent::after, .seconds::after {
+    .percent::after, .seconds::after, .hours::after {
         position: absolute;
         top: 0;
         right: 1em;
@@ -85,6 +85,10 @@ a, .btn-link {
 
     .seconds::after {
         content: 'S';
+    }
+
+    .hours::after {
+        content: 'H';
     }
 
     .percent input[type=number] {

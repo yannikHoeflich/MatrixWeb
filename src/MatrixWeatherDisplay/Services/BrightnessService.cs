@@ -6,6 +6,8 @@ public class BrightnessService : IService {
     private const double s_u = 15;
     private const double s_o = 3;
 
+    public double TimeShift { get; set; }
+
     public double GeneralBrightness { get; set; } = 0.75;
 
     internal bool AutoBrightness { get; set; } = true;
@@ -17,7 +19,7 @@ public class BrightnessService : IService {
             return new BrightnessPair(newBrightness, newBrightness * GeneralBrightness);
         }
 
-        double x = time.TotalHours() % 24;
+        double x = (time.TotalHours() + TimeShift) % 24;
         double factor = BrightnessFunction(x, s_u, s_o);
 
         if (factor > 1) {
