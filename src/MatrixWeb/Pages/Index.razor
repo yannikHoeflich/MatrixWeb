@@ -4,6 +4,7 @@
 @using MatrixWeatherDisplay.Services;
 @using System.Globalization;
 @using MatrixWeb.Extensions
+@using MatrixWeb.Shared.Inputs
 
 @inject IScreenGeneratorProvider screens
 @inject DeviceService devices
@@ -43,10 +44,7 @@
                     <td scope="row"> @screen.Name</td>
                     <td> @screen.Description </td>
                     <td>
-                        <input type="range" min="0" max="60" class="form-range" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)" disabled="@(!screen.IsEnabled)">
-                        <div class="seconds">
-                            <input type="number" class="form-control" value="@screen.ScreenTime.TotalSeconds" @oninput="e => ChangeScreenTime(e, screen)" disabled="@(!screen.IsEnabled)">
-                        </div>
+                        <SecondInput Min="0" Max="60" Decimals="1" OnInput="v => ChangeScreenTime(v, screen)" Value="screen.ScreenTime.TotalSeconds" Disabled="!screen.IsEnabled" />
                     </td>
                 </tr>
             }

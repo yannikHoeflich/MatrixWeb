@@ -33,7 +33,7 @@ public class Provider : ILoggerProvider, IInitializable {
             return;
         }
 
-        if(config.TryGetString(s_logLevelName, out string? logLevelStr) && logLevelStr is not null && Enum.TryParse<LogLevel>(logLevelStr, out LogLevel logLevel)){
+        if(config.TryGetString(s_logLevelName, out string? logLevelStr) && logLevelStr is not null && Enum.TryParse(logLevelStr, out LogLevel logLevel)){
             _minLogLevel.Value = logLevel;
         } else {
             _minLogLevel.Value = LogLevel.Information;
