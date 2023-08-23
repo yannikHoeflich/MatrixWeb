@@ -62,8 +62,12 @@
     <h4>Wetter</h4>
     <h5>Wetter Anbieter</h5>
     <select class="form-select" aria-label="Default select example" @onchange="ChangeWeatherProvider">
-        <option value="0">Open Weather Map</option>
-        <option value="1">Weather Api</option>
+        @if (weather.IsProviderEnabled(WeatherProvider.OpenWeatherMap)) {
+            <option value="0" selected="@WeatherProviderSelected(WeatherProvider.OpenWeatherMap)">Open Weather Map</option>
+        }
+        @if (weather.IsProviderEnabled(WeatherProvider.WeatherApi)) {
+            <option value="1" selected="@WeatherProviderSelected(WeatherProvider.WeatherApi)">Weather Api</option>
+        }
     </select>
 </p>
 
@@ -148,5 +152,9 @@
         autoBrightness.TimeShift = value;
         _redTimeRange = display.RedManager.GetRedTimeRange();
         await devices.UpdateBrightnessAsync();
+    }
+
+    private bool WeatherProviderSelected(WeatherProvider weatherProvider) {
+        return weather.WeatherProvider == weatherProvider;
     }
 }
