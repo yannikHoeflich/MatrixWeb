@@ -3,10 +3,12 @@ using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Services;
 public class BrightnessService : IService {
-    private const double s_u = 15;
+    private const double s_u = 12;
     private const double s_o = 3;
 
-    public double TimeShift { get; set; }
+    public const double MinBrightness = 0.01;
+
+    public double TimeShift { get; set; } = 3;
 
     public double GeneralBrightness { get; set; } = 0.75;
 
@@ -26,8 +28,8 @@ public class BrightnessService : IService {
             factor = 1;
         }
 
-        if (factor < 0.01) {
-            factor = 0.01;
+        if (factor < MinBrightness) {
+            factor = MinBrightness;
         }
 
         double brightness = factor * GeneralBrightness;

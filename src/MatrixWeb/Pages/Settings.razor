@@ -35,7 +35,13 @@
         <input type="number" min="0" max="100" class="form-control" value="@display.RedManager.RedThreshold.ToInputString(1, 100)" @oninput="e => ChangeRedThreshold(e)">
     </div>
 <p class="description">
-    Rot von <b>@_redTimeRange.Start</b> bis <b>@_redTimeRange.End</b>
+        @if (_redTimeRange == TimeRange.Always) {
+            <text>Immer Rot</text>
+        } else if (_redTimeRange == TimeRange.Never) {
+            <text>Nie Rot</text>
+        } else {
+            <text>Rot von <b>@_redTimeRange.Start</b> bis <b>@_redTimeRange.End</b></text>
+        }
 </p>
 </p>
 
