@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Server.IIS.Core;
 
 namespace MatrixWeb;
-public static class ExtensionsClass {
+public static class ExtensionsMethods {
     public static bool ToDouble(this ChangeEventArgs eventArgs, out double value) {
         value = 0;
 
@@ -51,16 +51,4 @@ public static class ExtensionsClass {
     }
 
     public static string ToInputString(this double value, int decimals, double multiplier) => ToInputString(value * multiplier, decimals);
-
-    public static double MinMax(this double value, double min, double max) {
-        if (value < min) {
-            return min;
-        }
-
-        if (value > max) {
-            return max;
-        }
-
-        return value;
-    }
 }

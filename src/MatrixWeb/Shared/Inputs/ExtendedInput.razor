@@ -1,4 +1,5 @@
-﻿<input type="range" min="@Min" step="@((1/Math.Pow(10, Decimals)).ToInputString())" max="@Max" class="form-range" value="@Value.ToInputString(Decimals, Multiplier)" @oninput="ChangeValue" disabled="@Disabled">
+﻿@using MatrixWeatherDisplay;
+<input type="range" min="@Min" step="@((1/Math.Pow(10, Decimals)).ToInputString())" max="@Max" class="form-range" value="@Value.ToInputString(Decimals, Multiplier)" @oninput="ChangeValue" disabled="@Disabled">
 <div id="@_id" class="input-container">
     <input type="number" min="@Min" max="@Max" class="form-control" value="@Value.ToInputString(Decimals, Multiplier)" @oninput="ChangeValue" disabled="@Disabled" style="width: @(_width)px">
 </div>

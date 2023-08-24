@@ -27,8 +27,8 @@ public readonly struct TimeRange : IEquatable<TimeRange> {
         _status = status;
     }
 
+    public bool Equals(TimeRange other) => (_status !=  TimeRangeStatus.Normal && _status == other._status) || (_status == TimeRangeStatus.Normal && Start.Equals(other.Start) && End.Equals(other.End));
     public override bool Equals(object? obj) => obj is TimeRange range && Equals(range);
-    public bool Equals(TimeRange other) => _status == other._status || (Start.Equals(other.Start) && End.Equals(other.End));
     public override int GetHashCode() => HashCode.Combine(Start, End, _status);
     public override string? ToString() => _status switch {
         TimeRangeStatus.Never => "Never",

@@ -41,7 +41,7 @@ public class RedSettings {
             }
 
             if(counter >= s_steps) {
-                return TimeRange.Never;
+                return TimeRange.Always;
             }
 
             TimeOnly end = currentTime;

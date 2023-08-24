@@ -17,4 +17,8 @@
     <PackageReference Include="OpenWeatherMap.NetClient" Version="1.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MatrixWeb.Extensions\MatrixWeb.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>

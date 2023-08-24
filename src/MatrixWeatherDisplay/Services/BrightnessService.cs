@@ -4,11 +4,13 @@ using MatrixWeb.Extensions.Services;
 namespace MatrixWeatherDisplay.Services;
 public class BrightnessService : IService {
     private const double s_u = 12;
-    private const double s_o = 3;
+    private const double s_o = 2.5;
+
+    private const double s_multiplier = 2;
 
     public const double MinBrightness = 0.01;
 
-    public double TimeShift { get; set; } = 3;
+    public double TimeShift { get; set; } = 2;
 
     public double GeneralBrightness { get; set; } = 0.75;
 
@@ -21,16 +23,10 @@ public class BrightnessService : IService {
             return new BrightnessPair(newBrightness, newBrightness * GeneralBrightness);
         }
 
-        double x = (time.TotalHours() + TimeShift) % 24;
-        double factor = BrightnessFunction(x, s_u, s_o);
+        double x = (time.TotalHours() - TimeShift) % 24;
+        double factor = BrightnessFunction(x, s_u, s_o) * s_multiplier;
 
-        if (factor > 1) {
-            factor = 1;
-        }
-
-        if (factor < MinBrightness) {
-            factor = MinBrightness;
-        }
+        factor = factor.MinMax(MinBrightness, 1);
 
         double brightness = factor * GeneralBrightness;
 
