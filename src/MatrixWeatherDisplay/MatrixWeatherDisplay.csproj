@@ -105,7 +105,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MatrixWeb.Extensions\MatrixWeb.Extensions.csproj" />
+    <ProjectReference Include="..\MatrixWeb.Extensions\MatrixWeb.Extensions\MatrixWeb.Extensions.csproj" />
   </ItemGroup>
 
 </Project>
