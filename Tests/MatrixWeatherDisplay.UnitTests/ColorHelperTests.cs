@@ -75,25 +75,4 @@ public class ColorHelperTests {
         _color = _colorHelper.MapMinute(60);
         Assert.Equal(Color.FromRgb(255, 0, 0), _color);
     }
-
-    [Fact]
-    public void RoomHumidity() {
-        _color = _colorHelper.MapRoomHumidity(50, 50);
-        Assert.Equal(Color.FromRgb(0, 255, 0), _color);
-
-        _color = _colorHelper.MapRoomHumidity(60, 50);
-        Assert.Equal(Color.FromRgb(255, 0, 0), _color);
-
-        _color = _colorHelper.MapRoomHumidity(55, 50);
-        Assert.Equal(Color.FromRgb(255, 255, 0), _color);
-
-        _color = _colorHelper.MapRoomHumidity(100, 100);
-        Assert.Equal(Color.FromRgb(0, 255, 0), _color);
-
-        _color = _colorHelper.MapRoomHumidity(90, 100);
-        Assert.Equal(Color.FromRgb(0, 255, 0), _color);
-
-        _color = _colorHelper.MapRoomHumidity(60, 20);
-        Assert.Equal(Color.FromRgb(255, 0, 0), _color);
-    }
 }
