@@ -6,7 +6,6 @@ using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeatherDisplay.Services.SensorServices;
-using MatrixWeatherDisplay.Services.Weather;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Logging;

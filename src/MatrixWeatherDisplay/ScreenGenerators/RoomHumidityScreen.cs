@@ -3,9 +3,10 @@ using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.SensorServices;
-using MatrixWeatherDisplay.Services.Weather;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Weather.Data;
+using MatrixWeb.Extensions.Weather.Services;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class RoomHumidityScreen : IScreenGenerator {

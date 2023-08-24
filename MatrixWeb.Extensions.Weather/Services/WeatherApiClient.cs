@@ -1,12 +1,11 @@
-﻿using MatrixWeatherDisplay.Data;
-using MatrixWeb.Extensions;
-using MatrixWeb.Extensions.Data;
+﻿using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services;
+using MatrixWeb.Extensions.Weather.Data;
 using Microsoft.Extensions.Logging;
 using NETWeatherAPI;
 using NETWeatherAPI.Entities;
 
-namespace MatrixWeatherDisplay.Services.Weather;
+namespace MatrixWeb.Extensions.Weather.Services;
 public class WeatherApiClient : CachedWeatherClient, IInitializable {
     private readonly ILogger _logger;
     private WeatherAPIClient? _weatherAPIClient;

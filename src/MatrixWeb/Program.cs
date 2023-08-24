@@ -3,9 +3,9 @@ using MatrixWeatherDisplay.DependencyInjection;
 using MatrixWeatherDisplay.ScreenGenerators;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
-using MatrixWeatherDisplay.Services.Weather;
 using MatrixWeb.Extensions.Logging;
 using MatrixWeb.Extensions.Services;
+using MatrixWeb.Extensions.Weather.Services;
 using MatrixWeb.Services;
 
 namespace MatrixWeb;

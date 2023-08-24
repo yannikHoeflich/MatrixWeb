@@ -1,9 +1,8 @@
-﻿using MatrixWeatherDisplay.Data;
-using MatrixWeb.Extensions.Services.Loader;
+﻿using MatrixWeb.Extensions.Services.Loader;
+using MatrixWeb.Extensions.Weather.Data;
 
-namespace MatrixWeatherDisplay.Services.IconLoader;
-public class WeatherIconLoader : IconLoader<WeatherType>
-{
+namespace MatrixWeb.Extensions.Weather.Services;
+public class WeatherIconLoader : IconLoader<WeatherType> {
     protected override string p_directory { get; } = "Icons/Weather";
 
     protected override Dictionary<string, WeatherType> p_files { get; } = new Dictionary<string, WeatherType>() {

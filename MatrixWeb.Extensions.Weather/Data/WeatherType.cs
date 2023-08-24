@@ -1,5 +1,6 @@
-﻿namespace MatrixWeatherDisplay.Data;
-public enum WeatherType {
+﻿namespace MatrixWeb.Extensions.Weather.Data;
+public enum WeatherType
+{
     Thunderstorm,
     Drizzle,
     Rain,

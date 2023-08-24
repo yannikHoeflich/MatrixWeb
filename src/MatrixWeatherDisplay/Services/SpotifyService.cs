@@ -85,7 +85,7 @@ public class SpotifyService : IInitializable, IService {
         }
 
         Func<Task<CurrentlyPlaying?>> requestFunc = async () => await _client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
-        CurrentlyPlaying? response = await Extensions.RetryAsync(requestFunc, 5, _logger);
+        CurrentlyPlaying? response = await requestFunc.RetryAsync(5, _logger);
         return response;
     }
 

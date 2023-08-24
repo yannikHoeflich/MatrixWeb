@@ -1,10 +1,10 @@
-﻿using MatrixWeatherDisplay.Data;
-using MatrixWeb.Extensions.Data;
+﻿using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services;
+using MatrixWeb.Extensions.Weather.Data;
 using Microsoft.Extensions.Logging;
 using OpenWeatherMap.NetClient.Models;
 
-namespace MatrixWeatherDisplay.Services.Weather;
+namespace MatrixWeb.Extensions.Weather.Services;
 public class OpenWeatherMapClient : CachedWeatherClient {
     private OpenWeatherMap.NetClient.OpenWeatherMapClient? _client;
     private double _latitude;
@@ -14,7 +14,7 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
     private readonly ConfigService _configService;
 
-    public override bool IsEnabled { get; protected set;}
+    public override bool IsEnabled { get; protected set; }
 
     public OpenWeatherMapClient(ConfigService configService, ILogger<OpenWeatherMapClient> logger) {
         _configService = configService;
@@ -23,12 +23,12 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
     public override void Init() {
         Config? config = _configService.GetConfig("open-weather-map");
-        if(config is null) {
+        if (config is null) {
             IsEnabled = false;
             return;
         }
 
-        if(!config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
+        if (!config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
             IsEnabled = false;
             return;
         }
@@ -47,9 +47,9 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
 
         Func<Task<CurrentWeather?>> getWeatherFunction = () => _client.CurrentWeather.GetByCoordinatesAsync(_latitude, _longitude);
-        CurrentWeather? response = await Extensions.RetryAsync(getWeatherFunction, 5, _logger);
+        CurrentWeather? response = await getWeatherFunction.RetryAsync(5, _logger);
 
-        if(response is null ) {
+        if (response is null) {
             return default;
         }
 

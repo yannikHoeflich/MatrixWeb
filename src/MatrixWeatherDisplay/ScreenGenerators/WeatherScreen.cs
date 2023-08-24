@@ -1,8 +1,9 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeatherDisplay.Services.IconLoader;
-using MatrixWeatherDisplay.Services.Weather;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Weather.Data;
+using MatrixWeb.Extensions.Weather.Services;
 
 namespace MatrixWeatherDisplay.Screens;
 public class WeatherScreen : IScreenGenerator {

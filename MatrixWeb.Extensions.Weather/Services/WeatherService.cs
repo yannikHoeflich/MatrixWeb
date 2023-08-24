@@ -1,8 +1,7 @@
-﻿using MatrixWeatherDisplay.Data;
-using MatrixWeb.Extensions;
-using MatrixWeb.Extensions.Services;
+﻿using MatrixWeb.Extensions.Services;
+using MatrixWeb.Extensions.Weather.Data;
 
-namespace MatrixWeatherDisplay.Services.Weather;
+namespace MatrixWeb.Extensions.Weather.Services;
 public class WeatherService : IService, IInitializable {
     private readonly Dictionary<WeatherProvider, CachedWeatherClient> _clients;
 
@@ -34,7 +33,7 @@ public class WeatherService : IService, IInitializable {
     public bool IsProviderEnabled(WeatherProvider weatherProvider) => _clients[weatherProvider].IsEnabled;
 }
 
-public enum WeatherProvider{
+public enum WeatherProvider {
     OpenWeatherMap,
     WeatherApi
 }
