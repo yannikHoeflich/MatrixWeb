@@ -17,7 +17,6 @@ public static class Program {
         displayBuilder.AddScreenGenerator<WeatherScreen>();
         displayBuilder.AddScreenGenerator<TemperatureScreen>();
         displayBuilder.AddScreenGenerator<TimeScreen>();
-        displayBuilder.AddScreenGenerator<RoomHumidityScreen>();
         displayBuilder.AddScreenGenerator<SpotifyScreen>();
         displayBuilder.AddScreenGenerator<ErrorScreen>();
 

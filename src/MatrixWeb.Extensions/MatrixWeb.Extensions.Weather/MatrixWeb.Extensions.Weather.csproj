@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>1.0.3</Version>
+    <Authors>Yannik Höflich</Authors>
+    <RepositoryType>https://github.com/yannikHoeflich/MatrixWeb</RepositoryType>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MatrixWeb.Extensions" Version="1.0.3" />
+    <PackageReference Include="NET-WeatherAPI" Version="0.1.0" />
+    <PackageReference Include="OpenWeatherMap.NetClient" Version="1.4.0" />
+  </ItemGroup>
+
+</Project>

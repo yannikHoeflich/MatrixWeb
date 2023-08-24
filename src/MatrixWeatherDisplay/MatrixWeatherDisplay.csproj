@@ -105,7 +105,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MatrixWeb.Extensions.Weather\MatrixWeb.Extensions.Weather.csproj" />
+    <ProjectReference Include="..\MatrixWeb.Extensions\MatrixWeb.Extensions.Weather\MatrixWeb.Extensions.Weather.csproj" />
     <ProjectReference Include="..\MatrixWeb.Extensions\MatrixWeb.Extensions\MatrixWeb.Extensions.csproj" />
   </ItemGroup>
 

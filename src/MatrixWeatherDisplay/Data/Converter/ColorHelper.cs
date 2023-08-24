@@ -6,10 +6,8 @@ using MatrixWeb.Extensions.Services;
 namespace MatrixWeatherDisplay.Data.Converter;
 public class ColorHelper: IInitializable {
     private const string s_configName = "colors";
-    private const string s_badHumidityDifferenceName = "bad-humidity-difference";
 
     private readonly ConfigService _configService;
-    private double _badHumidityDifference = 10;
 
     public bool IsEnabled { get; } = true;
 
@@ -21,12 +19,6 @@ public class ColorHelper: IInitializable {
         Config? config = _configService.GetConfig(s_configName);
         if(config is null) {
             return;
-        }
-
-        if(config.TryGetDouble(s_badHumidityDifferenceName, out double badHumidityDifference)) {
-            _badHumidityDifference = badHumidityDifference;
-        } else {
-            config.Set(s_badHumidityDifferenceName, _badHumidityDifference);
         }
     }
 
@@ -41,10 +33,6 @@ public class ColorHelper: IInitializable {
     public Color MapMinute(double minutes)
         => MapColor(minutes, 0, 60, 0, 360);
 
-    public Color MapRoomHumidity(double roomHumidity, double outsideHumidity) {
-        double difference = roomHumidity - outsideHumidity;
-        return MapColor(difference, 0, _badHumidityDifference, 120, 0);
-    }
 
     private static Color MapColor(double value, double min, double max, double hueFrom, double hueTo) {
         if (value < min) {

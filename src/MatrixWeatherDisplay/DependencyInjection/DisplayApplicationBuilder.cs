@@ -5,7 +5,6 @@ using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
-using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Logging;
 using MatrixWeb.Extensions.Services;
@@ -42,8 +41,6 @@ public partial class DisplayApplicationBuilder {
     public void AddDefaultServices() {
         Services.AddSingleton<ColorHelper>();
         Services.AddSingleton<SymbolLoader>();
-        Services.AddSingleton<SensorService>();
-        Services.AddSingleton<RoomHumidityService>();
         Services.AddSingleton<OpenWeatherMapClient>();
         Services.AddSingleton<SpotifyService>();
         Services.AddSingleton<InternetService>();

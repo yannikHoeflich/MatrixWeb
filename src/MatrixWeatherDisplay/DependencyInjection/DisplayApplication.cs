@@ -5,7 +5,6 @@ using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
-using MatrixWeatherDisplay.Services.SensorServices;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Logging;
@@ -61,10 +60,6 @@ public partial class DisplayApplication {
                 await serviceInitializer.InitAsync(serviceDescriptor);
             }
         }
-
-        SensorService? sensorService = Services.GetService<SensorService>();
-        if (sensorService is not null)
-            _ = sensorService.ScanAsync();
 
         await configService.SaveAsync();
     }
