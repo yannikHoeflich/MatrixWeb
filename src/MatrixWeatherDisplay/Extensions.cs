@@ -81,6 +81,7 @@ public static class Extensions {
 
     public static IEnumerable<ServiceDescriptor> GetServiceTypesWithInterface<T>(this IServiceCollection services)
         => services.OfType<ServiceDescriptor>().Where(x => typeof(T).IsAssignableFrom(x.ImplementationType));
+
     public static double MinMax(this double value, double min, double max) {
         if (value < min) {
             return min;

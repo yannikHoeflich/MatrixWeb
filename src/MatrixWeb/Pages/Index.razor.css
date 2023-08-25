@@ -14,3 +14,28 @@
 .disabled-screen-generator{
     background-color: #d9d9d9;
 }
+
+@media (max-width: 640.98px) {
+    .screen-table{
+        margin-top: 30px;
+    }
+
+    .screen-table thead {
+        display: none;
+    }
+
+        .screen-row td:first-child {
+            border-top: solid #222222 1px;
+            font-weight: 600;
+            padding-top: 20px;
+        }
+
+    .screen-row td:last-child {
+        padding-bottom: 20px;
+    }
+
+    .screen-row td {
+        display: block;
+        border: none;
+    }
+}

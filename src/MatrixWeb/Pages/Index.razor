@@ -29,7 +29,7 @@
     <button type="button" @onclick="() => _showAll = true" class="btn btn-secondary">Alle anzeigen</button>
 }
 
-<table class="table">
+<table class="table screen-table">
     <thead>
         <tr>
             <th scope="col">Name</th>
@@ -40,7 +40,7 @@
     <tbody>
         @foreach (var screen in screens.GetScreenGenerators()) {
             @if (screen.IsEnabled || _showAll) {
-                <tr class="@IsDisabledClass(screen)">
+                <tr class="screen-row  @IsDisabledClass(screen)">
                     <td scope="row"> @screen.Name</td>
                     <td> @screen.Description </td>
                     <td>
