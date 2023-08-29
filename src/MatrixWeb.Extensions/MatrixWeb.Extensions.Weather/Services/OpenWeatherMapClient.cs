@@ -1,4 +1,5 @@
 ﻿using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using MatrixWeb.Extensions.Weather.Data;
 using Microsoft.Extensions.Logging;
@@ -6,6 +7,11 @@ using OpenWeatherMap.NetClient.Models;
 
 namespace MatrixWeb.Extensions.Weather.Services;
 public class OpenWeatherMapClient : CachedWeatherClient {
+    private const string s_configName = "open-weather-map";
+    private const string s_apiKeyName = "api-key";
+    private const string s_latitudeName = "latitude";
+    private const string s_longitudeName = "longitude";
+
     private OpenWeatherMap.NetClient.OpenWeatherMapClient? _client;
     private double _latitude;
     private double _longitude;
@@ -16,27 +22,35 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
     public override bool IsEnabled { get; protected set; }
 
+    public ConfigLayout ConfigLayout { get; } = new() {
+        ConfigName = s_configName,
+        Keys = new ConfigKey[] {
+            new(s_apiKeyName, typeof(string)),
+            new(s_latitudeName, typeof(double)),
+            new(s_longitudeName, typeof(double)),
+        }
+    };
     public OpenWeatherMapClient(ConfigService configService, ILogger<OpenWeatherMapClient> logger) {
         _configService = configService;
         _logger = logger;
     }
 
     public override void Init() {
-        Config? config = _configService.GetConfig("open-weather-map");
+        RawConfig? config = _configService.GetConfig(s_configName);
         if (config is null) {
             IsEnabled = false;
             return;
         }
 
-        if (!config.TryGetString("api-key", out string? apiKey) || apiKey is null) {
+        if (!config.TryGetString(s_apiKeyName, out string? apiKey) || apiKey is null) {
             IsEnabled = false;
             return;
         }
 
         _client = new OpenWeatherMap.NetClient.OpenWeatherMapClient(apiKey);
 
-        config.TryGetDouble("latitude", out _latitude);
-        config.TryGetDouble("longitude", out _longitude);
+        config.TryGetDouble(s_latitudeName, out _latitude);
+        config.TryGetDouble(s_longitudeName, out _longitude);
         IsEnabled = true;
     }
 

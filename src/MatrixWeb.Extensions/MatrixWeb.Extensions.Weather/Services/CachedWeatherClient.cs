@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using MatrixWeb.Extensions.Weather.Data;
 
@@ -13,10 +14,12 @@ public abstract class CachedWeatherClient : IInitializable, IService
     private TicksTime _lastUpdate = TicksTime.MinValue;
 
     public abstract bool IsEnabled { get; protected set; }
+
     public abstract void Init();
 
     protected abstract Task<WeatherStatus> UpdateWeather();
 
+    public ConfigLayout ConfigLayout { get; } = ConfigLayout.Empty;
     private async Task PrivateUpdateWeather()
     {
         WeatherStatus newWeather = await UpdateWeather();

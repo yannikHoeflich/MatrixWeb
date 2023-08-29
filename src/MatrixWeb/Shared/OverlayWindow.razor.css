@@ -1,0 +1,42 @@
+﻿.overlay-window {
+    display: block;
+    position: absolute;
+    background: white;
+    z-index: 100;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.header {
+    height: 20px;
+}
+
+.header .btn-close{
+    float: right;
+}
+
+.body {
+    overflow-y: auto;
+    padding: 10px;
+}
+
+@media (min-width: 641px) {
+    .overlay-window {
+        top: 25px;
+        left: 25px;
+        height: calc(100% - 50px);
+        width: calc(100% - 50px);
+        border-radius: 20px;
+
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px 5px;
+    }
+}
+
+@media (max-width: 640.98px) {
+    .overlay-window {
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+}

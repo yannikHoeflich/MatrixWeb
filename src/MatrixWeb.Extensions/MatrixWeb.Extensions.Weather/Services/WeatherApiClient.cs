@@ -1,4 +1,5 @@
 ﻿using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using MatrixWeb.Extensions.Weather.Data;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,10 @@ using NETWeatherAPI.Entities;
 
 namespace MatrixWeb.Extensions.Weather.Services;
 public class WeatherApiClient : CachedWeatherClient, IInitializable {
+    private const string s_configName = "weather-api";
+    private const string s_apiKeyName = "api-key";
+    private const string s_cityName = "city";
+
     private readonly ILogger _logger;
     private WeatherAPIClient? _weatherAPIClient;
     private string? _cityName;
@@ -15,19 +20,27 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
 
     public override bool IsEnabled { get; protected set; } = false;
 
+    public ConfigLayout ConfigLayout { get; } = new() {
+        ConfigName = s_configName,
+        Keys = new ConfigKey[] {
+            new(s_apiKeyName, typeof(string)),
+            new(s_cityName, typeof(string))
+        }
+    };
+
     public WeatherApiClient(ConfigService configService, ILogger<WeatherApiClient> logger) {
         _configService = configService;
         _logger = logger;
     }
 
     public override void Init() {
-        Config? config = _configService.GetConfig("weather-api");
+        RawConfig? config = _configService.GetConfig(s_configName);
         if (config is null) {
             IsEnabled = false;
             return;
         }
 
-        if (!config.TryGetString("api-key", out string? apiKey) || !config.TryGetString("city", out _cityName)) {
+        if (!config.TryGetString(s_apiKeyName, out string? apiKey) || !config.TryGetString(s_cityName, out _cityName)) {
             IsEnabled = false;
             return;
         }

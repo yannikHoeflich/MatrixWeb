@@ -1,0 +1,18 @@
+﻿@if (Visible) {
+    <div class="overlay-window">
+        <div class="header">
+            <button class="btn-close" @onclick="e => Visible = false" />
+        </div>
+        <div class="body">
+            @ChildContent
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

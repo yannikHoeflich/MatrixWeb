@@ -1,9 +1,11 @@
 ﻿using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Services;
 public class SymbolLoader : IAsyncInitializable, IService {
     private const string s_directory = "Icons/Symbols";
+    public ConfigLayout ConfigLayout { get; } = ConfigLayout.Empty;
 
     private static readonly IReadOnlyDictionary<string, char> s_files = new Dictionary<string, char>() {
         {"0.png", '0'},

@@ -1,6 +1,7 @@
 ﻿@page "/Settings"
 @using MatrixWeatherDisplay.Data;
 @using MatrixWeatherDisplay.Services;
+@using MatrixWeb.Extensions.Services;
 @using MatrixWeb.Extensions.Weather.Services;
 @using MatrixWeb.Services;
 @using System.Globalization;
@@ -12,7 +13,21 @@
 @inject WeatherService weather
 @inject BrightnessService autoBrightness
 @inject DeviceService devices
+@inject ConfigService configService
 
+<OverlayWindow @ref="_configWindow">
+    @foreach(var configLayout in configService.Layouts) {
+        <h3>@configLayout.ConfigName</h3>
+        @foreach(var key in configLayout.Keys) {
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="@(configLayout.ConfigName + key.Key)" placeholder="@key.Key">
+                <label for="@(configLayout.ConfigName + key.Key)">@key.Key</label>
+            </div>
+        }
+    }
+</OverlayWindow>
+
+<button class="btn btn-primary config-button" @onclick="e => _configWindow.Visible = true">config</button>
 
 <p class="settings-container">
     <h4>Display</h4>
@@ -24,15 +39,15 @@
 
     <h5>Rot schwelle</h5>
     <PercentInput Min="0" Max="100" Decimals="1" OnInput="ChangeRedThreshold" Value="display.RedManager.RedThreshold" />
-<p class="description">
-        @if (_redTimeRange == TimeRange.Always) {
-            <text>Immer Rot</text>
-        } else if (_redTimeRange == TimeRange.Never) {
-            <text>Nie Rot</text>
-        } else {
-            <text>Rot von <b>@_redTimeRange.Start</b> bis <b>@_redTimeRange.End</b></text>
-        }
-</p>
+    <p class="description">
+            @if (_redTimeRange == TimeRange.Always) {
+                <text>Immer Rot</text>
+            } else if (_redTimeRange == TimeRange.Never) {
+                <text>Nie Rot</text>
+            } else {
+                <text>Rot von <b>@_redTimeRange.Start</b> bis <b>@_redTimeRange.End</b></text>
+            }
+    </p>
 </p>
 
 <p class="settings-container">
@@ -69,9 +84,12 @@
     <button type="button" @onclick="RestartDisplay" class="btn btn-danger">Display Controller neustarten</button>
     }
 </p>
+
 @code {
     private bool _restarting;
     private TimeRange _redTimeRange;
+
+    private OverlayWindow _configWindow;
 
     protected override void OnInitialized() {
         _redTimeRange = display.RedManager.GetRedTimeRange();

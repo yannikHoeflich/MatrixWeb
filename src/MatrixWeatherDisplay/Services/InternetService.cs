@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MatrixWeatherDisplay.Data;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using System;
 
@@ -32,13 +33,21 @@ public class InternetService : IInitializable, IService {
 
     public bool IsEnabled => true;
 
+    public ConfigLayout ConfigLayout { get; } = new() {
+        ConfigName = s_configName,
+        Keys = new ConfigKey[] {
+            new ConfigKey(s_updateFrequencyName, typeof(double)),
+            new ConfigKey(s_timeoutName, typeof(int)),
+            new ConfigKey(s_hostToPingName, typeof(string))
+        }
+    };
 
     public InternetService(ConfigService configService) {
         _configService = configService;
     }
 
     public void Init() {
-        Config? config = _configService.GetConfig(s_configName) ?? _configService.CreateConfig(s_configName);
+        RawConfig? config = _configService.GetConfig(s_configName) ?? _configService.CreateConfig(s_configName);
 
         if(config.TryGetDouble(s_updateFrequencyName, out double checkFrequency)) {
             _updateFrequency = TicksTimeSpan.FromTimeSpan(TimeSpan.FromMinutes(checkFrequency));

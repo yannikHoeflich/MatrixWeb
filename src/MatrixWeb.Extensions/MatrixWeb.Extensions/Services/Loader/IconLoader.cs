@@ -1,4 +1,5 @@
 ﻿using MatrixWeb.Extensions;
+using MatrixWeb.Extensions.Data.Config;
 
 namespace MatrixWeb.Extensions.Services.Loader;
 public abstract class IconLoader<T> : IAsyncInitializable, IService where T : struct {
@@ -7,6 +8,8 @@ public abstract class IconLoader<T> : IAsyncInitializable, IService where T : st
     protected abstract Dictionary<string, T> p_files { get; }
 
     private readonly Dictionary<T, Image<Rgb24>> _iconCash = new();
+
+    public ConfigLayout ConfigLayout { get; } = ConfigLayout.Empty;
 
     private static async Task<Image<Rgb24>> LoadGifAsync(string path) => await Image.LoadAsync<Rgb24>(path);
 

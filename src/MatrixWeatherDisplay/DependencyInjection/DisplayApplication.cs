@@ -7,6 +7,7 @@ using MatrixWeatherDisplay.Services;
 using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Logging;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,15 @@ public partial class DisplayApplication {
 
     public async Task InitDefaultServicesAsync() {
         ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
-        await configService.InitAsync();
+
+        IEnumerable<IInitializable> initializables = Initializables.Select(x => x.GetService(Services)).OfType<IInitializable>().ToArray();
+        IEnumerable<IAsyncInitializable> asyncInitializables = AsyncInitializables.Select(x => x.GetService(Services)).OfType<IAsyncInitializable>().ToArray();
+
+        var configLayouts = initializables.Select(x => x.ConfigLayout).Concat(
+                            asyncInitializables.Select(x => x.ConfigLayout))
+                            .ToList();
+
+        await configService.InitAsync(configLayouts);
 
         ILogger<DisplayApplication>? newLogger = Services.GetService<ILogger<DisplayApplication>>();
         if (newLogger is not null) {
@@ -47,17 +56,15 @@ public partial class DisplayApplication {
         BrightnessService autoBrightnessService = Services.GetService<BrightnessService>() ?? throw new InvalidOperationException("The Service of type 'AutoBrightnessService' must be registered");
         RedManager = new RedSettings(autoBrightnessService);
 
-        var serviceInitializer = new ServiceInitializer(Services);
-
         if (Initializables is not null) {
-            foreach (ServiceDescriptor serviceDescriptor in Initializables) {
-                serviceInitializer.Init(serviceDescriptor);
+            foreach (IInitializable service in initializables) {
+                service.Init();
             }
         }
 
         if (AsyncInitializables is not null) {
-            foreach (ServiceDescriptor serviceDescriptor in AsyncInitializables.Where(x => x.ImplementationType != typeof(ConfigService))) {
-                await serviceInitializer.InitAsync(serviceDescriptor);
+            foreach (IAsyncInitializable service in asyncInitializables) {
+                await service.InitAsync();
             }
         }
 

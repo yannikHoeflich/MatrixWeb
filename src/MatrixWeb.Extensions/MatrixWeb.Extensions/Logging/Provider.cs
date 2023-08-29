@@ -2,6 +2,7 @@
 
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,12 +22,19 @@ public class Provider : ILoggerProvider, IInitializable {
     public bool IsEnabled { get; } = true;
 
 
+    public ConfigLayout ConfigLayout { get; } = new() {
+        ConfigName = s_configName,
+        Keys = new ConfigKey[] {
+            new ConfigKey(s_logLevelName, typeof(string)),
+        }
+    };
+
     public Provider(ConfigService configService) {
         _configService = configService;
     }
 
     public void Init() {
-        Config config = _configService.GetOrCreateConfig(s_configName);
+        RawConfig config = _configService.GetOrCreateConfig(s_configName);
 
         if(config.TryGetInt(s_logLevelName, out int logLevelInt)) {
             _minLogLevel.Value = (LogLevel)logLevelInt;

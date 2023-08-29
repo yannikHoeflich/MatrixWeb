@@ -1,6 +1,7 @@
 ﻿using MatrixWeatherDisplay.Services;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 
 namespace MatrixWeatherDisplay.Data.Converter;
@@ -11,12 +12,16 @@ public class ColorHelper: IInitializable {
 
     public bool IsEnabled { get; } = true;
 
+    public ConfigLayout ConfigLayout { get; } = new() {
+        ConfigName = s_configName,
+        Keys = new ConfigKey[] { }
+    };
     public ColorHelper(ConfigService configService) {
         _configService = configService;
     }
 
     public void Init() {
-        Config? config = _configService.GetConfig(s_configName);
+        RawConfig? config = _configService.GetConfig(s_configName);
         if(config is null) {
             return;
         }

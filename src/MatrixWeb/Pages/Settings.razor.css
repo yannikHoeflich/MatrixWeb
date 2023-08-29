@@ -34,3 +34,7 @@ h5 {
         .settings-container .description b {
             font-weight: 600;
         }
+
+.config-button{
+    float: right;
+}

@@ -1,12 +1,17 @@
 ﻿using MatrixWeatherDisplay.Data;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 
 namespace MatrixWeatherDisplay.Services;
 public class SpotifyService : IInitializable, IService {
+    private const string s_configName = "spotify";
+    private const string s_clientIdName = "client-id";
+    private const string s_clientSecretName = "client-secret";
+
     private readonly static ICollection<string> s_spotifyScopes = new List<string> { Scopes.UserReadCurrentlyPlaying };
 
     private readonly ConfigService _configService;
@@ -25,20 +30,28 @@ public class SpotifyService : IInitializable, IService {
     public bool HasClientKeys => _clientId is not null && _clientSecret is not null;
     public bool IsEnabled => HasClientKeys && _client is not null;
 
+    public ConfigLayout ConfigLayout { get; } = new() {
+        ConfigName = s_configName,
+        Keys = new ConfigKey[] {
+            new ConfigKey(s_clientIdName, typeof(string)),
+            new ConfigKey(s_clientSecretName, typeof(string))
+        }
+    };
+
     public SpotifyService(ConfigService configService, ILogger<SpotifyService> logger) {
         _configService = configService;
         _logger = logger;
     }
 
     public void Init() {
-        Config? config = _configService.GetConfig("spotify");
+        RawConfig? config = _configService.GetConfig(s_configName);
 
         if(config is null) {
             return;
         }
 
-        config.TryGetString("client-id", out _clientId);
-        config.TryGetString("client-secret", out _clientSecret);
+        config.TryGetString(s_clientIdName, out _clientId);
+        config.TryGetString(s_clientSecretName, out _clientSecret);
     }
 
     public string GetSpotifyUrl(string baseUrl) {

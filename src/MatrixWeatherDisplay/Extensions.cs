@@ -93,4 +93,7 @@ public static class Extensions {
 
         return value;
     }
+
+    public static object? GetService(this ServiceDescriptor serviceDescriptor, IServiceProvider serviceProvider) 
+        => serviceProvider.GetService(serviceDescriptor.ServiceType);
 }

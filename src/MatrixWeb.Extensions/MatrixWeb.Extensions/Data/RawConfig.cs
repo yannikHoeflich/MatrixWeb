@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System;
 
 namespace MatrixWeb.Extensions.Data;
-public class Config : IDictionary<string, string?> {
+public class RawConfig : IDictionary<string, string?> {
     private delegate bool DataGetter<T>(string input, IFormatProvider? formatProvider, out T output);
     private readonly Dictionary<string, string?> _data = new();
 

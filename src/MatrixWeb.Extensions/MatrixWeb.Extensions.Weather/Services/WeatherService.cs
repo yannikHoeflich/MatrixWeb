@@ -1,4 +1,5 @@
-﻿using MatrixWeb.Extensions.Services;
+﻿using MatrixWeb.Extensions.Data.Config;
+using MatrixWeb.Extensions.Services;
 using MatrixWeb.Extensions.Weather.Data;
 
 namespace MatrixWeb.Extensions.Weather.Services;
@@ -8,6 +9,8 @@ public class WeatherService : IService, IInitializable {
     public WeatherProvider WeatherProvider { get; set; } = WeatherProvider.OpenWeatherMap;
 
     public bool IsEnabled => _clients.Any(c => c.Value.IsEnabled);
+
+    public ConfigLayout ConfigLayout { get; } = ConfigLayout.Empty;
 
     public WeatherService(OpenWeatherMapClient openWeatherMapClient, WeatherApiClient weatherApiClient) {
         _clients = new() {
