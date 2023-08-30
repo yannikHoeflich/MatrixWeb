@@ -22,7 +22,7 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
     public override bool IsEnabled { get; protected set; }
 
-    public ConfigLayout ConfigLayout { get; } = new() {
+    public override ConfigLayout ConfigLayout { get; } = new() {
         ConfigName = s_configName,
         Keys = new ConfigKey[] {
             new(s_apiKeyName, typeof(string)),
@@ -30,6 +30,7 @@ public class OpenWeatherMapClient : CachedWeatherClient {
             new(s_longitudeName, typeof(double)),
         }
     };
+
     public OpenWeatherMapClient(ConfigService configService, ILogger<OpenWeatherMapClient> logger) {
         _configService = configService;
         _logger = logger;

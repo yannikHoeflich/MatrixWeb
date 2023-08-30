@@ -44,6 +44,8 @@ public partial class DisplayApplication {
 
         var configLayouts = initializables.Select(x => x.ConfigLayout).Concat(
                             asyncInitializables.Select(x => x.ConfigLayout))
+                            .Where(x => x != ConfigLayout.Empty && x.Keys.Length > 0)
+                            .DistinctBy(x => x.Keys)
                             .ToList();
 
         await configService.InitAsync(configLayouts);

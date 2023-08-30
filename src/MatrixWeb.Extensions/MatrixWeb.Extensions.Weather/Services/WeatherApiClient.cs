@@ -20,7 +20,7 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
 
     public override bool IsEnabled { get; protected set; } = false;
 
-    public ConfigLayout ConfigLayout { get; } = new() {
+    public override ConfigLayout ConfigLayout { get; } = new() {
         ConfigName = s_configName,
         Keys = new ConfigKey[] {
             new(s_apiKeyName, typeof(string)),

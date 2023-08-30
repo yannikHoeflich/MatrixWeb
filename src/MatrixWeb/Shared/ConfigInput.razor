@@ -1,0 +1,58 @@
+﻿@using MatrixWeb.Extensions.Data.Config;
+@using MatrixWeb.Extensions.Data;
+
+@inject ConfigService configService
+
+<div class="form-floating mb-3">
+    <input type="@GetInputType()" class="form-control" id="@_inputId" placeholder="@ConfigKey.Key" value="@Getvalue()" @onchange="OnChange">
+   <label for="@_inputId">@ConfigKey.Key</label>
+</div>
+
+@code {
+    private Guid _inputId = Guid.NewGuid();
+    private RawConfig? _config = null;
+
+    [Parameter]
+    public ConfigKey ConfigKey { get; set; }
+
+    [Parameter]
+    public ConfigLayout ConfigLayout { get; set; }
+
+
+
+    protected override void OnInitialized() {
+        _config = configService.GetOrCreateConfig(ConfigLayout.ConfigName);
+    }
+
+    private string Getvalue() {
+        if(_config is null) {
+            return "";
+        }
+
+        if (_config.TryGetString(ConfigKey.Key, out string value)) {
+            return value;
+        }
+
+        return "";
+    }
+
+    private string GetInputType() {
+        if(ConfigKey.Type == typeof(string) || ConfigKey.Type == typeof(Guid)) {
+            return "text";
+        }
+
+        if (ConfigKey.Type == typeof(int) || ConfigKey.Type == typeof(long) || ConfigKey.Type == typeof(double) || ConfigKey.Type == typeof(float)) {
+            return "number";
+        }
+
+        return "text";
+    }
+
+    private void OnChange(ChangeEventArgs e) {
+        if(e.Value is not string str) {
+            return;
+        }
+
+        _config?.Set(ConfigKey.Key, str);
+    }
+}

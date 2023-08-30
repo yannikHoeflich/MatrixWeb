@@ -19,12 +19,13 @@
     @foreach(var configLayout in configService.Layouts) {
         <h3>@configLayout.ConfigName</h3>
         @foreach(var key in configLayout.Keys) {
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="@(configLayout.ConfigName + key.Key)" placeholder="@key.Key">
-                <label for="@(configLayout.ConfigName + key.Key)">@key.Key</label>
-            </div>
+            <ConfigInput ConfigKey="key" ConfigLayout="configLayout" />
         }
     }
+
+    <div class="footer">
+        <button class="btn btn-primary config-save-button" @onclick="e => configService.SaveAsync()">Save</button>
+    </div>
 </OverlayWindow>
 
 <button class="btn btn-primary config-button" @onclick="e => _configWindow.Visible = true">config</button>

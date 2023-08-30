@@ -56,7 +56,8 @@ public class ConfigService: IService{
     }
 
     public async Task SaveAsync() {
+        var configsToSave = _configs?.Where(x => x.Value.Any()).ToDictionary(x => x.Key, x => x.Value);
         using FileStream fileStream = File.Create(s_configFile);
-        await JsonSerializer.SerializeAsync(fileStream, _configs, new JsonSerializerOptions() { WriteIndented = true});
+        await JsonSerializer.SerializeAsync(fileStream, configsToSave, new JsonSerializerOptions() { WriteIndented = true});
     }
 }
