@@ -20,11 +20,13 @@ public class ColorHelper: IInitializable {
         _configService = configService;
     }
 
-    public void Init() {
+    public InitResult Init() {
         RawConfig? config = _configService.GetConfig(s_configName);
         if(config is null) {
-            return;
+            return InitResult.NoConfig();
         }
+
+        return InitResult.Success;
     }
 
 

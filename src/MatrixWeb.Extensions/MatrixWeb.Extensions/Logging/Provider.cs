@@ -33,12 +33,12 @@ public class Provider : ILoggerProvider, IInitializable {
         _configService = configService;
     }
 
-    public void Init() {
+    public InitResult Init() {
         RawConfig config = _configService.GetOrCreateConfig(s_configName);
 
         if(config.TryGetInt(s_logLevelName, out int logLevelInt)) {
             _minLogLevel.Value = (LogLevel)logLevelInt;
-            return;
+            return InitResult.Success;
         }
 
         if(config.TryGetString(s_logLevelName, out string? logLevelStr) && logLevelStr is not null && Enum.TryParse(logLevelStr, out LogLevel logLevel)){
@@ -48,6 +48,7 @@ public class Provider : ILoggerProvider, IInitializable {
             config.Set(s_logLevelName, _minLogLevel);
         }
 
+        return InitResult.Success;
     }
 
     public ILogger CreateLogger(string categoryName) {

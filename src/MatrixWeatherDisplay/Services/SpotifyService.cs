@@ -43,15 +43,19 @@ public class SpotifyService : IInitializable, IService {
         _logger = logger;
     }
 
-    public void Init() {
+    public InitResult Init() {
         RawConfig? config = _configService.GetConfig(s_configName);
 
         if(config is null) {
-            return;
+            return InitResult.NoConfig();
         }
 
         config.TryGetString(s_clientIdName, out _clientId);
         config.TryGetString(s_clientSecretName, out _clientSecret);
+
+        return HasClientKeys
+            ? InitResult.Success
+            : InitResult.NoConfigElements(s_clientIdName, s_clientSecretName);
     }
 
     public string GetSpotifyUrl(string baseUrl) {

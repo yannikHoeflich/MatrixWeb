@@ -39,18 +39,22 @@ public class SymbolLoader : IAsyncInitializable, IService {
         return symbol;
     }
 
-    public Task InitAsync() => LoadSymbolsAsync();
-    public async Task LoadSymbolsAsync() {
+    public async Task<InitResult> InitAsync() {
         foreach (KeyValuePair<string, char> symbol in s_files) {
             string file = symbol.Key;
             char character = symbol.Value;
+            bool[,] symbolMatrix;
+            try {
+                symbolMatrix = await LoadSymbol(Path.Combine(s_directory, file));
+            } catch(Exception ex) {
+                return InitResult.Critical($"Couldn't load '{file}': {ex.Message}");
+            }
 
-            bool[,] symbolMatrix = await LoadSymbol(Path.Combine(s_directory, file));
             _symbols.Add(character, symbolMatrix);
         }
+
+        return InitResult.Success;
     }
-
-
     public void DrawNumber(Image<Rgb24> image, int value, int length, int x, int y, Color color) {
         if (value < 0) {
             return;

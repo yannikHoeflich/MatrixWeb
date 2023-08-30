@@ -15,7 +15,7 @@ public abstract class CachedWeatherClient : IInitializable, IService
 
     public abstract bool IsEnabled { get; protected set; }
 
-    public abstract void Init();
+    public abstract InitResult Init();
 
     protected abstract Task<WeatherStatus> UpdateWeather();
 

@@ -46,7 +46,7 @@ public class InternetService : IInitializable, IService {
         _configService = configService;
     }
 
-    public void Init() {
+    public InitResult Init() {
         RawConfig? config = _configService.GetConfig(s_configName) ?? _configService.CreateConfig(s_configName);
 
         if(config.TryGetDouble(s_updateFrequencyName, out double checkFrequency)) {
@@ -66,6 +66,8 @@ public class InternetService : IInitializable, IService {
         } else {
             config.Set(s_hostToPingName, _hostToPing);
         }
+
+        return InitResult.Success;
     }
 
     public async Task<bool> HasInternetConnection() {

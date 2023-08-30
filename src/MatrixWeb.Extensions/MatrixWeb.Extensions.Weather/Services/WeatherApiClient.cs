@@ -33,20 +33,21 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
         _logger = logger;
     }
 
-    public override void Init() {
+    public override InitResult Init() {
         RawConfig? config = _configService.GetConfig(s_configName);
         if (config is null) {
             IsEnabled = false;
-            return;
+            return InitResult.NoConfig();
         }
 
         if (!config.TryGetString(s_apiKeyName, out string? apiKey) || !config.TryGetString(s_cityName, out _cityName)) {
             IsEnabled = false;
-            return;
+            return InitResult.NoConfigElements(s_apiKeyName, s_cityName);
         }
 
         _weatherAPIClient = new WeatherAPIClient(apiKey);
         IsEnabled = true;
+        return InitResult.Success;
     }
 
 

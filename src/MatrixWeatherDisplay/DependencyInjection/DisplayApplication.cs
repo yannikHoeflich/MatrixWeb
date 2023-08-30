@@ -36,7 +36,12 @@ public partial class DisplayApplication {
 
     }
 
-    public async Task InitDefaultServicesAsync() {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>true if the code flow should be continued, false if a critical error accured and the program should not be started.</returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<bool> InitDefaultServicesAsync() {
         ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
 
         IEnumerable<IInitializable> initializables = Initializables.Select(x => x.GetService(Services)).OfType<IInitializable>().ToArray();
@@ -60,17 +65,24 @@ public partial class DisplayApplication {
 
         if (Initializables is not null) {
             foreach (IInitializable service in initializables) {
-                service.Init();
+                InitResult result = service.Init();
+                if(HandleInitResult(service,  result)) {
+                    return false;
+                }
             }
         }
 
         if (AsyncInitializables is not null) {
             foreach (IAsyncInitializable service in asyncInitializables) {
-                await service.InitAsync();
+                InitResult result = await service.InitAsync();
+                if (HandleInitResult(service, result)) {
+                    return false;
+                }
             }
         }
 
         await configService.SaveAsync();
+        return true;
     }
 
     public async Task RunAsync() {

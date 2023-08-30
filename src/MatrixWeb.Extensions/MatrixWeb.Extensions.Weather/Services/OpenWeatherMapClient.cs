@@ -36,16 +36,16 @@ public class OpenWeatherMapClient : CachedWeatherClient {
         _logger = logger;
     }
 
-    public override void Init() {
+    public override InitResult Init() {
         RawConfig? config = _configService.GetConfig(s_configName);
         if (config is null) {
             IsEnabled = false;
-            return;
+            return InitResult.NoConfig();
         }
 
         if (!config.TryGetString(s_apiKeyName, out string? apiKey) || apiKey is null) {
             IsEnabled = false;
-            return;
+            return InitResult.NoConfigElements(s_apiKeyName);
         }
 
         _client = new OpenWeatherMap.NetClient.OpenWeatherMapClient(apiKey);
@@ -53,6 +53,7 @@ public class OpenWeatherMapClient : CachedWeatherClient {
         config.TryGetDouble(s_latitudeName, out _latitude);
         config.TryGetDouble(s_longitudeName, out _longitude);
         IsEnabled = true;
+        return InitResult.Success;
     }
 
     protected override async Task<WeatherStatus> UpdateWeather() {

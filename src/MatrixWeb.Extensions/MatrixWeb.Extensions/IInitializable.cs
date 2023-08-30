@@ -9,5 +9,5 @@ using System;
 namespace MatrixWeb.Extensions;
 public interface IInitializable : IEnableable{
     public ConfigLayout ConfigLayout { get; }
-    public void Init();
+    public InitResult Init();
 }

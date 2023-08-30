@@ -19,8 +19,9 @@ public class WeatherService : IService, IInitializable {
         };
     }
 
-    public void Init() {
+    public InitResult Init() {
         WeatherProvider = _clients.FirstOrDefault(x => x.Value.IsEnabled).Key;
+        return InitResult.Success;
     }
 
     public async Task<WeatherStatus> GetWeatherAsync() {

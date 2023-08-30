@@ -9,5 +9,5 @@ using System;
 namespace MatrixWeb.Extensions;
 public interface IAsyncInitializable {
     public ConfigLayout ConfigLayout { get; }
-    public Task InitAsync();
+    public Task<InitResult> InitAsync();
 }

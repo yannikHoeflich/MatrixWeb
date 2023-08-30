@@ -13,18 +13,22 @@ public abstract class IconLoader<T> : IAsyncInitializable, IService where T : st
 
     private static async Task<Image<Rgb24>> LoadGifAsync(string path) => await Image.LoadAsync<Rgb24>(path);
 
-    public Task InitAsync() => LoadGifsAsync();
-
-    public async Task LoadGifsAsync() {
+    public async Task<InitResult> InitAsync() {
         foreach (KeyValuePair<string, T> item in p_files) {
             string file = item.Key;
             T name = item.Value;
 
-            Image<Rgb24> gif = await LoadGifAsync(Path.Combine(p_directory, file));
+            Image<Rgb24> gif;
+            try {
+                gif = await LoadGifAsync(Path.Combine(p_directory, file));
+            } catch(Exception ex) {
+                return InitResult.Critical($"Couldn't load '{file}': {ex.Message}");
+            }
 
             _iconCash.Add(name, gif);
         }
-    }
 
+        return InitResult.Success;
+    }
     public Image<Rgb24> GetIconAsync(T name) => _iconCash[name].Clone();
 }

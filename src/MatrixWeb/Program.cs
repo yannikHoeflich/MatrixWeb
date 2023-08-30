@@ -24,7 +24,9 @@ public static class Program {
 
         DisplayApplication displayApp = displayBuilder.Build();
 
-        await displayApp.InitDefaultServicesAsync();
+        if(!await displayApp.InitDefaultServicesAsync()) {
+            return;
+        }
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         displayApp.Services.MoveServiceTo<ConfigService>(builder.Services);
