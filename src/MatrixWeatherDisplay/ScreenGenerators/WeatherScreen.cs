@@ -2,6 +2,7 @@
 using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services.Translation;
 using MatrixWeb.Extensions.Weather.Data;
 using MatrixWeb.Extensions.Weather.Services;
 
@@ -11,9 +12,12 @@ public class WeatherScreen : IScreenGenerator {
     private readonly WeatherService _weather;
     private readonly WeatherIconLoader _iconLoader;
 
-    public string Name { get; } = "Wetter";
+    public Text Name { get; } = new Text(new TextElement(LanguageCode.EN, "Weather"), new TextElement(LanguageCode.DE, "Wetter"));
 
-    public string Description { get; } = "Zeigt das aktuelle Wetter als ein animiertes Icon an";
+    public Text Description { get; } = new Text(
+        new TextElement(LanguageCode.EN, "Shows the current weather as an animated icon"),
+        new TextElement(LanguageCode.DE, "Zeigt das aktuelle Wetter als ein animiertes Icon an")
+        );
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(5);
 

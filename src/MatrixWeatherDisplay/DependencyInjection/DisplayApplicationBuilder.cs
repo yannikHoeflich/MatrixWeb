@@ -8,6 +8,7 @@ using MatrixWeatherDisplay.Services.IconLoader;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Logging;
 using MatrixWeb.Extensions.Services;
+using MatrixWeb.Extensions.Services.Translation;
 using MatrixWeb.Extensions.Weather.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ public partial class DisplayApplicationBuilder {
         Services = new ServiceCollection();
 
         Services.AddSingleton<ConfigService>();
+        Services.AddSingleton<TextService>();
         Services.AddLogger();
 
         Services.AddSingleton<BrightnessService>();

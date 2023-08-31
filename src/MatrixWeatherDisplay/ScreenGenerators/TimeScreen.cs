@@ -4,6 +4,7 @@ using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services.Translation;
 using static OpenWeatherMap.NetClient.Models.Forecast5Days;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
@@ -11,9 +12,12 @@ public class TimeScreen : IScreenGenerator {
     private readonly SymbolLoader _symbolLoader;
     private readonly ColorHelper _colorHelper;
 
-    public string Name { get; } = "Uhr";
+    public Text Name { get; } = new Text(new TextElement(LanguageCode.EN, "Clock"), new TextElement(LanguageCode.DE, "Uhr"));
 
-    public string Description { get; } = "Zeight die Uhrzeit an";
+    public Text Description { get; } = new Text(
+        new TextElement(LanguageCode.EN, "Show the current time"),
+        new TextElement(LanguageCode.DE, "Zeigt die Uhrzeit an")
+        );
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(3);
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,5 +37,16 @@ public static class ExtensionsMethods {
 
 
         return response;
+    }
+
+    public static bool TryFirst<T>(this IEnumerable<T> enumerable, Predicate<T> predicate, out T? value) {
+        IEnumerator<T> enumerator = enumerable.Where(item => predicate(item)).GetEnumerator();
+        if(enumerator.MoveNext()) {
+            value = enumerator.Current;
+            return true;
+        }
+
+        value = default;
+        return false;
     }
 }

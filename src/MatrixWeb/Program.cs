@@ -5,6 +5,7 @@ using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeb.Extensions.Logging;
 using MatrixWeb.Extensions.Services;
+using MatrixWeb.Extensions.Services.Translation;
 using MatrixWeb.Extensions.Weather.Services;
 using MatrixWeb.Services;
 
@@ -30,6 +31,7 @@ public static class Program {
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         displayApp.Services.MoveServiceTo<ConfigService>(builder.Services);
+        displayApp.Services.MoveServiceTo<TextService>(builder.Services);
         displayApp.Services.MoveLogger(builder.Services);
 
         builder.Services.AddSingleton((p) => new DisplayService(displayApp, p.GetService<ILogger<DisplayService>>()));

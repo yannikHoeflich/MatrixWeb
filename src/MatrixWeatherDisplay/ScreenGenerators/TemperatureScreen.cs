@@ -4,6 +4,7 @@ using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services.Translation;
 using MatrixWeb.Extensions.Weather.Data;
 using MatrixWeb.Extensions.Weather.Services;
 
@@ -13,9 +14,12 @@ public class TemperatureScreen : IScreenGenerator {
     private readonly WeatherService _weather;
     private readonly ColorHelper _colorHelper;
 
-    public string Name { get; } = "außen Temperatur";
+    public Text Name { get; } = new Text(new TextElement(LanguageCode.EN, "outside temperature"), new TextElement(LanguageCode.DE, "außen Temperatur"));
 
-    public string Description { get; } = "Zeigt die momentane außen temperatur an";
+    public Text Description { get; } = new Text(
+            new TextElement(LanguageCode.EN, "Shows the current outside temperature"),
+            new TextElement(LanguageCode.DE, "Zeigt die momentane außen temperatur an")
+        );
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(3);
 

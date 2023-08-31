@@ -4,15 +4,19 @@ using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
+using MatrixWeb.Extensions.Services.Translation;
 using SpotifyAPI.Web;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class SpotifyScreen : IScreenGenerator {
     private readonly SpotifyService _spotify;
 
-    public string Name { get; } = "Spotify";
+    public Text Name { get; } = new Text(new TextElement(LanguageCode.EN, "Spotify"), new TextElement(LanguageCode.DE, "Spotify"));
 
-    public string Description { get; } = "Zeigt das Cover des Songs, den du aktuell abspielst. Wird übersprungen falls du momentan kein Spotify hörst.";
+    public Text Description { get; } = new Text(
+        new TextElement(LanguageCode.EN, "Shows the cover of the currently playing song. If you aren't playing anything this screen will be skipped."),
+        new TextElement(LanguageCode.DE, "Zeigt das Cover des Songs, den du aktuell abspielst. Wird übersprungen falls du momentan kein Spotify hörst.")
+        );
 
     public TimeSpan ScreenTime { get; set; } = TimeSpan.FromSeconds(10);
 

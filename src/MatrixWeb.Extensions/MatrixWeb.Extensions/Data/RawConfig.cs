@@ -13,10 +13,10 @@ public class RawConfig : IDictionary<string, string?> {
     private delegate bool DataGetter<T>(string input, IFormatProvider? formatProvider, out T output);
     private readonly Dictionary<string, string?> _data = new();
 
-    public bool TryGetString(string key, out string? value) {
+    public bool TryGetString(string key, [NotNullWhen(true)] out string? value) {
         if (_data.ContainsKey(key)) {
             value = _data[key];
-            return true;
+            return value is not null;
         }
 
         value = default;
