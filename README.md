@@ -7,7 +7,7 @@ It offers a practical way to generate and showcase various images, animations,
 and real-time information. The software is accessible through a web-based interface,
 making it easy to control and configure display settings.
 
-Link to the [Wiki](wiki)
+Link to the [Wiki](/../../wiki)
 
 *Features:*
 
