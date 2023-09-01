@@ -1,6 +1,7 @@
 ﻿using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
+using MatrixWeb.Extensions.Services.Translation;
 
 namespace MatrixWeatherDisplay.Services;
 public class SymbolLoader : IAsyncInitializable, IService {
@@ -47,7 +48,8 @@ public class SymbolLoader : IAsyncInitializable, IService {
             try {
                 symbolMatrix = await LoadSymbol(Path.Combine(s_directory, file));
             } catch(Exception ex) {
-                return InitResult.Critical($"Couldn't load '{file}': {ex.Message}");
+                return InitResult.Critical(new Text(new TextElement(LanguageCode.EN, $"Couldn't load file '{file}': {ex.Message}"),
+                                                    new TextElement(LanguageCode.DE, $"Konnte Datei nicht laden '{file}': {ex.Message}")));
             }
 
             _symbols.Add(character, symbolMatrix);

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MatrixWeatherDisplay.Services;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data.Config;
+using MatrixWeb.Extensions.Services.Translation;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -48,22 +49,22 @@ public partial class DisplayApplication {
         }
 
         if (result.ResultType == InitResultType.Warning) {
-            _logger.LogInformation("Warning initializing {serviceName}: {message}", name, result.Message);
+            _logger.LogInformation("Warning initializing {serviceName}: {message}", name, result.Message.GetText(LanguageCode.EN));
             return false;
         }
         if (result.ResultType == InitResultType.Error) {
-            _logger.LogWarning("Error initializing {serviceName}: {message}", name, result.Message);
+            _logger.LogWarning("Error initializing {serviceName}: {message}", name, result.Message.GetText(LanguageCode.EN));
             return false;
         }
 
         if (result.ResultType == InitResultType.Critical) {
-            _logger.LogCritical("Critical error initializing {serviceName}: {message}", name, result.Message);
+            _logger.LogCritical("Critical error initializing {serviceName}: {message}", name, result.Message.GetText(LanguageCode.EN));
             _logger.LogCritical("Stopping!");
             _ = StopAsync();
             return true;
         }
 
-        _logger.LogInformation("Unknown result from initializing {serviceName}: {message}", name, result.Message);
+        _logger.LogInformation("Unknown result from initializing {serviceName}: {message}", name, result.Message.GetText(LanguageCode.EN));
         return false;
     }
 

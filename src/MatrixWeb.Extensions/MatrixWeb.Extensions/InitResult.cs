@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System;
+﻿using MatrixWeb.Extensions.Services.Translation;
 
 namespace MatrixWeb.Extensions;
-public record struct InitResult(InitResultType ResultType, string Message) {
-    public static readonly InitResult Success = new(InitResultType.Success, "");
+public record struct InitResult(InitResultType ResultType, Text Message) {
+    public static readonly InitResult Success = new(InitResultType.Success, Text.Empty);
 
-    public static InitResult Warning(string message) => new(InitResultType.Warning, message);
-    public static InitResult Error(string message) => new(InitResultType.Error, message);
-    public static InitResult Critical(string message) => new(InitResultType.Critical, message);
+    public static InitResult Warning(Text message) => new(InitResultType.Warning, message);
+    public static InitResult Error(Text message) => new(InitResultType.Error, message);
+    public static InitResult Critical(Text message) => new(InitResultType.Critical, message);
 
-    public static InitResult NoConfig() => new (InitResultType.Error, "There is no config for this service, even thought its required");
-    public static InitResult NoConfigElements(params string[] required) => new (InitResultType.Error, $"The config needs to contain: {string.Join(", ", required)}");
+    public static InitResult NoConfig() => Error(new Text(
+        new TextElement( LanguageCode.EN , "There is no config for this service, even thought its required"),
+        new TextElement( LanguageCode.DE , "Es gibt keine configuration für diesen Service, obwohl dieser benötigt wird")
+        ));
+    public static InitResult NoConfigElements(params string[] required) => Error(new Text(
+        new TextElement(LanguageCode.EN, $"The config needs to contain: {string.Join(", ", required)}"),
+        new TextElement(LanguageCode.DE, $"Die Konfiguration muss folgendes enthalten: {string.Join(", ", required)}")
+        ));
 }
 
 public enum InitResultType {

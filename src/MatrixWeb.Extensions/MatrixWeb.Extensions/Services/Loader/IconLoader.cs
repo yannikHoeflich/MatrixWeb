@@ -1,5 +1,6 @@
 ﻿using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data.Config;
+using MatrixWeb.Extensions.Services.Translation;
 
 namespace MatrixWeb.Extensions.Services.Loader;
 public abstract class IconLoader<T> : IAsyncInitializable, IService where T : struct {
@@ -22,7 +23,8 @@ public abstract class IconLoader<T> : IAsyncInitializable, IService where T : st
             try {
                 gif = await LoadGifAsync(Path.Combine(p_directory, file));
             } catch(Exception ex) {
-                return InitResult.Critical($"Couldn't load '{file}': {ex.Message}");
+                return InitResult.Critical(new Text(new TextElement(LanguageCode.EN, $"Couldn't load file '{file}': {ex.Message}"),
+                                                    new TextElement(LanguageCode.DE, $"Konnte Datei nicht laden '{file}': {ex.Message}")));
             }
 
             _iconCash.Add(name, gif);

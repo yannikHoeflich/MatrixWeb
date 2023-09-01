@@ -13,30 +13,30 @@
 
 <PageTitle>Index</PageTitle>
 
-<h5>@textService[s_brightnessId]</h5>
+<h5>@textService[s_brightnessText]</h5>
 
 <div class="brightness-container">
     @if (devices.AutoBrightness) {
         <input type="range" min="0" step="0.01" max="1" class="form-range" value="@devices.Brightness.Display.ToInputString(2, 1)" disabled>
-        <button type="button" @onclick="() => devices.AutoBrightness = false" class="btn btn-success">@textService[s_automaticId]</button>
+        <button type="button" @onclick="() => devices.AutoBrightness = false" class="btn btn-success">@textService[s_automaticText]</button>
     } else {
         <input type="range" min="0" step="0.01" max="1" class="form-range" value="@devices.Brightness.Display.ToInputString(2, 1)" @oninput="e => ChangeBrighness(e)">
-        <button type="button" @onclick="() => devices.AutoBrightness = true" class="btn btn-secondary">@textService[s_automaticId]</button>
+        <button type="button" @onclick="() => devices.AutoBrightness = true" class="btn btn-secondary">@textService[s_automaticText]</button>
     }
 </div>
 
 @if (_showAll) {
-    <button type="button" @onclick="() => _showAll = false" class="btn btn-success">@textService[s_showAllId]</button>
+    <button type="button" @onclick="() => _showAll = false" class="btn btn-success">@textService[s_showAllText]</button>
 } else {
-    <button type="button" @onclick="() => _showAll = true" class="btn btn-secondary">@textService[s_showAllId]</button>
+    <button type="button" @onclick="() => _showAll = true" class="btn btn-secondary">@textService[s_showAllText]</button>
 }
 
 <table class="table screen-table">
     <thead>
         <tr>
-            <th scope="col">@textService[s_nameId]</th>
-            <th scope="col">@textService[s_descriptionId]</th>
-            <th scope="col">@textService[s_screenTimeId]</th>
+            <th scope="col">@textService[s_nameText]</th>
+            <th scope="col">@textService[s_descriptionText]</th>
+            <th scope="col">@textService[s_screenTimeText]</th>
         </tr>
     </thead>
     <tbody>

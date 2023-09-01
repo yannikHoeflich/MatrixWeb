@@ -2,6 +2,7 @@
 @using MatrixWeatherDisplay.Data;
 @using MatrixWeatherDisplay.Services;
 @using MatrixWeb.Extensions.Services;
+@using MatrixWeb.Extensions.Services.Translation;
 @using MatrixWeb.Extensions.Weather.Services;
 @using MatrixWeb.Services;
 @using System.Globalization;
@@ -14,6 +15,7 @@
 @inject BrightnessService autoBrightness
 @inject DeviceService devices
 @inject ConfigService configService
+@inject TextService textService
 
 <OverlayWindow @ref="_configWindow">
     @foreach(var configLayout in configService.Layouts) {
@@ -24,50 +26,48 @@
     }
 
     <div class="footer">
-        <button class="btn btn-primary config-save-button" @onclick="e => configService.SaveAsync()">Save</button>
+        <button class="btn btn-primary config-save-button" @onclick="e => configService.SaveAsync()">@textService[s_saveText]</button>
     </div>
 </OverlayWindow>
 
-<button class="btn btn-primary config-button" @onclick="e => _configWindow.Visible = true">config</button>
+<button class="btn btn-primary config-button" @onclick="e => _configWindow.Visible = true">@textService[s_configText]</button>
 
 <p class="settings-container">
-    <h4>Display</h4>
+    <h4>@textService[s_displayText]</h4>
 
-    <h5>Generelle Helligkeit</h5>
+    <h5>@textService[s_generalBrightnessText]</h5>
     <PercentInput Min="0" Max="100" Decimals="1" OnInput="ChangeMaxBrightness" Value="autoBrightness.GeneralBrightness" />
-    <h5>Helligkeits Zeit Verschiebung</h5>
+    <h5>@textService[s_timeShiftText]</h5>
     <HourInput Min="-12" Max="12" Decimals="2" OnInput="ChangeHourShift" Value="autoBrightness.TimeShift" />
 
-    <h5>Rot schwelle</h5>
+    <h5>@textService[s_redThresholdText]</h5>
     <PercentInput Min="0" Max="100" Decimals="1" OnInput="ChangeRedThreshold" Value="display.RedManager.RedThreshold" />
     <p class="description">
             @if (_redTimeRange == TimeRange.Always) {
-                <text>Immer Rot</text>
-            } else if (_redTimeRange == TimeRange.Never) {
-                <text>Nie Rot</text>
+            <text>@textService[s_alwaysRedText]</text>
+        } else if (_redTimeRange == TimeRange.Never) {
+            <text>@textService[s_neverRedText]</text>
             } else {
-                <text>Rot von <b>@_redTimeRange.Start</b> bis <b>@_redTimeRange.End</b></text>
+            <text>@textService[s_redBetweenText] <b>@_redTimeRange.Start</b> @textService[s_andText] <b>@_redTimeRange.End</b></text>
             }
     </p>
 </p>
 
 <p class="settings-container">
-    <h4>Spotify</h4>
+    <h4>@textService[s_spotifyText]</h4>
     @if (spotify.HasClientKeys) {
         @if (spotify.IsConnected) {
-            <button type="button" @onclick="DisconnectSpotify" class="btn btn-success">Spotify Verbunden</button>
+            <button type="button" @onclick="DisconnectSpotify" class="btn btn-success">@textService[s_spotifyConnectedText]</button>
         } else {
-            <a class="btn btn-secondary" href="@spotify.GetSpotifyUrl(GetCallbackUrl())">mit Spotify verbinden</a>
+            <a class="btn btn-secondary" href="@spotify.GetSpotifyUrl(GetCallbackUrl())">@textService[s_connectWithSpotifyText]</a>
         }
-    } else {
-    <p class="red">Spotify ist deaktiviert, füge <i>Client Id</i> und <i>Client Secret</i> zu <i>config.json</i> hinzu, um diese funktion zu aktievieren</p>
     }
 </p>
 
 <p class="settings-container">
-    <h4>Wetter</h4>
-    <h5>Wetter Anbieter</h5>
-    <select class="form-select" aria-label="Default select example" @onchange="ChangeWeatherProvider">
+    <h4>@textService[s_weatherText]</h4>
+    <h5>@textService[s_weatherProviderText]</h5>
+    <select class="form-select" @onchange="ChangeWeatherProvider">
         @if (weather.IsProviderEnabled(WeatherProvider.OpenWeatherMap)) {
             <option value="0" selected="@WeatherProviderSelected(WeatherProvider.OpenWeatherMap)">Open Weather Map</option>
         }
@@ -78,11 +78,11 @@
 </p>
 
 <p class="settings-container">
-    <h4>Display Controller</h4>
+    <h4>@textService[s_displayControllerText]</h4>
     @if (_restarting) {
-    <p class="btn btn-secondary disabled">Display Controller neustarten</p>
+    <p class="btn btn-secondary disabled">@textService[s_restartDisplayControllerText]</p>
     } else {
-    <button type="button" @onclick="RestartDisplay" class="btn btn-danger">Display Controller neustarten</button>
+    <button type="button" @onclick="RestartDisplay" class="btn btn-danger">@textService[s_restartDisplayControllerText]</button>
     }
 </p>
 
@@ -92,7 +92,7 @@
 
     private OverlayWindow _configWindow;
 
-    protected override void OnInitialized() {
+    protected void PageOnInitialized() {
         _redTimeRange = display.RedManager.GetRedTimeRange();
     }
 
