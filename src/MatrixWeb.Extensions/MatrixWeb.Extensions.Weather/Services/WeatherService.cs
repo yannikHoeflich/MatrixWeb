@@ -27,11 +27,7 @@ public class WeatherService : IService, IInitializable {
     public async Task<WeatherStatus> GetWeatherAsync() {
         CachedWeatherClient provider = _clients[WeatherProvider];
 
-        if (!provider.IsEnabled) {
-            return new WeatherStatus();
-        }
-
-        return await provider.GetWeatherAsync();
+        return provider.IsEnabled ? await provider.GetWeatherAsync() : new WeatherStatus();
     }
 
     public bool IsProviderEnabled(WeatherProvider weatherProvider) => _clients[weatherProvider].IsEnabled;

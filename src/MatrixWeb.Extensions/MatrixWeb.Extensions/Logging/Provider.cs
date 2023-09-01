@@ -52,12 +52,9 @@ public class Provider : ILoggerProvider, IInitializable {
     }
 
     public ILogger CreateLogger(string categoryName) {
-        if (_disposedValue) {
-            throw new ObjectDisposedException(GetType().FullName);
-        }
-        
-        return _loggers.GetOrAdd(categoryName, name => new Logger(name.Split('.')[^1], _minLogLevel));
-        
+        return _disposedValue
+            ? throw new ObjectDisposedException(GetType().FullName)
+            : (ILogger)_loggers.GetOrAdd(categoryName, name => new Logger(name.Split('.')[^1], _minLogLevel));
     }
 
     public ILogger CreateLogger<T>() => CreateLogger(typeof(T).Name);
@@ -79,5 +76,4 @@ public class Provider : ILoggerProvider, IInitializable {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
-
 }

@@ -14,7 +14,7 @@ public class ColorHelper: IInitializable {
 
     public ConfigLayout ConfigLayout { get; } = new() {
         ConfigName = s_configName,
-        Keys = new ConfigKey[] { }
+        Keys = Array.Empty<ConfigKey>()
     };
     public ColorHelper(ConfigService configService) {
         _configService = configService;
@@ -22,22 +22,20 @@ public class ColorHelper: IInitializable {
 
     public InitResult Init() {
         RawConfig? config = _configService.GetConfig(s_configName);
-        if(config is null) {
-            return InitResult.NoConfig();
-        }
-
-        return InitResult.Success;
+        return config is not null 
+            ? InitResult.Success 
+            : InitResult.NoConfig();
     }
 
 
-    public Color MapTemperature(int temperature)
+    public static Color MapTemperature(int temperature)
         => MapColor(temperature, -10, 45, 240, 0);
 
 
-    public Color MapHour(double hours)
+    public static Color MapHour(double hours)
         => MapColor(hours, 0, 24, 240, 240 + 360);
 
-    public Color MapMinute(double minutes)
+    public static Color MapMinute(double minutes)
         => MapColor(minutes, 0, 60, 0, 360);
 
 

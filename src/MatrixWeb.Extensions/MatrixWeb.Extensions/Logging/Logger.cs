@@ -39,7 +39,4 @@ public class Logger : ILogger {
         LogLevel.None => ConsoleColor.White,
         _ => ConsoleColor.White
     };
-
-
-    // public static ILogger Create<T>() => new Logger(typeof(T).Name, new Wrapped<LogLevel>(LogLevel.Information));
 }

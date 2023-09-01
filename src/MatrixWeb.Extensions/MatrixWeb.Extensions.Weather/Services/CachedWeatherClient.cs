@@ -6,8 +6,7 @@ using MatrixWeb.Extensions.Services;
 using MatrixWeb.Extensions.Weather.Data;
 
 namespace MatrixWeb.Extensions.Weather.Services;
-public abstract class CachedWeatherClient : IInitializable, IService
-{
+public abstract class CachedWeatherClient : IInitializable, IService {
     private static readonly TicksTimeSpan s_updateFrequency = TicksTimeSpan.FromTimeSpan(TimeSpan.FromMinutes(5));
 
     private WeatherStatus? _currentWeather;
@@ -20,19 +19,16 @@ public abstract class CachedWeatherClient : IInitializable, IService
     protected abstract Task<WeatherStatus> UpdateWeather();
 
     public abstract ConfigLayout ConfigLayout { get; }
-    private async Task PrivateUpdateWeather()
-    {
+    private async Task PrivateUpdateWeatherAsync() {
         WeatherStatus newWeather = await UpdateWeather();
 
         _lastUpdate = TicksTime.Now;
         _currentWeather = newWeather;
     }
 
-    public async Task<WeatherStatus> GetWeatherAsync()
-    {
-        if (TicksTime.Now - _lastUpdate >= s_updateFrequency || _currentWeather is null)
-        {
-            await PrivateUpdateWeather();
+    public async Task<WeatherStatus> GetWeatherAsync() {
+        if (TicksTime.Now - _lastUpdate >= s_updateFrequency || _currentWeather is null) {
+            await PrivateUpdateWeatherAsync();
         }
 
         return _currentWeather ?? throw new UnreachableException("Current weather should always has a value as this point");

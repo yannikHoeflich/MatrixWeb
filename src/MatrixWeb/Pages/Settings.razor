@@ -18,9 +18,9 @@
 @inject TextService textService
 
 <OverlayWindow @ref="_configWindow">
-    @foreach(var configLayout in configService.Layouts) {
+    @foreach (var configLayout in configService.Layouts) {
         <h3>@configLayout.ConfigName</h3>
-        @foreach(var key in configLayout.Keys) {
+        @foreach (var key in configLayout.Keys) {
             <ConfigInput ConfigKey="key" ConfigLayout="configLayout" />
         }
     }
@@ -44,11 +44,11 @@
     <PercentInput Min="0" Max="100" Decimals="1" OnInput="ChangeRedThreshold" Value="display.RedManager.RedThreshold" />
     <p class="description">
             @if (_redTimeRange == TimeRange.Always) {
-            <text>@textService[s_alwaysRedText]</text>
-        } else if (_redTimeRange == TimeRange.Never) {
-            <text>@textService[s_neverRedText]</text>
+                <text>@textService[s_alwaysRedText]</text>
+            } else if (_redTimeRange == TimeRange.Never) {
+                <text>@textService[s_neverRedText]</text>
             } else {
-            <text>@textService[s_redBetweenText] <b>@_redTimeRange.Start</b> @textService[s_andText] <b>@_redTimeRange.End</b></text>
+                <text>@textService[s_redBetweenText] <b>@_redTimeRange.Start</b> @textService[s_andText] <b>@_redTimeRange.End</b></text>
             }
     </p>
 </p>

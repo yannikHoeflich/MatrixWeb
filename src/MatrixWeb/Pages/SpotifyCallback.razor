@@ -34,7 +34,7 @@
         }
 
         try {
-            await spotify.AddToken(code, GetCallbackUrl());
+            await spotify.AddTokenAsync(code, GetCallbackUrl());
         } catch (Exception ex) {
             logger.LogError(ex.ToString());
             _error = true;

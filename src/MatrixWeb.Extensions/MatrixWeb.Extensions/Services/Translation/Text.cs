@@ -5,7 +5,7 @@ public record Text(params TextElement[] Texts) {
     public static readonly Text Empty = new(new TextElement(LanguageCode.EN, ""), new TextElement(LanguageCode.DE, ""));
 
     public string GetText(LanguageCode languageCode) {
-        return TryGetText(languageCode, out var text)
+        return TryGetText(languageCode, out string? text)
             ? text
             : string.Empty;
     }

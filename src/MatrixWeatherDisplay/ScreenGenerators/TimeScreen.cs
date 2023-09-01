@@ -37,8 +37,8 @@ public class TimeScreen : IScreenGenerator {
         int hours = now.Hour;
         int minutes = now.Minute;
 
-        Color colorHour = _colorHelper.MapHour(now.TotalHours());
-        Color colorMinute = _colorHelper.MapMinute(now.MinutesOfHour());
+        Color colorHour = ColorHelper.MapHour(now.TotalHours());
+        Color colorMinute = ColorHelper.MapMinute(now.MinutesOfHour());
 
         _symbolLoader.DrawNumber(image, hours, 2, 0, 4, colorHour);
         _symbolLoader.DrawNumber(image, minutes, 2, 9, 4, colorMinute);

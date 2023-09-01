@@ -70,20 +70,20 @@ public class InternetService : IInitializable, IService {
         return InitResult.Success;
     }
 
-    public async Task<bool> HasInternetConnection() {
+    public async Task<bool> HasInternetConnectionAsync() {
         if(TicksTime.Now - _lastCheckTime > _updateFrequency) {
-            await Update();
+            await UpdateAsync();
         }
 
         return _lastCheckResult;
     }
 
-    private async Task Update() {
-        _lastCheckResult = await Ping();
+    private async Task UpdateAsync() {
+        _lastCheckResult = await PingAsync();
         _lastCheckTime = TicksTime.Now;
     }
 
-    private async Task<bool> Ping() {
+    private async Task<bool> PingAsync() {
         try {
             PingReply result = await _pingSender.SendPingAsync(_hostToPing, _timeout);
             return result.Status == IPStatus.Success;

@@ -37,7 +37,7 @@ public class TemperatureScreen : IScreenGenerator {
         WeatherStatus weather = await _weather.GetWeatherAsync();
         int temp = (int)Math.Round(weather.Temperature);
 
-        Color color = _colorHelper.MapTemperature(temp);
+        Color color = ColorHelper.MapTemperature(temp);
 
         Image<Rgb24> image = GenerateTemperatureScreen(16, 16, temp, color);
         return new Screen(image, ScreenTime);

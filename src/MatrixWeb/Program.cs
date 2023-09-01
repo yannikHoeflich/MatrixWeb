@@ -34,7 +34,7 @@ public static class Program {
         displayApp.Services.MoveServiceTo<TextService>(builder.Services);
         displayApp.Services.MoveLogger(builder.Services);
 
-        builder.Services.AddSingleton((p) => new DisplayService(displayApp, p.GetService<ILogger<DisplayService>>()));
+        builder.Services.AddSingleton((p) => new DisplayService(displayApp, p.GetRequiredService<ILogger<DisplayService>>()));
 
         displayApp.Services.MoveServiceTo<SpotifyService>(builder.Services);
         displayApp.Services.MoveServiceTo<DeviceService>(builder.Services);

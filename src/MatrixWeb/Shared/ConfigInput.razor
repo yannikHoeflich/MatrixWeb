@@ -4,32 +4,40 @@
 @inject ConfigService configService
 
 <div class="form-floating mb-3">
-    <input type="@GetInputType()" class="form-control" id="@_inputId" placeholder="@ConfigKey.Key" value="@Getvalue()" @onchange="OnChange">
-   <label for="@_inputId">@ConfigKey.Key</label>
+    <input type="@GetInputType()" class="form-control" id="@_inputId" placeholder="@ConfigKey?.Key" value="@GetValue()" @onchange="OnChange">
+   <label for="@_inputId">@ConfigKey?.Key</label>
 </div>
 
 @code {
-    private Guid _inputId = Guid.NewGuid();
+    private string _inputId = $"input-{Guid.NewGuid()}";
     private RawConfig? _config = null;
 
-    [Parameter]
-    public ConfigKey ConfigKey { get; set; }
+    [Parameter, EditorRequired]
+    public ConfigKey? ConfigKey { get; set; }
 
-    [Parameter]
-    public ConfigLayout ConfigLayout { get; set; }
+    [Parameter, EditorRequired]
+    public ConfigLayout? ConfigLayout { get; set; }
 
 
 
     protected override void OnInitialized() {
+        if (ConfigKey is null || ConfigLayout is null) {
+            return;
+        }
+
         _config = configService.GetOrCreateConfig(ConfigLayout.ConfigName);
     }
 
-    private string Getvalue() {
+    private string GetValue() {
+        if (ConfigKey is null || ConfigLayout is null) {
+            return "";
+        }
+
         if(_config is null) {
             return "";
         }
 
-        if (_config.TryGetString(ConfigKey.Key, out string value)) {
+        if (_config.TryGetString(ConfigKey.Key, out string? value)) {
             return value;
         }
 
@@ -37,6 +45,10 @@
     }
 
     private string GetInputType() {
+        if (ConfigKey is null || ConfigLayout is null) {
+            return "";
+        }
+
         if(ConfigKey.Type == typeof(string) || ConfigKey.Type == typeof(Guid)) {
             return "text";
         }
@@ -49,6 +61,10 @@
     }
 
     private void OnChange(ChangeEventArgs e) {
+        if (ConfigKey is null || ConfigLayout is null) {
+            return;
+        }
+
         if(e.Value is not string str) {
             return;
         }

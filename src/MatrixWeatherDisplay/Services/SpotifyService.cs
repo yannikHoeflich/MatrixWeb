@@ -70,7 +70,7 @@ public class SpotifyService : IInitializable, IService {
         return request.ToUri().ToString();
     }
 
-    public async Task AddToken(string code, string url) {
+    public async Task AddTokenAsync(string code, string url) {
         if (_clientId is null || _clientSecret is null) {
             throw new InvalidOperationException("The service 'SpotifyService' should be initialized and get all values through the config, to be used!");
         }

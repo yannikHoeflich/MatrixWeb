@@ -27,7 +27,7 @@ public class SymbolLoader : IAsyncInitializable, IService {
 
     private readonly Dictionary<char, bool[,]> _symbols = new();
 
-    private static async Task<bool[,]> LoadSymbol(string path) {
+    private static async Task<bool[,]> LoadSymbolAsync(string path) {
         Image<Rgba32> image = await Image.LoadAsync<Rgba32>(path);
 
         bool[,] symbol = new bool[image.Width, image.Height];
@@ -46,7 +46,7 @@ public class SymbolLoader : IAsyncInitializable, IService {
             char character = symbol.Value;
             bool[,] symbolMatrix;
             try {
-                symbolMatrix = await LoadSymbol(Path.Combine(s_directory, file));
+                symbolMatrix = await LoadSymbolAsync(Path.Combine(s_directory, file));
             } catch(Exception ex) {
                 return InitResult.Critical(new Text(new TextElement(LanguageCode.EN, $"Couldn't load file '{file}': {ex.Message}"),
                                                     new TextElement(LanguageCode.DE, $"Konnte Datei nicht laden '{file}': {ex.Message}")));

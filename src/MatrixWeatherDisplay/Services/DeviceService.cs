@@ -54,20 +54,20 @@ public class DeviceService: IService {
             await UpdateBrightnessAsync();
         }
 
-        await PerformForAll(d => d.SendGifAsync(gifBytes));
+        await PerformForAllAsync(d => d.SendGifAsync(gifBytes));
     }
 
     public async Task SetBrightnessAsync(double newBrightness) {
         BrightnessPair brightness = _brightnessService.GetBrightness(newBrightness);
         Brightness = brightness;
-        await PerformForAll(d => d.SendBrightnessAsync(brightness.Real));
+        await PerformForAllAsync(d => d.SendBrightnessAsync(brightness.Real));
     }
 
     public async Task UpdateBrightnessAsync() {
         BrightnessPair brightness = _brightnessService.GetBrightness(Brightness.Display);
         Brightness = brightness;
-        await PerformForAll(d => d.SendBrightnessAsync(brightness.Real));
+        await PerformForAllAsync(d => d.SendBrightnessAsync(brightness.Real));
     }
 
-    private async Task PerformForAll(Func<MatrixDevice, Task> func) => await Task.WhenAll(_devices.Select(func));
+    private async Task PerformForAllAsync(Func<MatrixDevice, Task> func) => await Task.WhenAll(_devices.Select(func));
 }

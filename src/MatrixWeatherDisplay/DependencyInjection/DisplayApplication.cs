@@ -1,6 +1,8 @@
-﻿using System.Xml.Serialization;
+﻿using System.Data.SqlTypes;
+using System.Xml.Serialization;
 
 using MatrixWeatherDisplay.Data;
+using MatrixWeatherDisplay.DependencyInjection.Helper;
 using MatrixWeatherDisplay.DependencyInjection.ScreenGeneratorCollections;
 using MatrixWeatherDisplay.Screens;
 using MatrixWeatherDisplay.Services;
@@ -23,7 +25,7 @@ public partial class DisplayApplication {
     internal ServiceDescriptor[]? Initializables { get; init; }
     internal ServiceDescriptor[]? AsyncInitializables { get; init; }
 
-    private ILogger _logger;
+    private ILogger? _logger;
 
     private bool _running = false;
     private bool _shouldRun = false;
@@ -42,56 +44,40 @@ public partial class DisplayApplication {
     /// <returns>true if the code flow should be continued, false if a critical error accured and the program should not be started.</returns>
     /// <exception cref="InvalidOperationException"></exception>
     public async Task<bool> InitDefaultServicesAsync() {
+        if (Initializables is null || AsyncInitializables is null) {
+            _logger?.LogCritical("The display application didn't get information about services to initialize.");
+            return false;
+        }
+
+        var serviceInitializer = new ServiceInitializer(Services, Initializables, AsyncInitializables);
+
+        IReadOnlyCollection<ConfigLayout> configLayouts = serviceInitializer.GetConfigLayouts();
+
         ConfigService configService = Services.GetService<ConfigService>() ?? throw new InvalidOperationException("The service 'ConfigService' has to be registered");
-
-        IEnumerable<IInitializable> initializables = Initializables.Select(x => x.GetService(Services)).OfType<IInitializable>().ToArray();
-        IEnumerable<IAsyncInitializable> asyncInitializables = AsyncInitializables.Select(x => x.GetService(Services)).OfType<IAsyncInitializable>().ToArray();
-
-        var configLayouts = initializables.Select(x => x.ConfigLayout).Concat(
-                            asyncInitializables.Select(x => x.ConfigLayout))
-                            .Where(x => x != ConfigLayout.Empty && x.Keys.Length > 0)
-                            .DistinctBy(x => x.Keys)
-                            .ToList();
-
         await configService.InitAsync(configLayouts);
 
         ILogger<DisplayApplication>? newLogger = Services.GetService<ILogger<DisplayApplication>>();
         if (newLogger is not null) {
             _logger = newLogger;
+            serviceInitializer.Logger = _logger;
         }
 
         BrightnessService autoBrightnessService = Services.GetService<BrightnessService>() ?? throw new InvalidOperationException("The Service of type 'AutoBrightnessService' must be registered");
         RedManager = new RedSettings(autoBrightnessService);
 
-        if (Initializables is not null) {
-            foreach (IInitializable service in initializables) {
-                InitResult result = service.Init();
-                if(HandleInitResult(service,  result)) {
-                    return false;
-                }
-            }
-        }
 
-        if (AsyncInitializables is not null) {
-            foreach (IAsyncInitializable service in asyncInitializables) {
-                InitResult result = await service.InitAsync();
-                if (HandleInitResult(service, result)) {
-                    return false;
-                }
-            }
-        }
-
+        bool result = await serviceInitializer.InitAllAsync();
         await configService.SaveAsync();
-        return true;
+        return result;
     }
 
     public async Task RunAsync() {
         if (_running) {
-            _logger.LogInformation("Already running");
+            _logger?.LogInformation("Already running");
             return;
         }
 
-        _logger.LogInformation("Starting up");
+        _logger?.LogInformation("Starting up");
 
         _running = true;
         _shouldRun = true;
@@ -122,9 +108,9 @@ public partial class DisplayApplication {
     }
 
     private async Task SendScreenAsync(DeviceService deviceService, ByteScreen screen) {
-        _logger.LogTrace("sending gif");
+        _logger?.LogTrace("sending gif");
         await deviceService.SendGifAsync(screen.Image);
-        _logger.LogTrace("waiting {screen time}ms", screen.ScreenTime.TotalMilliseconds);
+        _logger?.LogTrace("waiting {screen time}ms", screen.ScreenTime.TotalMilliseconds);
         SetWaitUntil(screen.ScreenTime);
     }
 
@@ -137,7 +123,7 @@ public partial class DisplayApplication {
             }
 
             screenGenerator = ScreenGenerators.GetNextScreenGenerator();
-            _logger.LogTrace("Trying to show '{screen}'", screenGenerator?.Name);
+            _logger?.LogTrace("Trying to show '{screen}'", screenGenerator?.Name);
 
             if (await ShouldScreenGeneratorSkipAsync(internetService, screenGenerator)) {
                 skips++;
@@ -151,7 +137,7 @@ public partial class DisplayApplication {
                 Screen rawScreen = await screenGenerator.GenerateImageAsync();
                 screen = await ByteScreen.FromScreenAsync(rawScreen, turnRed);
             } catch (Exception ex) {
-                _logger.LogError("Error creating next screen {ex}", ex); 
+                _logger?.LogError("Error creating next screen {ex}", ex); 
                 screen = null;
             }
 
@@ -167,15 +153,15 @@ public partial class DisplayApplication {
     }
 
     public async Task StopAsync() {
-        _logger.LogInformation($"Stopping");
+        _logger?.LogInformation($"Stopping");
         _shouldRun = false;
 
         await Extensions.SleepAsync(TimeSpan.FromSeconds(1), () => !_running);
 
         if (_running) {
-            _logger.LogError($"Didn't stop after 1 Seconds.");
-            _logger.LogError($"Probably stuck in a task or already stopped because of an error!");
-            _logger.LogError($"Pretending to be stopped!");
+            _logger?.LogError($"Didn't stop after 1 Seconds.");
+            _logger?.LogError($"Probably stuck in a task or already stopped because of an error!");
+            _logger?.LogError($"Pretending to be stopped!");
             _running = false;
         }
     }

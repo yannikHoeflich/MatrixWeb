@@ -10,69 +10,69 @@ using System;
 
 namespace MatrixWeatherDisplay.UnitTests;
 public class ColorHelperTests {
-    private ColorHelper _colorHelper = new(new ConfigService());
+    private readonly ColorHelper _colorHelper = new(new ConfigService());
     private Color _color;
 
     [Fact]
     public void Temperature() {
-        _color = _colorHelper.MapTemperature(-20);
+        _color = ColorHelper.MapTemperature(-20);
         Assert.Equal(Color.FromRgb(0, 0, 255), _color);
 
-        _color = _colorHelper.MapTemperature(-10);
+        _color = ColorHelper.MapTemperature(-10);
         Assert.Equal(Color.FromRgb(0, 0, 255), _color);
 
-        _color = _colorHelper.MapTemperature(45);
+        _color = ColorHelper.MapTemperature(45);
         Assert.Equal(Color.FromRgb(255, 0, 0), _color);
 
-        _color = _colorHelper.MapTemperature(55);
+        _color = ColorHelper.MapTemperature(55);
         Assert.Equal(Color.FromRgb(255, 0, 0), _color);
     }
 
     [Fact]
     public void Hour() {
-        _color = _colorHelper.MapHour(0);
+        _color = ColorHelper.MapHour(0);
         Assert.Equal(Color.FromRgb(0, 0, 255), _color);
 
-        _color = _colorHelper.MapHour(4);
+        _color = ColorHelper.MapHour(4);
         Assert.Equal(Color.FromRgb(255, 0, 255), _color);
 
-        _color = _colorHelper.MapHour(8);
+        _color = ColorHelper.MapHour(8);
         Assert.Equal(Color.FromRgb(255, 0, 0), _color);
 
-        _color = _colorHelper.MapHour(12);
+        _color = ColorHelper.MapHour(12);
         Assert.Equal(Color.FromRgb(255, 255, 0), _color);
 
-        _color = _colorHelper.MapHour(16);
+        _color = ColorHelper.MapHour(16);
         Assert.Equal(Color.FromRgb(0, 255, 0), _color);
 
-        _color = _colorHelper.MapHour(20);
+        _color = ColorHelper.MapHour(20);
         Assert.Equal(Color.FromRgb(0, 255, 255), _color);
 
-        _color = _colorHelper.MapHour(24);
+        _color = ColorHelper.MapHour(24);
         Assert.Equal(Color.FromRgb(0, 0, 255), _color);
     }
 
     [Fact]
     public void Minute() {
-        _color = _colorHelper.MapMinute(0);
+        _color = ColorHelper.MapMinute(0);
         Assert.Equal(Color.FromRgb(255, 0, 0), _color);
 
-        _color = _colorHelper.MapMinute(10);
+        _color = ColorHelper.MapMinute(10);
         Assert.Equal(Color.FromRgb(255, 255, 0), _color);
 
-        _color = _colorHelper.MapMinute(20);
+        _color = ColorHelper.MapMinute(20);
         Assert.Equal(Color.FromRgb(0, 255, 0), _color);
 
-        _color = _colorHelper.MapMinute(30);
+        _color = ColorHelper.MapMinute(30);
         Assert.Equal(Color.FromRgb(0, 255, 255), _color);
 
-        _color = _colorHelper.MapMinute(40);
+        _color = ColorHelper.MapMinute(40);
         Assert.Equal(Color.FromRgb(0, 0, 255), _color);
 
-        _color = _colorHelper.MapMinute(50);
+        _color = ColorHelper.MapMinute(50);
         Assert.Equal(Color.FromRgb(255, 0, 255), _color);
 
-        _color = _colorHelper.MapMinute(60);
+        _color = ColorHelper.MapMinute(60);
         Assert.Equal(Color.FromRgb(255, 0, 0), _color);
     }
 }

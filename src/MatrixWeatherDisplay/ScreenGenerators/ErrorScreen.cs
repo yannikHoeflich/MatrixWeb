@@ -34,7 +34,7 @@ public class ErrorScreen : IScreenGenerator {
 
 
     public async Task<Screen> GenerateImageAsync() { 
-        if(await _internetService.HasInternetConnection()) {
+        if(await _internetService.HasInternetConnectionAsync()) {
             return Screen.Empty;
         }
 

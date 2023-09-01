@@ -30,8 +30,18 @@ public class RawConfig : IDictionary<string, string?> {
     public bool TryGetGuid(string key, out Guid value) => Get(key, Guid.TryParse, out value);
 
     private bool Get<T>(string key, DataGetter<T> func, out T? value) {
-        value = default;
-        return _data.ContainsKey(key) && _data[key] is not null && func(_data[key], CultureInfo.InvariantCulture, out value);
+        if (_data.ContainsKey(key)) {
+            value = default;
+            return false;
+        }
+
+        string? valueAsString = _data[key];
+        if(valueAsString is null) {
+            value = default;
+            return false;
+        }
+
+        return func(valueAsString, CultureInfo.InvariantCulture, out value);
     }
 
     public void Set(string key, object value) => _data[key] = value.ToString();

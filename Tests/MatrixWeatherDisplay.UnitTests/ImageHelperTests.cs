@@ -11,8 +11,8 @@ using Xunit;
 
 namespace MatrixWeatherDisplay.UnitTests;
 public class ImageHelperTests {
-    Image<Rgb24> _image;
-    Random _random = new Random(420);
+    readonly Image<Rgb24> _image;
+    readonly Random _random = new(420);
 
     public ImageHelperTests() {
         _image = new Image<Rgb24>(16, 16);
@@ -29,13 +29,13 @@ public class ImageHelperTests {
     [Fact]
     public void SetColor() {
         var color = Color.FromRgb(255, 0, 0);
-        var testPixelColor = color.ToPixel<Rgb24>();
-        var testPixelBlack = Color.Black.ToPixel<Rgb24>();
+        Rgb24 testPixelColor = color.ToPixel<Rgb24>();
+        Rgb24 testPixelBlack = Color.Black.ToPixel<Rgb24>();
         ImageHelper.SetColor(_image, color);
 
         for (int y = 0; y < _image.Height; y++) {
             for (int x = 0; x < _image.Width; x++) {
-                var pixel = _image[x, y];
+                Rgb24 pixel = _image[x, y];
                 if(pixel != testPixelColor && pixel != testPixelBlack) {
                     Assert.Fail($"Each pixel must be either {color} or black");
                 }

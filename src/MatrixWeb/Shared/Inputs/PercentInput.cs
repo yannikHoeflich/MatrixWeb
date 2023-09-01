@@ -5,13 +5,13 @@ namespace MatrixWeb.Shared.Inputs;
 public class PercentInput : ExtendedInput {
     private static bool s_textIdsSet = false;
 
-    private static int _percentText = -1;
+    private static int s_percentText = -1;
 
     [Inject]
-    public TextService TextService { get; set; }
+    public required TextService TextService { get; set; }
 
     private static void InitTexts(TextService textService) {
-        _percentText = textService.AddText(new TextElement(LanguageCode.EN, "%"), new TextElement(LanguageCode.DE, "%"));
+        s_percentText = textService.AddText(new TextElement(LanguageCode.EN, "%"), new TextElement(LanguageCode.DE, "%"));
 
         s_textIdsSet = true;
     }
@@ -20,7 +20,7 @@ public class PercentInput : ExtendedInput {
             InitTexts(TextService);
         }
 
-        Text = TextService[_percentText];
+        Text = TextService[s_percentText];
         Multiplier = 100;
         base.OnParametersSet();
     }

@@ -5,7 +5,7 @@
 </div>
 
 <style>
-    #@_id::after {
+    #@(_id)::after {
         content: '@Text';
     }
 </style>
@@ -29,7 +29,7 @@
     [Parameter]
     public bool Disabled { get; set; } = false;
 
-    protected string Text { get; set; }
+    protected string Text { get; set; } = "";
 
     protected int Multiplier { get; set; } = 1;
 

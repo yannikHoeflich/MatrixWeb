@@ -16,7 +16,7 @@ public class ConfigService: IService{
 
     private Dictionary<string, RawConfig>? _configs;
 
-    public IReadOnlyCollection<ConfigLayout> Layouts { get; private set; }
+    public IReadOnlyCollection<ConfigLayout> Layouts { get; private set; } = new List<ConfigLayout>(0);
 
     public async Task InitAsync(IReadOnlyCollection<ConfigLayout> layouts) {
         Layouts = layouts;
@@ -36,11 +36,9 @@ public class ConfigService: IService{
     public RawConfig GetOrCreateConfig(string name) => GetConfig(name) ?? CreateConfig(name);
 
     public RawConfig? GetConfig(string name) {
-        if (_configs is null) {
-            return null;
-        }
-
-        return !_configs.TryGetValue(name, out RawConfig? config) ? null : config;
+        return _configs is not null && _configs.TryGetValue(name, out RawConfig? config) 
+            ? config 
+            : null;
     }
 
     public RawConfig CreateConfig(string name) { 
