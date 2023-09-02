@@ -24,4 +24,8 @@ public class HourInput : ExtendedInput {
         Text = TextService[s_hourText];
         base.OnParametersSet();
     }
+
+    public static void Reset() {
+        s_textIdsSet = false;
+    }
 }

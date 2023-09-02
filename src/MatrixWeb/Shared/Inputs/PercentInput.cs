@@ -24,4 +24,8 @@ public class PercentInput : ExtendedInput {
         Multiplier = 100;
         base.OnParametersSet();
     }
+
+    public static void Reset() {
+        s_textIdsSet = false;
+    }
 }

@@ -28,4 +28,7 @@ public partial class Index {
 
         s_textIdsSet = true;
     }
+    public static void Reset() {
+        s_textIdsSet = false;
+    }
 }

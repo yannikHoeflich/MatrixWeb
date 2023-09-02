@@ -24,4 +24,8 @@ public class SecondInput : ExtendedInput {
         Text = TextService[s_secondsText];
         base.OnParametersSet();
     }
+
+    public static void Reset() {
+        s_textIdsSet = false;
+    }
 }

@@ -21,6 +21,7 @@ public partial class Settings {
     private static int s_weatherProviderText = -1;
     private static int s_displayControllerText = -1;
     private static int s_restartDisplayControllerText = -1;
+    private static int s_restartApplication = -1;
 
     protected override void OnInitialized() {
         base.OnInitialized();
@@ -49,7 +50,12 @@ public partial class Settings {
         s_weatherProviderText = textService.AddText(new TextElement(LanguageCode.EN, "Weather provider"), new TextElement(LanguageCode.DE, "Wetter Anbieter"));
         s_displayControllerText = textService.AddText(new TextElement(LanguageCode.EN, "Display Controller"), new TextElement(LanguageCode.DE, "Bildschirm Controller"));
         s_restartDisplayControllerText = textService.AddText(new TextElement(LanguageCode.EN, "Restart Display Controller"), new TextElement(LanguageCode.DE, "Bildschirm Controller neustarten"));
+        s_restartApplication = textService.AddText(new TextElement(LanguageCode.EN, "Restart Application"), new TextElement(LanguageCode.DE, "Programm neustarten"));
 
         s_textIdsSet = true;
+    }
+
+    public static void Reset() {
+        s_textIdsSet = false;
     }
 }

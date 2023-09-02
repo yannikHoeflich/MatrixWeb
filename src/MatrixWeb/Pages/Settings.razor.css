@@ -42,3 +42,7 @@ h5 {
 .config-save-button{
     float: right;
 }
+
+.restart-app-container{
+    margin-top: 30px;
+}

@@ -42,15 +42,15 @@
 
     <h5>@textService[s_redThresholdText]</h5>
     <PercentInput Min="0" Max="100" Decimals="1" OnInput="ChangeRedThreshold" Value="display.RedManager.RedThreshold" />
-    <p class="description">
-            @if (_redTimeRange == TimeRange.Always) {
-                <text>@textService[s_alwaysRedText]</text>
-            } else if (_redTimeRange == TimeRange.Never) {
-                <text>@textService[s_neverRedText]</text>
-            } else {
-                <text>@textService[s_redBetweenText] <b>@_redTimeRange.Start</b> @textService[s_andText] <b>@_redTimeRange.End</b></text>
-            }
-    </p>
+<p class="description">
+        @if (_redTimeRange == TimeRange.Always) {
+            <text>@textService[s_alwaysRedText]</text>
+        } else if (_redTimeRange == TimeRange.Never) {
+            <text>@textService[s_neverRedText]</text>
+        } else {
+            <text>@textService[s_redBetweenText] <b>@_redTimeRange.Start</b> @textService[s_andText] <b>@_redTimeRange.End</b></text>
+        }
+</p>
 </p>
 
 <p class="settings-container">
@@ -84,6 +84,9 @@
     } else {
     <button type="button" @onclick="RestartDisplay" class="btn btn-danger">@textService[s_restartDisplayControllerText]</button>
     }
+    <p class="restart-app-container">
+        <button type="button" @onclick="RestartApplication" class="btn btn-danger">@textService[s_restartApplication]</button>
+    </p>
 </p>
 
 @code {
@@ -147,5 +150,9 @@
 
     private bool WeatherProviderSelected(WeatherProvider weatherProvider) {
         return weather.WeatherProvider == weatherProvider;
+    }
+
+    private async Task RestartApplication() {
+        await Program.RestartAsync();
     }
 }
