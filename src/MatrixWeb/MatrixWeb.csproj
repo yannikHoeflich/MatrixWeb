@@ -11,6 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="config.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Icons\Weather\ClearNight.gif">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
