@@ -9,6 +9,12 @@ making it easy to control and configure display settings.
 
 Link to the [Wiki](/../../wiki)
 
+**Example Video:**
+
+
+https://github.com/yannikHoeflich/MatrixWeb/assets/39781419/76d60eb3-3e87-441f-b292-3c02f38175a4
+
+
 *Features:*
 
 - **Screen Generation:** MatrixWeb introduces the concept of "screens," which are image generators.
