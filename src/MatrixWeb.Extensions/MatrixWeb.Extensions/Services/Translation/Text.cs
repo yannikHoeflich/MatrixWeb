@@ -2,6 +2,11 @@
 
 namespace MatrixWeb.Extensions.Services.Translation;
 public record Text(params TextElement[] Texts) {
+    public static implicit operator Text(string baseStr) => new(
+            new TextElement(LanguageCode.EN, baseStr),
+            new TextElement(LanguageCode.DE, baseStr)
+        );
+
     public static readonly Text Empty = new(new TextElement(LanguageCode.EN, ""), new TextElement(LanguageCode.DE, ""));
 
     public string GetText(LanguageCode languageCode) {
