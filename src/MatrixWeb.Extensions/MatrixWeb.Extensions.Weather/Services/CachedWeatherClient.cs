@@ -24,6 +24,11 @@ public abstract class CachedWeatherClient : IInitializable, IService {
         WeatherStatus newWeather = await UpdateWeather();
 
         _lastUpdate = TicksTime.Now;
+
+        if(newWeather == default) {
+            return;
+        }
+
         _currentWeather = newWeather;
     }
 
