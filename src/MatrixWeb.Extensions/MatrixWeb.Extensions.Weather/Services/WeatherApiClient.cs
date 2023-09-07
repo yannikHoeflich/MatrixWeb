@@ -20,6 +20,8 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
 
     public override bool IsEnabled { get; protected set; } = false;
 
+
+    public override string Name => "Weather Api";
     public override ConfigLayout ConfigLayout { get; } = new() {
         ConfigName = s_configName,
         Keys = new ConfigKey[] {
@@ -62,7 +64,7 @@ public class WeatherApiClient : CachedWeatherClient, IInitializable {
 
         CurrentEntity currentWeather = response.Current;
         WeatherType weatherType = ToWeatherType((int)currentWeather.Condition.Code, response.Current.IsDay);
-        return new WeatherStatus(weatherType, response.Current.TemperatureC, response.Current.Humidity);
+        return new WeatherStatus(weatherType, response.Current.TemperatureC, response.Current.Humidity, response.Current.PressureMB, response.Current.VisibilityKm * 1000, response.Current.WindKPH / 3.6);
     }
 
     private static WeatherType ToWeatherType(int id, bool isDay) {

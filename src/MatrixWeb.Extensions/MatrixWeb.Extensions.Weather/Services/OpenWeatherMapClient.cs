@@ -22,6 +22,8 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
     public override bool IsEnabled { get; protected set; }
 
+    public override string Name => "Open Weather Map";
+
     public override ConfigLayout ConfigLayout { get; } = new() {
         ConfigName = s_configName,
         Keys = new ConfigKey[] {
@@ -71,7 +73,7 @@ public class OpenWeatherMapClient : CachedWeatherClient {
 
         WeatherType weatherType = ToWeatherType(response.WeatherConditionId, IsDay(response.Sunrise, response.Sunset));
 
-        return new WeatherStatus(weatherType, response.Temperature.DegreesCelsius, response.Humidity.Percent);
+        return new WeatherStatus(weatherType, response.Temperature.DegreesCelsius, response.Humidity.Percent, response.Pressure.Hectopascals, response.Visibility.Meters, response.WindSpeed.MetersPerSecond);
     }
 
     private static bool IsDay(DateTimeOffset sunrise, DateTimeOffset sunset) {

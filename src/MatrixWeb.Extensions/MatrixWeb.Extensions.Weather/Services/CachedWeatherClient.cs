@@ -17,6 +17,7 @@ public abstract class CachedWeatherClient : IInitializable, IService {
     public abstract InitResult Init();
 
     protected abstract Task<WeatherStatus> UpdateWeather();
+    public abstract string Name { get; }
 
     public abstract ConfigLayout ConfigLayout { get; }
     private async Task PrivateUpdateWeatherAsync() {
