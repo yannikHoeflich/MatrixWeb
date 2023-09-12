@@ -19,7 +19,7 @@ public readonly struct TicksTimeSpan : IEquatable<TicksTimeSpan> {
     public static bool operator !=(TicksTimeSpan left, TicksTimeSpan right) => !(left == right);
 
     public static bool operator <= (TicksTimeSpan left, TicksTimeSpan right) => (left.Ticks <= right.Ticks);
-    public static bool operator >= (TicksTimeSpan left, TicksTimeSpan right) => (left.Ticks <= right.Ticks);
+    public static bool operator >= (TicksTimeSpan left, TicksTimeSpan right) => (left.Ticks >= right.Ticks);
 
     public TicksTimeSpan() : this(Environment.TickCount64) { }
 
