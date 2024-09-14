@@ -3,6 +3,7 @@ using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
+using SixLabors.ImageSharp;
 
 namespace MatrixWeatherDisplay.Data.Converter;
 public class ColorHelper: IInitializable {

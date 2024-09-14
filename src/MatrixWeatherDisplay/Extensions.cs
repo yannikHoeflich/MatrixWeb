@@ -3,17 +3,25 @@ using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MatrixWeatherDisplay;
 public static class Extensions {
     public static async Task<byte[]> ToGifBytesAsync<T>(this Image<T> image) where T : unmanaged, IPixel<T> {
         ImageHelper.AdjustFrameLengths(image);
         var stream = new MemoryStream();
-        await image.SaveAsGifAsync(stream);
+        foreach (ImageFrame<T> frame in image.Frames) {
+            GifFrameMetadata gifMetadata = frame.Metadata.GetGifMetadata();
+            gifMetadata.DisposalMethod = GifDisposalMethod.RestoreToBackground;
+            gifMetadata.HasTransparency = false;
+        }
+        var encoder = new GifEncoder() { SkipMetadata = false };
+        await image.SaveAsGifAsync(stream, encoder);
+        await image.SaveAsGifAsync("test.gif", encoder);
         return stream.ToArray();
     }
-
-
 
     public static double TotalHours(this DateTime dateTime) => TotalHours(TimeOnly.FromDateTime(dateTime));
     public static double TotalHours(this TimeOnly dateTime) {

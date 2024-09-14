@@ -11,6 +11,8 @@ using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services.Translation;
 using System;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;
 public class ErrorScreen : IScreenGenerator {

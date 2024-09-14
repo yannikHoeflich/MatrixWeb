@@ -5,6 +5,8 @@ using MatrixWeatherDisplay.Services;
 using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services.Translation;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SpotifyAPI.Web;
 
 namespace MatrixWeatherDisplay.ScreenGenerators;

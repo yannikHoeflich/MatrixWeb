@@ -1,6 +1,8 @@
 ﻿using MatrixWeb.Extensions;
 using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services.Translation;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MatrixWeb.Extensions.Services.Loader;
 public abstract class IconLoader<T> : IAsyncInitializable, IService where T : struct {

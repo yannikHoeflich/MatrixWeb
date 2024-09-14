@@ -5,6 +5,8 @@ using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Services.Translation;
 using MatrixWeb.Extensions.Weather.Data;
 using MatrixWeb.Extensions.Weather.Services;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MatrixWeatherDisplay.Screens;
 public class WeatherScreen : IScreenGenerator {

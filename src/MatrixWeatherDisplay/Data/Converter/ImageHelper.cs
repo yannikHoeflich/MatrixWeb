@@ -1,4 +1,7 @@
-﻿namespace MatrixWeatherDisplay.Data.Converter;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+
+namespace MatrixWeatherDisplay.Data.Converter;
 public static class ImageHelper {
     public static void ScaleDown<TBigPixel, TSmallPixel>(Image<TBigPixel> big,  Image<TSmallPixel> small) where TBigPixel : unmanaged, IPixel<TBigPixel> where TSmallPixel : unmanaged, IPixel<TSmallPixel> {
         int stepsWidth = big.Width / small.Width;

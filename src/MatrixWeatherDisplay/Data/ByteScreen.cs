@@ -1,5 +1,6 @@
 ﻿using MatrixWeatherDisplay.Data.Converter;
 using MatrixWeb.Extensions.Data;
+using SixLabors.ImageSharp;
 
 namespace MatrixWeatherDisplay.Data;
 internal record ByteScreen(byte[] Image, TimeSpan ScreenTime) {

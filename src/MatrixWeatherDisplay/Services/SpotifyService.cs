@@ -4,6 +4,8 @@ using MatrixWeb.Extensions.Data;
 using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SpotifyAPI.Web;
 
 namespace MatrixWeatherDisplay.Services;

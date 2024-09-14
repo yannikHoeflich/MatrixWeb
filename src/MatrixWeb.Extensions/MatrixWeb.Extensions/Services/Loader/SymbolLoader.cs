@@ -2,6 +2,8 @@
 using MatrixWeb.Extensions.Data.Config;
 using MatrixWeb.Extensions.Services;
 using MatrixWeb.Extensions.Services.Translation;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MatrixWeatherDisplay.Services;
 public class SymbolLoader : IAsyncInitializable, IService {
